@@ -1,4 +1,7 @@
-name: Déployer sur GitHub Pages
+name: Mettre le site en ligne
+
+# Construit le site et le publie sur la branche gh-pages (servie par GitHub Pages).
+# Un commit dont le message contient « [wip] » est sauvegardé sans être mis en ligne.
 
 on:
   push:
@@ -6,17 +9,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
-    # Un commit dont le message contient « [wip] » est sauvegardé sans être mis en ligne.
+  deploy:
     if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[wip]') }}
     runs-on: ubuntu-latest
     steps:
@@ -39,17 +39,15 @@ jobs:
         run: npm run build
         env:
           BASE_PATH: ${{ steps.base.outputs.path }}
-          SITE_URL: ${{ vars.SITE_URL }}
-      - uses: actions/upload-pages-artifact@v3
+      - name: Désactiver Jekyll
+        run: touch dist/.nojekyll
+      - name: Publier sur la branche gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Mise en ligne'

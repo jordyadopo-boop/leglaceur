@@ -1,11 +1,13 @@
 # Mise en ligne sur GitHub Pages et domaine www.leglaceur.ci
 
-## 1. Activer GitHub Pages
+## 1. Mise en ligne automatique
 
-1. Poussez le dépôt sur GitHub (branche `main`).
-2. Sur GitHub : **Settings → Pages → Build and deployment → Source : GitHub Actions**.
-3. Chaque `push` sur `main` lance le workflow `.github/workflows/deploy.yml` (onglet **Actions**), qui construit le site et le publie.
-   Sans domaine personnalisé, le site est disponible sur `https://<compte>.github.io/<dépôt>/`.
+Chaque `push` sur `main` lance `.github/workflows/deploy.yml` (onglet **Actions**) : le site est construit puis publié
+sur la branche **`gh-pages`**, servie par GitHub Pages à l'adresse `https://<compte>.github.io/<dépôt>/`.
+Un commit dont le message contient `[wip]` est sauvegardé sans être mis en ligne.
+
+Si l'adresse ne répond pas après le premier déploiement : **Settings → Pages → Build and deployment → Source :
+« Deploy from a branch », branche `gh-pages`, dossier `/ (root)`**.
 
 ## 2. Brancher le domaine www.leglaceur.ci
 
@@ -24,7 +26,7 @@
    | A     | @   | 185.199.110.153 |
    | A     | @   | 185.199.111.153 |
 
-3. Sur GitHub : **Settings → Pages → Custom domain : `www.leglaceur.ci`**, puis cochez **Enforce HTTPS** une fois le certificat émis
+3. Sur GitHub : **Settings → Pages → Custom domain : `www.leglaceur.ci`** (le fichier `public/CNAME` le renseigne aussi automatiquement), puis cochez **Enforce HTTPS** une fois le certificat émis
    (quelques minutes à quelques heures après la propagation DNS).
 
 ## 3. (Facultatif) Recevoir chaque devis dans un tableur Google Sheets
