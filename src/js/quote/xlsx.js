@@ -182,11 +182,11 @@ export async function buildXlsx(q, { logo = null } = {}) {
     if (!p.available) continue;
     for (const v of p.variants) {
       const l = qtyBySku.get(v.sku);
-      items.push({ sku: v.sku, name: p.name, label: v.label, unit: v.unit, price: v.price, kg: v.kg, qty: l?.qty || 0 });
+      items.push({ sku: v.sku, name: p.name, label: v.label, unit: v.unit, units: v.units, price: v.price, kg: v.kg, qty: l?.qty || 0 });
       qtyBySku.delete(v.sku);
     }
   }
-  for (const l of qtyBySku.values()) items.push({ sku: l.sku, name: l.name, label: l.label, unit: l.unit, price: l.price, kg: l.kg, qty: l.qty || 0 });
+  for (const l of qtyBySku.values()) items.push({ sku: l.sku, name: l.name, label: l.label, unit: l.unit, units: l.units, price: l.price, kg: l.kg, qty: l.qty || 0 });
 
   const first = 8;
   const last = first + items.length - 1;
@@ -223,7 +223,7 @@ export async function buildXlsx(q, { logo = null } = {}) {
       error: 'Saisissez un nombre entier positif ou nul.',
       showInputMessage: true,
       promptTitle: 'Quantité',
-      prompt: it.unit === 'kg' ? 'Nombre de kilos souhaités.' : `Nombre de ${it.unit === 'gobelet' ? 'gobelets' : `${it.unit}s`} souhaités.`,
+      prompt: it.unit === 'kg' ? 'Nombre de kilos souhaités (entier).' : `Nombre de ${it.units || 'articles'} souhaités.`,
     };
     const e = row.getCell(5);
     e.value = { formula: `C${r}*D${r}`, result: it.price * it.qty };

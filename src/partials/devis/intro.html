@@ -1,10 +1,16 @@
-<!-- Devis · en-tête « nuit polaire » compact (agent quote-ui). Styles : src/styles/modules/quote.css · Animations : src/js/modules/quote-intro.js -->
+<!-- Devis · en-tête clair et givré, compact (agent quote-ui). Styles : src/styles/modules/quote.css · Animations : src/js/modules/quote-intro.js -->
 <section class="quote-intro" data-module="quote-intro" aria-labelledby="quote-intro-title">
   <div class="quote-intro__bg" aria-hidden="true">
     <!-- @img slot="texture-glace" alt="" sizes="100vw" class="quote-intro__photo" picture-class="quote-intro__picture" eager -->
-    <div class="quote-intro__veil"></div>
+    <span class="quote-intro__glow quote-intro__glow--a"></span>
+    <span class="quote-intro__glow quote-intro__glow--b"></span>
     <svg class="quote-intro__frost" data-intro-frost viewBox="0 0 1440 720" preserveAspectRatio="xMidYMid slice" focusable="false"></svg>
-    <span class="quote-intro__aurora"></span>
+    <div class="quote-intro__cubes" data-intro-cubes>
+      <span class="quote-intro__cube quote-intro__cube--1"><i></i></span>
+      <span class="quote-intro__cube quote-intro__cube--2"><i></i></span>
+      <span class="quote-intro__cube quote-intro__cube--3"><i></i></span>
+      <span class="quote-intro__cube quote-intro__cube--4"><i></i></span>
+    </div>
   </div>
 
   <div class="container quote-intro__inner">
@@ -15,14 +21,14 @@
           <li><span aria-current="page">Devis en ligne</span></li>
         </ol>
       </nav>
-      <p class="eyebrow" data-intro-item>Devis en ligne · gratuit</p>
-      <h1 class="quote-intro__title" id="quote-intro-title" data-intro-title>Votre devis glace <span class="quote-intro__hl ice-text">en une minute</span></h1>
-      <p class="quote-intro__lead" data-intro-item>Choisissez vos quantités, la livraison ou le retrait&nbsp;: tout se calcule en direct. Téléchargez votre devis en PDF ou en Excel, puis envoyez-le sur WhatsApp.</p>
+      <p class="eyebrow" data-intro-item>Devis gratuit · sans engagement</p>
+      <h1 class="quote-intro__title" id="quote-intro-title" data-intro-title><span class="quote-intro__line">Votre devis glace</span> <span class="quote-intro__line quote-intro__hl ice-text">en une minute</span></h1>
+      <p class="quote-intro__lead" data-intro-item>Choisissez vos quantités, la livraison ou le retrait&nbsp;: tout se calcule en direct. Recevez votre devis en PDF ou en Excel, puis envoyez-le sur WhatsApp.</p>
 
       <ul class="quote-intro__perks" role="list" data-intro-item>
         <li class="quote-intro__perk quote-intro__perk--free">
           <svg class="icon" aria-hidden="true"><use href="#q-i-truck"/></svg>
-          <span>Livraison offerte dès 20&nbsp;articles</span>
+          <span data-intro-free>Livraison offerte dès 20&nbsp;articles</span>
         </li>
         <li class="quote-intro__perk">
           <svg class="icon" aria-hidden="true"><use href="#q-i-nocard"/></svg>
@@ -30,12 +36,12 @@
         </li>
         <li class="quote-intro__perk">
           <svg class="icon" aria-hidden="true"><use href="#q-i-clock"/></svg>
-          <span>24h/24 · 7j/7</span>
+          <span data-intro-hours>24h/24 · 7j/7</span>
         </li>
       </ul>
 
       <div class="quote-intro__cta" data-intro-item>
-        <a class="btn btn--lg quote-intro__btn" href="#devis-glaces">
+        <a class="btn btn--lg quote-intro__btn" href="#devis-glaces" data-module="fx-magnetic">
           <span data-intro-cta-label>Composer mon devis</span>
           <svg class="icon" aria-hidden="true"><use href="#q-i-down"/></svg>
         </a>
@@ -49,27 +55,27 @@
     <ol class="quote-intro__steps" role="list" aria-label="Comment ça marche">
       <li class="quote-intro__step" data-intro-step>
         <span class="quote-intro__num" aria-hidden="true">01</span>
-        <span class="quote-intro__ico" aria-hidden="true"><svg class="icon"><use href="#q-i-cube"/></svg></span>
         <span class="quote-intro__step-txt">
           <strong>Choisissez vos quantités</strong>
-          <span>Glaçons, gobelets, barres, glace pilée ou glace carbonique&nbsp;: la quantité que vous voulez.</span>
+          <span>Glace cubique, en grain, pilée, carboglace, Ice Cup ou barres&nbsp;: la quantité que vous voulez.</span>
         </span>
+        <span class="quote-intro__ico" aria-hidden="true"><svg class="icon"><use href="#q-i-cube"/></svg></span>
       </li>
       <li class="quote-intro__step" data-intro-step>
         <span class="quote-intro__num" aria-hidden="true">02</span>
-        <span class="quote-intro__ico" aria-hidden="true"><svg class="icon"><use href="#q-i-truck"/></svg></span>
         <span class="quote-intro__step-txt">
           <strong>Livraison ou retrait</strong>
           <span>Livraison partout à Abidjan, ou retrait gratuit à Abatta – Carrefour Drogba.</span>
         </span>
+        <span class="quote-intro__ico" aria-hidden="true"><svg class="icon"><use href="#q-i-truck"/></svg></span>
       </li>
       <li class="quote-intro__step" data-intro-step>
         <span class="quote-intro__num" aria-hidden="true">03</span>
-        <span class="quote-intro__ico quote-intro__ico--wa" aria-hidden="true"><svg class="icon icon--fill"><use href="#q-i-wa"/></svg></span>
         <span class="quote-intro__step-txt">
           <strong>Recevez votre devis</strong>
           <span>En PDF ou en Excel, puis envoyez-le sur WhatsApp en un geste.</span>
         </span>
+        <span class="quote-intro__ico quote-intro__ico--wa" aria-hidden="true"><svg class="icon icon--fill"><use href="#q-i-wa"/></svg></span>
       </li>
     </ol>
   </div>
@@ -79,18 +85,18 @@
     <svg viewBox="0 0 1440 64" preserveAspectRatio="none" focusable="false">
       <defs>
         <linearGradient id="q-icicle-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff"/>
-          <stop offset=".45" stop-color="#d9efff"/>
-          <stop offset="1" stop-color="#8ecfff" stop-opacity=".9"/>
+          <stop offset="0" stop-color="#e3f3ff"/>
+          <stop offset=".35" stop-color="#d4ecfd"/>
+          <stop offset="1" stop-color="#8ecfff" stop-opacity=".85"/>
         </linearGradient>
         <linearGradient id="q-icicle-shine" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-          <stop offset=".5" stop-color="#ffffff" stop-opacity=".95"/>
+          <stop offset=".5" stop-color="#ffffff" stop-opacity="1"/>
           <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
       </defs>
       <path class="quote-intro__rim" fill="url(#q-icicle-fill)" d="M0 0H1440V10C1424 12 1416 14 1404 13L1398 34L1390 13C1370 15 1352 12 1334 14L1328 26L1322 13C1300 12 1282 15 1262 13L1255 46L1247 13C1226 12 1210 15 1192 13L1187 24L1182 13C1160 12 1140 15 1118 13L1110 38L1103 13C1082 12 1062 15 1044 13L1039 22L1034 13C1012 12 992 15 972 13L963 52L955 13C934 12 916 15 896 13L891 26L886 13C866 12 846 15 826 13L819 36L812 13C792 12 772 15 752 13L747 22L742 13C722 12 702 15 682 13L674 44L667 13C646 12 626 15 606 13L601 25L596 13C576 12 556 15 536 13L528 34L521 13C500 12 482 15 462 13L456 21L451 13C430 12 410 15 390 13L381 50L373 13C352 12 334 15 314 13L309 27L304 13C284 12 264 15 244 13L237 38L230 13C210 12 190 15 170 13L165 22L160 13C140 12 120 15 100 13L92 42L85 13C64 12 44 15 26 13L21 24L16 13C10 12 5 11 0 10Z"/>
-      <path fill="url(#q-icicle-shine)" opacity=".7" d="M0 4H1440V7H0Z"/>
+      <path fill="url(#q-icicle-shine)" opacity=".9" d="M0 3H1440V6H0Z"/>
     </svg>
     <span class="quote-intro__drop" style="--x: 6.4%; --y: 66%; --d: 0s"></span>
     <span class="quote-intro__drop" style="--x: 26.5%; --y: 78%; --d: 2.6s"></span>
