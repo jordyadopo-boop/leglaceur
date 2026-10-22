@@ -195,7 +195,7 @@
 .brand-sdlsit__text { display: inline-flex; flex-direction: column; align-items: stretch; gap: 0.32em; }
 .brand-sdlsit__name {
   font-family: var(--font-body, 'Barlow', sans-serif);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.55em;
   letter-spacing: 0.2em;
   margin-right: -0.2em;
@@ -207,7 +207,7 @@
   align-items: center;
   gap: 0.7em;
   font-family: var(--font-body, 'Barlow', sans-serif);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.6em;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -275,7 +275,7 @@
 @media (prefers-reduced-motion: no-preference) {
   :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-g path {
     stroke: var(--lg-g);
-    stroke-width: 3;
+    stroke-width: 5;
     stroke-dasharray: var(--len, 1500) var(--len, 1500);
     animation: brand-draw 1.3s cubic-bezier(0.65, 0, 0.35, 1) var(--brand-intro-delay, 0s) both,
       brand-flood 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 0.95s) both;
