@@ -35,7 +35,7 @@
   object-fit: cover; object-position: 50% 40%;
   /* La glace sombre devient une vitre givrée claire : fissures et cristaux bleu pâle. */
   filter: grayscale(1) invert(1) contrast(1.35) brightness(1.04);
-  mix-blend-mode: multiply; opacity: 0.16;
+  mix-blend-mode: multiply; opacity: 0.12;
   -webkit-mask-image: radial-gradient(90% 80% at 85% 30%, #000 0%, rgba(0, 0, 0, 0.4) 55%, transparent 85%);
   mask-image: radial-gradient(90% 80% at 85% 30%, #000 0%, rgba(0, 0, 0, 0.4) 55%, transparent 85%);
 }
@@ -115,8 +115,7 @@
 }
 .quote-intro__step::after { /* reflet glacé */
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(115deg, rgba(191, 228, 255, 0.16) 0%, transparent 35%, transparent 70%, rgba(142, 207, 255, 0.12) 100%), var(--noise);
-  opacity: 0.9;
+  background: linear-gradient(115deg, rgba(191, 228, 255, 0.16) 0%, transparent 35%, transparent 70%, rgba(142, 207, 255, 0.12) 100%);
 }
 .quote-intro__num { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem, 4vw, 3.2rem); line-height: 0.85; color: var(--blue-400); letter-spacing: -0.02em; min-width: 2.2ch; }
 .quote-intro__step-txt { display: grid; gap: 0.2rem; }
@@ -443,6 +442,7 @@
 }
 .quote-when { margin-top: 1rem; }
 @media (min-width: 40rem) { .quote-when { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } }
+.quote .field { align-content: start; }
 .quote fieldset.field { margin: 0; padding: 0; border: 0; min-width: 0; }
 .quote fieldset.field > legend { margin-bottom: 0.45rem; padding: 0; }
 .quote .field > label, .quote .label { color: var(--ink-800); }
@@ -504,6 +504,9 @@
 .quote-summary { min-width: 0; }
 @media (min-width: 64rem) {
   .quote-summary { position: sticky; top: calc(var(--header-h) + 20px); }
+  /* Le ticket tient toujours dans l'écran : la liste des lignes défile si besoin. */
+  .quote-summary__sheet { max-height: calc(100vh - var(--header-h) - 40px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .quote-summary__lines { max-height: clamp(130px, calc(100vh - 640px), 360px); overflow-y: auto; scrollbar-width: thin; margin-right: -0.4rem; padding-right: 0.4rem; }
 }
 .quote-summary__sheet {
   position: relative; isolation: isolate; display: grid; gap: 1rem;

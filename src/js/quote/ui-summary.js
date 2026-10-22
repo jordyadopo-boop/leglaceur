@@ -27,7 +27,7 @@ export function initSummary(root) {
     deliveryLabel: $('[data-delivery-label]'),
     totalLabel: $('[data-total-label]'),
     total: $('[data-total]'),
-    count: $('[data-count]'),
+    count: $('[data-sum-count]'),
     weight: $('[data-weight]'),
     feeNote: $('[data-fee-note]'),
     mini: $('[data-mini]'),

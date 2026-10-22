@@ -31,7 +31,7 @@ function buildRecos(root) {
         <button type="button" class="reco__add" data-add>${PLUS}<span class="reco__qty" data-qty hidden></span></button>`;
       li.querySelector('.reco__name').textContent = v.product.name;
       li.querySelector('.reco__variant').textContent = v.label;
-      li.querySelector('.reco__price').textContent = fcfaShort(v.price);
+      li.querySelector('.reco__price').textContent = fcfaShort(v.price).replace('\u202f' + 'F', '\u00a0F');
       li.querySelector('[data-add]').setAttribute('aria-label', `Ajouter au devis : ${v.product.name}, ${v.label.toLowerCase()} (${fcfaShort(v.price)})`);
       frag.append(li);
     }
