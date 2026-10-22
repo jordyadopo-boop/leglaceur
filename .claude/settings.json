@@ -1,0 +1,16 @@
+{
+  "effortLevel": "medium",
+  "autoCompactWindow": 200000,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/econome.json\""
+          }
+        ]
+      }
+    ]
+  }
+}

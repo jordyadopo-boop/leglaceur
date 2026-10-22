@@ -1,0 +1,6 @@
+{
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "Mode économe (demandé par l'utilisateur pour préserver sa limite d'utilisation) : réponses courtes et directes ; ne lance pas de sous-agents ni de workflows sauf si l'utilisateur le demande explicitement ; lis seulement les parties de fichiers utiles plutôt que des fichiers entiers ; quand une étape est terminée et poussée sur GitHub, propose d'ouvrir une nouvelle session pour l'étape suivante plutôt que de continuer dans la même."
+  }
+}
