@@ -1,0 +1,307 @@
+/* ==========================================================================
+   Identité Le Glaceur — symbole, logotype, signature SDLSIT Group
+   Plan :
+   1. Symbole « G » vectoriel (viewBox 0 0 512 512) recréé d'après les affiches : anneau + hampe marine,
+      glaçon en verre (faces en retrait = arêtes en réserve), vague bleue, feuille verte.
+   2. Couleurs pilotées par des variables (--lg-*) : une seule structure SVG pour fond clair (.brand-logo),
+      fond marine (.brand-logo--white / .section--dark) et monochrome (.brand-mark--mono).
+   3. Logotype en vrai texte (Barlow Condensed 800) : le « A » porte la vague bleue des affiches.
+   4. Mouvement 100 % CSS, toujours depuis un état visible : survol (feuille qui ondule, éclat sur le glaçon,
+      reflet sur la vague) et intro optionnelle .brand-mark--draw / .brand-logo--draw (tracé du G façon After Effects).
+   5. Groupes .lg-g, .lg-cube, .lg-wave, .lg-leaf exposés pour GSAP (DrawSVG, from…) : aucune transition CSS
+      sur leurs transforms pour ne pas lutter avec GSAP. prefers-reduced-motion : aucune animation.
+   ========================================================================== */
+
+/* ---------- Palette du symbole ---------- */
+/* Déclarée sur le logo complet, ou sur le symbole seul (le symbole d'un logo hérite de son parent). */
+.brand-logo,
+.brand-mark:not(.brand-logo__mark) {
+  --lg-g: var(--ink-900, #0a1f44);
+  --lg-wave: var(--blue-600, #1563d6);
+  --lg-wave-hi: #3d8ff0;
+  --lg-top: #f3faff;
+  --lg-left: #a3d2f6;
+  --lg-right: #d4ecfd;
+  --lg-facet-o: 1;
+  --lg-edge: #1f6fd6;
+  --lg-edge-o: 1;
+  --lg-leaf: #16935a;
+  --lg-vein: #6fd39a;
+  --lg-glint: var(--blue-400, #4d9bff);
+  /* logotype */
+  --lg-name: var(--ink-900, #0a1f44);
+  --lg-name-wave: var(--blue-600, #1563d6);
+  --lg-tag: var(--ink-900, #0a1f44);
+  --lg-tag-accent: var(--blue-600, #1563d6);
+  --lg-rule: rgba(21, 99, 214, 0.55);
+}
+
+/* Fond marine : G blanc, glaçon lumineux, arêtes en réserve (comme l'affiche « Des solutions de glace ») */
+.brand-logo--white,
+.brand-mark--white,
+.section--dark .brand-logo:not(.brand-logo--color),
+.section--dark .brand-mark:not(.brand-logo__mark):not(.brand-mark--color):not(.brand-mark--mono) {
+  --lg-g: #ffffff;
+  --lg-wave: #2f8cf2;
+  --lg-wave-hi: #6db3ff;
+  --lg-top: #ffffff;
+  --lg-left: #8ecfff;
+  --lg-right: #c6e8ff;
+  --lg-edge-o: 0;
+  --lg-leaf: #39a85b;
+  --lg-vein: #9be3b6;
+  --lg-glint: #ffffff;
+  --lg-name: #ffffff;
+  --lg-name-wave: #2f8cf2;
+  --lg-tag: #ffffff;
+  --lg-tag-accent: var(--ice-300, #8ecfff);
+  --lg-rule: rgba(142, 207, 255, 0.6);
+}
+
+.brand-mark { display: block; width: var(--brand-mark-size, 3rem); height: auto; aspect-ratio: 1; overflow: visible; }
+.brand-mark .lg-g { fill: var(--lg-g); }
+.brand-mark .lg-wave { fill: var(--lg-wave); }
+.brand-mark .lg-wave__hi { fill: var(--lg-wave-hi); }
+.brand-mark .lg-cube__face--top { fill: var(--lg-top); }
+.brand-mark .lg-cube__face--left { fill: var(--lg-left); }
+.brand-mark .lg-cube__face--right { fill: var(--lg-right); }
+.brand-mark .lg-cube__facet { opacity: calc(var(--lg-facet-o) * 0.9); }
+.brand-mark .lg-cube__edges { stroke: var(--lg-edge); stroke-opacity: var(--lg-edge-o); }
+.brand-mark .lg-leaf__blade { fill: var(--lg-leaf); }
+.brand-mark .lg-leaf__vein { fill: var(--lg-vein); }
+.brand-mark .lg-glint { fill: var(--lg-glint); opacity: 0; }
+.brand-mark :is(.lg-g, .lg-wave, .lg-cube__face, .lg-leaf__blade) { transition: fill 0.45s var(--ease-out, ease); }
+.brand-mark .lg-cube__edges { transition: stroke-opacity 0.45s var(--ease-out, ease); }
+
+/* Monochrome (une couleur : currentColor) — arêtes, réserves et creux restent transparents */
+.brand-mark--mono { --lg-facet-o: 0; --lg-edge-o: 0; }
+.brand-mark--mono :is(.lg-g, .lg-wave, .lg-cube__face, .lg-leaf__blade) { fill: currentColor; }
+.brand-mark--mono :is(.lg-wave__hi, .lg-leaf__vein) { display: none; }
+
+/* ---------- Logotype horizontal (en-tête) ---------- */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: var(--brand-size, clamp(1.45rem, 1.1rem + 1vw, 1.85rem)); /* taille du nom ; tout le reste est en em */
+  color: var(--lg-name);
+  line-height: 1;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.brand-logo .brand-logo__mark { width: 1.82em; flex: none; margin-block: -0.08em; }
+.brand-logo__word { display: inline-flex; flex-direction: column; align-items: stretch; transform: translateY(0.07em); }
+.brand-logo__name {
+  display: block;
+  font-family: var(--font-display, 'Barlow Condensed', 'Arial Narrow', sans-serif);
+  font-weight: 800;
+  font-size: 1em;
+  line-height: 0.8;
+  letter-spacing: 0.006em;
+  text-transform: uppercase;
+  color: var(--lg-name);
+  transition: color 0.45s var(--ease-out, ease);
+}
+/* La vague bleue posée sur le « A » (remplace sa barre, comme sur les affiches) */
+.brand-logo__wave {
+  display: inline-block;
+  vertical-align: baseline;
+  width: 0.65em;
+  height: 0.26em;
+  margin: 0 -0.072em 0.07em -0.584em;
+  overflow: visible;
+  fill: var(--lg-name-wave);
+  transition: fill 0.45s var(--ease-out, ease);
+}
+.brand-logo__tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+  font-family: var(--font-body, 'Barlow', 'Segoe UI', sans-serif);
+  font-weight: 600;
+  font-size: 0.25em;
+  line-height: 1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--lg-tag);
+  transition: color 0.45s var(--ease-out, ease);
+}
+.brand-logo__tag::before {
+  content: '';
+  flex: 1 1 0;
+  min-width: 0.8em;
+  height: max(1px, 0.12em);
+  background: var(--lg-rule);
+  border-radius: 1px;
+}
+.brand-logo__tag-text { margin-right: -0.17em; } /* compense l'espacement après la dernière lettre */
+.brand-logo__tag b { font-weight: 700; color: var(--lg-tag-accent); transition: color 0.45s var(--ease-out, ease); }
+
+/* Variante compacte : le nom seul à côté du symbole (en-tête réduit au défilement, mobile très étroit) */
+.brand-logo--compact .brand-logo__tag { display: none; }
+.brand-logo--compact .brand-logo__word { transform: translateY(0.02em); }
+.brand-logo--compact .brand-logo__mark { width: 1.5em; }
+
+/* Variante verticale (pied de page, écran de chargement) : symbole au-dessus, nom centré */
+.brand-logo--stacked { flex-direction: column; gap: 0.32em; }
+.brand-logo--stacked .brand-logo__mark { width: 2.9em; margin: 0; }
+.brand-logo--stacked .brand-logo__word { transform: none; align-items: center; }
+.brand-logo--stacked .brand-logo__tag::after { content: ''; flex: 1 1 0; min-width: 0.8em; height: max(1px, 0.12em); background: var(--lg-rule); border-radius: 1px; }
+.brand-logo--stacked .brand-logo__tag { align-self: stretch; }
+
+/* ---------- Signature SDLSIT Group ---------- */
+.brand-sdlsit {
+  --sdl-1: #12306b;
+  --sdl-2: #1563d6;
+  --sdl-3: #0f8a5f;
+  --sdl-ink: var(--ink-900, #0a1f44);
+  --sdl-muted: var(--text-muted, #45597c);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--sdlsit-size, 1rem);
+  color: var(--sdl-ink);
+  line-height: 1;
+  white-space: nowrap;
+}
+.brand-sdlsit--white,
+.section--dark .brand-sdlsit:not(.brand-sdlsit--color) {
+  --sdl-1: #ffffff;
+  --sdl-2: #bfe4ff;
+  --sdl-3: #4fb3ff;
+  --sdl-ink: #ffffff;
+  --sdl-muted: var(--text-on-dark-muted, #a9c3e6);
+}
+.brand-sdlsit__kicker {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 700;
+  font-size: 0.82em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sdl-ink);
+}
+.brand-sdlsit__lockup { display: inline-flex; align-items: center; gap: 0.75em; }
+.brand-sdlsit__symbol {
+  width: 4.4em;
+  height: 2.2em;
+  flex: none;
+  background: linear-gradient(90deg, var(--sdl-1) 8%, var(--sdl-2) 52%, var(--sdl-3) 88%);
+  -webkit-mask: var(--sdlsit-infinity) center / contain no-repeat;
+  mask: var(--sdlsit-infinity) center / contain no-repeat;
+  --sdlsit-infinity: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Cpath d='M87.7 38.3 76.4 27.5A31 31 0 1 0 76.4 72.5L123.6 27.5A31 31 0 1 1 123.6 72.5L112.3 61.7' fill='none' stroke='%23000' stroke-width='24'/%3E%3C/svg%3E");
+}
+.brand-sdlsit__text { display: inline-flex; flex-direction: column; align-items: stretch; gap: 0.32em; }
+.brand-sdlsit__name {
+  font-family: var(--font-body, 'Barlow', sans-serif);
+  font-weight: 600;
+  font-size: 1.55em;
+  letter-spacing: 0.2em;
+  margin-right: -0.2em;
+  text-transform: uppercase;
+  color: var(--sdl-ink);
+}
+.brand-sdlsit__group {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  font-family: var(--font-body, 'Barlow', sans-serif);
+  font-weight: 600;
+  font-size: 0.6em;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--sdl-muted);
+}
+.brand-sdlsit__group::before,
+.brand-sdlsit__group::after { content: ''; flex: 1 1 0; min-width: 1em; height: max(1px, 0.1em); background: currentColor; opacity: 0.7; }
+.brand-sdlsit__group span { margin-right: -0.32em; }
+.brand-sdlsit--inline { flex-direction: row; gap: 0.9em; }
+@media (forced-colors: active) {
+  .brand-sdlsit__symbol { background: CanvasText; forced-color-adjust: none; }
+}
+
+/* ---------- Mouvement : survol ---------- */
+/* Origines exprimées dans le repère du viewBox (512) : base de la feuille, sommet du glaçon */
+.brand-mark :is(.lg-leaf__blade, .lg-leaf__vein) { transform-box: view-box; transform-origin: 392px 200px; }
+.brand-mark .lg-glint { transform-box: view-box; transform-origin: 254px 258px; }
+.brand-mark .lg-wave__hi { transform-box: view-box; transform-origin: 120px 360px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(a, button):is(:hover, :focus-visible) .brand-mark .lg-leaf__blade,
+  :is(a, button):is(:hover, :focus-visible) .brand-mark .lg-leaf__vein,
+  .brand-logo:hover .lg-leaf__blade,
+  .brand-logo:hover .lg-leaf__vein,
+  .brand-mark:hover .lg-leaf__blade,
+  .brand-mark:hover .lg-leaf__vein { animation: brand-leaf-sway 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+  :is(a, button):is(:hover, :focus-visible) .brand-mark .lg-glint,
+  .brand-logo:hover .lg-glint,
+  .brand-mark:hover .lg-glint { animation: brand-glint 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+
+  :is(a, button):is(:hover, :focus-visible) .brand-mark .lg-wave__hi,
+  .brand-logo:hover .lg-wave__hi,
+  .brand-mark:hover .lg-wave__hi { animation: brand-wave-shine 1.4s cubic-bezier(0.65, 0, 0.35, 1) both; }
+
+  :is(a, button):is(:hover, :focus-visible) .brand-logo__wave,
+  .brand-logo:hover .brand-logo__wave { animation: brand-name-wave 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+}
+@keyframes brand-leaf-sway {
+  0% { transform: rotate(0deg); }
+  30% { transform: rotate(-14deg) scale(1.06); }
+  60% { transform: rotate(6deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes brand-glint {
+  0% { opacity: 0; transform: scale(0.2) rotate(-45deg); }
+  35% { opacity: 1; transform: scale(1.15) rotate(0deg); }
+  100% { opacity: 0; transform: scale(0.4) rotate(35deg); }
+}
+@keyframes brand-wave-shine {
+  0% { opacity: 0.55; transform: translateX(0); }
+  45% { opacity: 1; transform: translateX(14px); }
+  100% { opacity: 0.55; transform: translateX(0); }
+}
+@keyframes brand-name-wave {
+  0% { transform: translateX(0); }
+  35% { transform: translateX(0.04em) scaleX(1.08); }
+  100% { transform: translateX(0); }
+}
+
+/* ---------- Mouvement : intro optionnelle (ajoutez .brand-mark--draw sur le SVG ou .brand-logo--draw sur le logo) ----------
+   Séquence : le contour du G se trace (comme DrawSVG), la matière marine envahit la lettre, le glaçon tombe et se pose,
+   la vague balaie de gauche à droite, la feuille éclot, un éclat de givre traverse le glaçon. Durée ≈ 2,4 s.
+   Délai réglable : --brand-intro-delay. */
+@media (prefers-reduced-motion: no-preference) {
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-g path {
+    stroke: var(--lg-g);
+    stroke-width: 3;
+    stroke-dasharray: var(--len, 1500) var(--len, 1500);
+    animation: brand-draw 1.3s cubic-bezier(0.65, 0, 0.35, 1) var(--brand-intro-delay, 0s) both,
+      brand-flood 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 0.95s) both;
+  }
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-g__body { animation-delay: calc(var(--brand-intro-delay, 0s) + 0.15s), calc(var(--brand-intro-delay, 0s) + 1.05s); }
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-cube {
+    transform-box: view-box; transform-origin: 254px 330px;
+    animation: brand-cube-drop 1s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--brand-intro-delay, 0s) + 0.85s) both;
+  }
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-wave { animation: brand-wave-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 1.15s) both; }
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-leaf {
+    transform-box: view-box; transform-origin: 392px 200px;
+    animation: brand-leaf-in 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--brand-intro-delay, 0s) + 1.5s) both;
+  }
+  :is(.brand-mark--draw, .brand-logo--draw .brand-mark) .lg-glint { animation: brand-glint 1.1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 1.9s) both; }
+  .brand-logo--draw .brand-logo__name { animation: brand-rise 1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 0.9s) both; }
+  .brand-logo--draw .brand-logo__wave { animation: brand-wave-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 1.4s) both; }
+  .brand-logo--draw .brand-logo__tag { animation: brand-rise 1s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--brand-intro-delay, 0s) + 1.2s) both; }
+}
+@keyframes brand-draw { from { stroke-dashoffset: var(--len, 1500); } to { stroke-dashoffset: 0; } }
+@keyframes brand-flood { from { fill-opacity: 0; } to { fill-opacity: 1; stroke-opacity: 0; } }
+@keyframes brand-cube-drop {
+  0% { opacity: 0; transform: translateY(-70px) rotate(-8deg) scale(0.85); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes brand-wave-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes brand-leaf-in { from { opacity: 0; transform: scale(0) rotate(-40deg); } to { opacity: 1; transform: none; } }
+@keyframes brand-rise { from { opacity: 0; transform: translateY(0.35em); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(-0.2em -0.2em -0.2em -0.2em); } }

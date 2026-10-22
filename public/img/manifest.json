@@ -1,0 +1,181 @@
+{
+  "glacons": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Glaçons cubiques transparents posés sur un fond bleu profond, en lumière rasante",
+    "credit": "Ting lee — Unsplash",
+    "source": "https://unsplash.com/photos/clear-ice-cubes-casting-shadows-on-a-deep-blue-background-YBTEMvm85qI"
+  },
+  "gobelet": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Gobelet transparent rempli de glaçons, avec feuilles de menthe et paille",
+    "credit": "Kunal Lakhotia — Pexels",
+    "source": "https://www.pexels.com/photo/refreshing-cold-drink-with-mint-garnish-28944486/"
+  },
+  "barres": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Pains de glace rectangulaires empilés sur un quai de chargement",
+    "credit": "baolong thai — Pexels",
+    "source": "https://www.pexels.com/photo/man-unloading-ice-blocks-at-a-fish-market-26728029/"
+  },
+  "pilee": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Glace pilée en gros plan, fragments cristallins aux reflets bleutés",
+    "credit": "Andre Moura — Pexels",
+    "source": "https://www.pexels.com/photo/hole-with-crushed-ice-20312243/"
+  },
+  "carboglace": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Glace carbonique dégageant une épaisse brume blanche sur fond noir",
+    "credit": "cottonbro studio — Pexels",
+    "source": "https://www.pexels.com/photo/white-smoke-in-a-glass-container-against-black-background-9694195/"
+  },
+  "sac-glaceur": {
+    "w": 960,
+    "h": 1200,
+    "widths": [
+      480,
+      960
+    ],
+    "alt": "Sac de glaçons alimentaires siglé Le Glaceur",
+    "credit": "Le Glaceur — affiche officielle",
+    "source": "Affiche officielle Le Glaceur (fournie par le client)"
+  },
+  "usage-cocktail": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Mojito servi sur glace pilée, avec citron vert et menthe fraîche",
+    "credit": "Aram Diseño — Pexels",
+    "source": "https://www.pexels.com/photo/close-up-shot-of-ice-in-the-drinking-glass-7259044/"
+  },
+  "usage-whisky": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Whisky versé sur un gros glaçon dans un verre bas",
+    "credit": "Adam Jaime — Unsplash",
+    "source": "https://unsplash.com/photos/amber-cocktail-pouring-over-ice-dmkmrNptMpw"
+  },
+  "usage-poisson": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Poissons frais disposés sur un lit de glace pilée",
+    "credit": "Engin Akyurt — Pexels",
+    "source": "https://www.pexels.com/photo/fish-in-a-refrigerator-19789770/"
+  },
+  "usage-event": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Seau à champagne rempli de glaçons et de bouteilles lors d’une réception",
+    "credit": "Sven Mieke — Unsplash",
+    "source": "https://unsplash.com/photos/gray-steel-tray-with-bottles-fhiLkn5jjCk"
+  },
+  "usage-jus": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Trois boissons fraîches aux fruits servies avec des glaçons, vues de dessus",
+    "credit": "Roman Odintsov — Pexels",
+    "source": "https://www.pexels.com/photo/cold-drinks-on-glass-5836845/"
+  },
+  "usage-restaurant": {
+    "w": 1600,
+    "h": 1067,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Barman mélangeant une boisson sur glace au comptoir d’un bar",
+    "credit": "Yuri Barreto — Pexels",
+    "source": "https://www.pexels.com/photo/a-person-stirring-a-cocktail-drink-9319210/"
+  },
+  "eau-pure": {
+    "w": 1600,
+    "h": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Goutte d’eau pure formant des ondes concentriques",
+    "credit": "David Becker — Unsplash",
+    "source": "https://unsplash.com/photos/water-ripple-effect-rrfdqjJWwmU"
+  },
+  "texture-glace": {
+    "w": 1600,
+    "h": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Glace bleue en gros plan, parcourue de fissures blanches et de bulles d’air",
+    "credit": "Justin Kauffman — Unsplash",
+    "source": "https://unsplash.com/photos/cracked-blue-ice-texture-kBO-sBhf_I8"
+  },
+  "abidjan": {
+    "w": 1600,
+    "h": 900,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Les tours du Plateau, à Abidjan, vues depuis la lagune Ébrié",
+    "credit": "Shane Ryan Herilalaina — Unsplash",
+    "source": "https://unsplash.com/photos/distant-cityscape-across-water-under-a-blue-sky-ir5PK5Itae0"
+  }
+}
