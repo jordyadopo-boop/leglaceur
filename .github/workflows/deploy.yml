@@ -16,6 +16,8 @@ concurrency:
 
 jobs:
   build:
+    # Un commit dont le message contient « [wip] » est sauvegardé sans être mis en ligne.
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[wip]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
