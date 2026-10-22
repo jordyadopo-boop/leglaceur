@@ -1,0 +1,61 @@
+<!-- Page 404 (agent chrome) : « Cette page a fondu. » Styles : src/styles/modules/pages.css (.page-404) · Animation : src/js/modules/notfound.js
+     Liens absolus {{base}} (la page peut être servie depuis n'importe quelle URL). Sans JS : glaçon à moitié fondu, immobile. -->
+<section class="page-404" data-module="notfound" aria-labelledby="nf-title">
+  <div class="page-404__bg" aria-hidden="true">
+    <span class="page-404__orb page-404__orb--a"></span>
+    <span class="page-404__orb page-404__orb--b"></span>
+  </div>
+  <div class="container page-404__inner">
+    <div class="page-404__scene" data-nf-scene>
+      <p class="page-404__code" aria-hidden="true">404</p>
+      <svg class="page-404__svg" viewBox="0 0 320 260" role="img" aria-label="Un glaçon qui fond en flaque" focusable="false">
+        <defs>
+          <linearGradient id="nf-top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3f3ff"/></linearGradient>
+          <linearGradient id="nf-left" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe4ff"/><stop offset="1" stop-color="#7fbdf0"/></linearGradient>
+          <linearGradient id="nf-right" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f3ff"/><stop offset="1" stop-color="#a9d6fb"/></linearGradient>
+          <radialGradient id="nf-puddle" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#d6eeff"/><stop offset=".7" stop-color="#a9d6fb" stop-opacity=".75"/><stop offset="1" stop-color="#8ecfff" stop-opacity=".15"/></radialGradient>
+          <clipPath id="nf-puddle-clip"><ellipse data-nf-clip cx="160" cy="216" rx="112" ry="18.2"/></clipPath>
+        </defs>
+        <g class="page-404__puddle">
+          <ellipse class="page-404__shadow" cx="160" cy="220" rx="112" ry="18.2" data-nf-shadow/>
+          <ellipse class="page-404__water" cx="160" cy="216" rx="112" ry="18.2" data-nf-puddle/>
+          <g clip-path="url(#nf-puddle-clip)"><use href="#nf-cube" class="page-404__reflect" transform="translate(0 428) scale(1 -1)"/></g>
+          <ellipse class="page-404__ripple" cx="160" cy="216" rx="20" ry="4" data-nf-ripple/>
+          <ellipse class="page-404__ripple" cx="160" cy="216" rx="20" ry="4" data-nf-ripple/>
+          <ellipse class="page-404__hi" cx="120.80000000000001" cy="211.45" rx="33.6" ry="4.004" data-nf-hi/>
+        </g>
+        <g class="page-404__cube" id="nf-cube">
+          <path class="page-404__face page-404__face--left" d="M89.4 181.7 L160 214 L160 168.3 Q160 158.2 145.9 150.9 L111.8 133.3 Q97.7 126 96.2 136.1 Q86.8 153.8 89.4 181.7Z" data-nf-left/>
+          <path class="page-404__face page-404__face--right" d="M230.6 181.7 L160 214 L160 168.3 Q160 158.2 174.1 150.9 L208.2 133.3 Q222.3 126 223.8 136.1 Q233.2 153.8 230.6 181.7Z" data-nf-right/>
+          <path class="page-404__face page-404__face--top" d="M111.8 120.4 Q97.7 126 111.8 133.3 L145.9 150.9 Q160 158.2 174.1 150.9 L208.2 133.3 Q222.3 126 208.2 120.4 L174.1 106.9 Q160 101.3 145.9 106.9 Z" data-nf-top/>
+          <path class="page-404__shine" d="M116.4 122.6 L175.6 113.4" data-nf-shine/>
+          <path class="page-404__edge" d="M160 161.2 L160 211" data-nf-edge/>
+        </g>
+        <g class="page-404__drops"><circle r="3.2" cx="150" cy="190" data-nf-drop/><circle r="2.6" cx="182" cy="180" data-nf-drop/></g>
+        <g class="page-404__sparks" data-nf-sparks>
+          <path d="M100 96l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
+          <path d="M226 110l2.4 5.6 5.6 2.4-5.6 2.4-2.4 5.6-2.4-5.6-5.6-2.4 5.6-2.4z"/>
+          <path d="M168 70l2 4.6 4.6 2-4.6 2-2 4.6-2-4.6-4.6-2 4.6-2z"/>
+        </g>
+      </svg>
+      <p class="page-404__hint" data-nf-hint hidden>Touchez le glaçon pour le regeler</p>
+    </div>
+
+    <div class="page-404__text">
+      <p class="eyebrow">Erreur 404</p>
+      <h1 class="page-404__title" id="nf-title">Cette page <span class="ice-text">a fondu.</span></h1>
+      <p class="lead">La page que vous cherchez n’existe pas ou a changé d’adresse. Rassurez-vous&nbsp;: nos glaçons, eux, restent bien au frais.</p>
+      <div class="page-404__actions">
+        <a class="btn btn--lg" href="{{base}}">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg>
+          <span>Retour à l’accueil</span>
+        </a>
+        <a class="btn btn--lg btn--glass" href="{{base}}devis.html">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6a1 1 0 0 1 1 1v1.5H8V4a1 1 0 0 1 1-1z"/><path d="M16 5h1.6A2.4 2.4 0 0 1 20 7.4v11.2a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 18.6V7.4A2.4 2.4 0 0 1 6.4 5H8"/><path d="M8.5 11.5h7M8.5 15.5h4.5"/></svg>
+          <span>Faire mon devis</span>
+        </a>
+      </div>
+      <p class="page-404__more"><a class="link-arrow" href="{{base}}guide.html">Découvrir le guide des glaces <span aria-hidden="true">→</span></a></p>
+    </div>
+  </div>
+</section>
