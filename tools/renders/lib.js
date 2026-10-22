@@ -164,7 +164,7 @@ export function buildEnvironment(renderer, opts = {}) {
 /* ------------------------------------------------------------------ décor */
 
 /** Mur de fond : dégradé marine + halo froid (émissif, non éclairé). */
-export function buildBackdrop({ haloPos = [0.5, 0.42], haloSize = 0.55, top = '#020816', mid = '#06183a', halo = '#2a6cc0', glow = 0.5 } = {}) {
+export function buildBackdrop({ haloPos = [0.5, 0.42], haloSize = 0.55, top = '#01050f', mid = '#071a3e', halo = '#2a6cc0', glow = 0.5 } = {}) {
   const mat = new THREE.ShaderMaterial({
     uniforms: {
       cTop: { value: new THREE.Color(top) },
@@ -178,7 +178,7 @@ export function buildBackdrop({ haloPos = [0.5, 0.42], haloSize = 0.55, top = '#
     fragmentShader: /* glsl */ `
       uniform vec3 cTop, cMid, cHalo; uniform vec2 haloPos; uniform float haloSize, glow; varying vec2 vUv;
       void main(){
-        vec3 c = mix(cMid, cTop, smoothstep(0.15, 1.0, vUv.y));
+        vec3 c = mix(cMid, cTop, smoothstep(0.2, 0.9, vUv.y));
         vec2 d = (vUv - haloPos) * vec2(1.0, 1.25);
         float r = length(d) / haloSize;
         c += cHalo * glow * (exp(-r*r*2.2) * 0.9 + exp(-r*r*0.6) * 0.25);
@@ -192,7 +192,7 @@ export function buildBackdrop({ haloPos = [0.5, 0.42], haloSize = 0.55, top = '#
 }
 
 /** Sol mouillé : PBR sombre + vernis + réflexion miroir injectée (floue, ondulée). */
-export function buildFloor({ size = 200, color = '#040e22', seed = 3, puddle = 0.7 } = {}) {
+export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0.7 } = {}) {
   const N = 1024;
   // micro-relief + flaques
   const hFine = fbm(N, N, { cells: 48, octaves: 4, seed });
@@ -201,7 +201,7 @@ export function buildFloor({ size = 200, color = '#040e22', seed = 3, puddle = 0
   const ripple = new Float32Array(N * N);
   for (let i = 0; i < N * N; i++) {
     const wet = THREE.MathUtils.smoothstep(pud[i], 0.35, 0.6);
-    rough[i] = THREE.MathUtils.lerp(0.3, 0.08, wet * puddle + (1 - puddle) * 0.4);
+    rough[i] = THREE.MathUtils.lerp(0.2, 0.1, wet * puddle + (1 - puddle) * 0.4);
     ripple[i] = hFine[i] * (1 - wet * 0.85);
   }
   const normal = heightToNormal(ripple, N, N, 3.0);
@@ -212,8 +212,8 @@ export function buildFloor({ size = 200, color = '#040e22', seed = 3, puddle = 0
     roughness: 1, roughnessMap: rmap,
     metalness: 0,
     normalMap: normal, normalScale: new THREE.Vector2(0.25, 0.25),
-    clearcoat: 0.6, clearcoatRoughness: 0.12,
-    envMapIntensity: 0.3,
+    specularIntensity: 0.5,
+    envMapIntensity: 0.22,
   });
   [normal, rmap].forEach((t) => t.repeat.set(size / 6, size / 6));
   const uniforms = {
@@ -225,7 +225,7 @@ export function buildFloor({ size = 200, color = '#040e22', seed = 3, puddle = 0
     reflDistort: { value: 0.006 },
     fadeCenter: { value: new THREE.Vector2(0, 0) },
     fadeRadius: { value: 14 },
-    fogColor: { value: new THREE.Color('#06183a') },
+    fogColor: { value: new THREE.Color('#071a3e') },
     fogFar: { value: 30 },
   };
   mat.onBeforeCompile = (sh) => {

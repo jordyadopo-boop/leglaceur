@@ -70,12 +70,13 @@ function internals({ L, S, seed }) {
   const tex = coreTexture(seed);
   const coreMat = new THREE.MeshBasicMaterial({
     map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide,
-    color: new THREE.Color(0.8, 0.88, 1.0), opacity: 0.5,
+    color: new THREE.Color(0.8, 0.88, 1.0), opacity: 0.42,
   });
   const p1 = new THREE.Mesh(new THREE.PlaneGeometry(L * 0.86, S * 0.78), coreMat);
   const p2 = new THREE.Mesh(new THREE.PlaneGeometry(L * 0.86, S * 0.7), coreMat.clone());
   p2.material.map = coreTexture(seed + 50, { density: 0.7 });
   p2.rotation.x = Math.PI / 2;
+  p2.material.opacity = 0.22;
   grp.add(p1, p2);
   // bulles
   const nB = 420;
@@ -138,7 +139,7 @@ function floorDrops(seed, area) {
       const rad = a.r0 + Math.pow(r(), 2.2) * a.r1;
       const ang = r() * Math.PI * 2, dist = Math.sqrt(r()) * a.spread;
       d.position.set(a.x + Math.cos(ang) * dist, 0, a.z + Math.sin(ang) * dist * 0.8);
-      d.scale.set(rad * (1 + r() * 0.8), rad * 0.32, rad * (1 + r() * 0.3));
+      d.scale.set(rad * (1 + r() * 0.8), rad * 0.22, rad * (1 + r() * 0.3));
       d.rotation.y = r() * Math.PI;
       grp.add(d);
     }
@@ -182,7 +183,7 @@ export default async function render({ w, h, variant = 0 }) {
 
   // lumières
   const key = new THREE.DirectionalLight(0xeef6ff, 2.4);
-  key.position.set(-6, 11, 7);
+  key.position.set(-7, 12, 1);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.camera.left = -7; key.shadow.camera.right = 7; key.shadow.camera.top = 7; key.shadow.camera.bottom = -7;
@@ -234,9 +235,9 @@ export default async function render({ w, h, variant = 0 }) {
   }
 
   // glaçons au premier plan
-  const c1 = cube(0.42, 101); c1.position.set(2.25, 0.21, 2.55); c1.rotation.set(0, 0.5, 0);
-  const c2 = cube(0.36, 102); c2.position.set(2.85, 0.18, 1.85); c2.rotation.set(0, -0.3, 0);
-  const c3 = cube(0.34, 103); c3.position.set(-2.35, 0.17, 2.75); c3.rotation.set(0, 0.9, 0);
+  const c1 = cube(0.5, 101); c1.position.set(2.25, 0.21, 2.55); c1.rotation.set(0, 0.5, 0);
+  const c2 = cube(0.45, 102); c2.position.set(2.85, 0.18, 1.85); c2.rotation.set(0, -0.3, 0);
+  const c3 = cube(0.42, 103); c3.position.set(-2.35, 0.17, 2.75); c3.rotation.set(0, 0.9, 0);
   studio.addLayer([c2], { name: 'glaçon 2' });
   studio.addLayer([c1, c3], { name: 'glaçons' });
 
