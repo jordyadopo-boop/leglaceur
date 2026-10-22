@@ -257,7 +257,10 @@ export function createVeil(canvas) {
     resize();
   } catch (err) {
     if (import.meta.env.DEV) console.warn('[fx-ambient] voile WebGL indisponible', err);
-    return createVeil2D(canvas);
+    // Un canvas qui a déjà un contexte WebGL ne peut plus fournir de contexte 2D : on le remplace.
+    const fresh = canvas.cloneNode(false);
+    canvas.replaceWith(fresh);
+    return createVeil2D(fresh);
   }
 
   return {
