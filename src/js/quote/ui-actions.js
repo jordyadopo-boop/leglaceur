@@ -292,7 +292,7 @@ export function initActions(root, { client, drawer, items }) {
     if (busy || !validate()) return;
     const q = quoteData();
     webhook(q);
-    setBusy(btn, kind === 'pdf' ? 'Génération du PDF…' : 'Génération de l’Excel…');
+    setBusy(btn, { pdf: 'Génération du PDF…', xlsx: 'Génération de l’Excel…', png: 'Génération de l’image…' }[kind]);
     try {
       if (kind === 'pdf') {
         const pdf = await pdfFor(q);
@@ -300,10 +300,10 @@ export function initActions(root, { client, drawer, items }) {
         toast(`Devis PDF téléchargé : ${pdf.name}`);
       } else {
         const docs = await loadDocs();
-        const blob = await docs.createXlsx(q);
-        const name = docs.quoteFileName(q, 'xlsx');
+        const blob = await (kind === 'png' ? docs.createImage(q) : docs.createXlsx(q));
+        const name = docs.quoteFileName(q, kind);
         download(blob, name);
-        toast(`Devis Excel téléchargé : ${name}`);
+        toast(`Devis ${kind === 'png' ? 'en image' : 'Excel'} téléchargé : ${name}`);
       }
     } catch (err) {
       docsError(err);
@@ -352,6 +352,7 @@ export function initActions(root, { client, drawer, items }) {
     else if (a === 'share') sharePdf(btn);
     else if (a === 'pdf') downloadDoc(btn, 'pdf');
     else if (a === 'xlsx') downloadDoc(btn, 'xlsx');
+    else if (a === 'png') downloadDoc(btn, 'png');
     else if (a === 'reset') toggleReset(resetBox.hidden);
     else if (a === 'reset-no') { toggleReset(false); resetBtn.focus({ preventScroll: true }); }
     else if (a === 'reset-yes') doReset();
