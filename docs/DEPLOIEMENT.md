@@ -11,23 +11,31 @@ Si l'adresse ne répond pas après le premier déploiement : **Settings → Page
 
 ## 2. Brancher le domaine www.leglaceur.ci
 
-1. Créez le fichier `public/CNAME` contenant uniquement :
-   ```
-   www.leglaceur.ci
-   ```
-   (le workflow construit alors le site pour la racine du domaine).
-2. Chez le gestionnaire du domaine `.ci`, configurez le DNS :
+> Au 22/10/2026, **leglaceur.ci n'est pas enregistré** (le registre NIC.CI répond « domaine inexistant »).
+> Il faut d'abord l'acheter.
+
+1. **Enregistrer le domaine** `leglaceur.ci` auprès d'un bureau d'enregistrement agréé par NIC.CI
+   (liste officielle sur https://www.nic.ci). Gardez l'accès à la gestion DNS du domaine.
+2. **Configurer le DNS** chez ce bureau d'enregistrement :
 
    | Type  | Nom | Valeur |
    |-------|-----|--------|
-   | CNAME | www | `<compte>.github.io.` |
+   | CNAME | www | `jordyadopo-boop.github.io.` |
    | A     | @   | 185.199.108.153 |
    | A     | @   | 185.199.109.153 |
    | A     | @   | 185.199.110.153 |
    | A     | @   | 185.199.111.153 |
+   | AAAA  | @   | 2606:50c0:8000::153 |
+   | AAAA  | @   | 2606:50c0:8001::153 |
+   | AAAA  | @   | 2606:50c0:8002::153 |
+   | AAAA  | @   | 2606:50c0:8003::153 |
 
-3. Sur GitHub : **Settings → Pages → Custom domain : `www.leglaceur.ci`** (le fichier `public/CNAME` le renseigne aussi automatiquement), puis cochez **Enforce HTTPS** une fois le certificat émis
-   (quelques minutes à quelques heures après la propagation DNS).
+   Avec ces enregistrements, `leglaceur.ci` redirige automatiquement vers `www.leglaceur.ci`.
+3. **Activer le domaine dans le site** : créez le fichier `public/CNAME` contenant uniquement `www.leglaceur.ci`, puis poussez sur `main`.
+   Le workflow construit alors le site pour la racine du domaine et GitHub Pages l'adopte comme domaine personnalisé.
+   (Ne le faites qu'une fois le DNS en place : sinon l'adresse github.io redirige vers un domaine qui ne répond pas encore.)
+4. Sur GitHub : **Settings → Pages**, vérifiez que le domaine personnalisé est `www.leglaceur.ci` puis cochez **Enforce HTTPS**
+   dès que le certificat est émis (quelques minutes à quelques heures après la propagation DNS).
 
 ## 3. (Facultatif) Recevoir chaque devis dans un tableur Google Sheets
 
