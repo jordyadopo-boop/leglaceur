@@ -2,7 +2,7 @@ import React from 'react';
 import { Composition, staticFile } from 'remotion';
 import { Main, TOTAL } from './Main';
 import { FPS } from './beat';
-import { POSTER_IDS, PH, PW, Poster } from './posters/Posters';
+import { POSTER_IDS, PH, PW, Poster, SH } from './posters/Posters';
 
 // Polices de la marque (Barlow / Barlow Condensed), chargées depuis public/fonts.
 const faces: [string, string, number][] = [
@@ -22,6 +22,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="Promo" component={Main} durationInFrames={TOTAL} fps={FPS} width={1080} height={1920} defaultProps={{ bgm: true }} />
     {POSTER_IDS.map((id) => (
       <Composition key={id} id={`poster-${id}`} component={Poster} durationInFrames={1} fps={FPS} width={PW} height={PH} defaultProps={{ id }} />
+    ))}
+    {POSTER_IDS.map((id) => (
+      <Composition key={`s-${id}`} id={`story-${id}`} component={Poster} durationInFrames={1} fps={FPS} width={PW} height={SH} defaultProps={{ id, story: true }} />
     ))}
   </>
 );
