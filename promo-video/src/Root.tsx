@@ -3,6 +3,7 @@ import { Composition, staticFile } from 'remotion';
 import { Main, TOTAL } from './Main';
 import { STORIES, Story, storyDuration } from './Stories';
 import { FPS } from './beat';
+import { TH, TUTO_TOTAL, TW, Tutoriel } from './tuto/Tutoriel';
 import { POSTER_IDS, PH, PW, Poster, SH } from './posters/Posters';
 
 // Polices de la marque (Barlow / Barlow Condensed), chargées depuis public/fonts.
@@ -21,6 +22,7 @@ export const RemotionRoot: React.FC = () => (
   <>
     <style>{css}</style>
     <Composition id="Promo" component={Main} durationInFrames={TOTAL} fps={FPS} width={1080} height={1920} defaultProps={{ bgm: true }} />
+    <Composition id="Tutoriel" component={Tutoriel} durationInFrames={TUTO_TOTAL} fps={FPS} width={TW} height={TH} />
     {Object.keys(STORIES).map((id) => (
       <Composition key={`v-${id}`} id={`video-${id}`} component={Story} durationInFrames={storyDuration(id)} fps={FPS} width={1080} height={1920} defaultProps={{ id, bgm: true }} />
     ))}
