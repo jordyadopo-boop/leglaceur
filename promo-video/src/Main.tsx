@@ -45,14 +45,14 @@ const L = beatF;
 const SFX: Cue[] = [
   { f: 'data-scan', at: 2, pk: 0.12, v: 0.5, len: 50 }, // courbe qui démarre
   { f: 'transition-tech', at: L(4) - 4, pk: 0.55, v: 0.45, len: 24 }, // montée vers −18 °C
-  { f: 'glass-break-hammer', at: L(4), pk: 0.02, v: 0.8 }, // impact 1 : fracture
-  { f: 'impact-cine-big', at: L(4), pk: 2.17, v: 0.7, len: 90 },
+  { f: 'glass-break-hammer', at: L(4), pk: 0.02, v: 0.5 }, // impact 1 : fracture
+  { f: 'impact-cine-big', at: L(4), pk: 2.17, v: 0.45, len: 90 },
   { f: 'light-sweep-magic', at: L(8) + 10, pk: 1.55, v: 0.5, len: 60 }, // balayage tagline
   ...[12, 14, 16].map((n) => ({ f: 'transition-tech-slide', at: L(n), pk: 0.12, v: 0.45, len: 30 })), // piliers
   { f: 'wind-woosh-throw', at: L(18), pk: 0.16, v: 0.6 }, // cartes
   ...[23, 24, 25, 26, 27].map((n) => ({ f: 'switch-tap', at: L(n), pk: 0.01, v: 0.55, len: 20 })), // tarifs
-  { f: 'impact-transition', at: L(28), pk: 0.98, v: 0.65, len: 60 }, // impact 2 : carboglace
-  { f: 'bass-hit-short', at: L(28), pk: 0.09, v: 0.6 },
+  { f: 'impact-transition', at: L(28), pk: 0.98, v: 0.45, len: 60 }, // impact 2 : carboglace
+  { f: 'bass-hit-short', at: L(28), pk: 0.09, v: 0.4 },
   { f: 'whoosh-swirl', at: L(29), pk: 1.97, v: 0.45, len: 70 }, // retournement
   ...[32, 33, 34, 35].map((n) => ({ f: 'camera-lens-shutter', at: L(n), pk: 0.03, v: 0.6, len: 25 })), // coupes secteurs
   { f: 'air-zoom-vacuum', at: L(36), pk: 0.45, v: 0.5 }, // tunnel de mots
@@ -66,7 +66,7 @@ const SFX: Cue[] = [
   ...[55, 56].map((n) => ({ f: 'switch-light', at: L(n), pk: 0.07, v: 0.6 })),
   { f: 'power-up-electronic', at: L(57), pk: 0.35, v: 0.4, len: 40 },
   { f: 'water-drop-cave', at: L(58) + 2, pk: 0.07, v: 0.6, len: 40 }, // goutte d'encre
-  { f: 'riser-cine', at: L(60) - 35, pk: 1.17, v: 0.45, len: 70 }, // montée vers l'impact final
+  { f: 'riser-cine', at: L(60) - 35, pk: 1.17, v: 0.35, len: 70 }, // montée vers l'impact final
   { f: 'impact-deep-whoosh', at: L(60), pk: 0.63, v: 0.75, len: 70 }, // impact 3 : CTA
   { f: 'sparkle', at: L(58) + 54, pk: 1.38, v: 0.45, len: 60 }, // éclat du logo
 ];
