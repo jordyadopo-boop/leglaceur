@@ -1,6 +1,7 @@
 import React from 'react';
 import { Composition, staticFile } from 'remotion';
 import { Main, TOTAL } from './Main';
+import { STORIES, Story, storyDuration } from './Stories';
 import { FPS } from './beat';
 import { POSTER_IDS, PH, PW, Poster, SH } from './posters/Posters';
 
@@ -20,6 +21,9 @@ export const RemotionRoot: React.FC = () => (
   <>
     <style>{css}</style>
     <Composition id="Promo" component={Main} durationInFrames={TOTAL} fps={FPS} width={1080} height={1920} defaultProps={{ bgm: true }} />
+    {Object.keys(STORIES).map((id) => (
+      <Composition key={`v-${id}`} id={`video-${id}`} component={Story} durationInFrames={storyDuration(id)} fps={FPS} width={1080} height={1920} defaultProps={{ id, bgm: true }} />
+    ))}
     {POSTER_IDS.map((id) => (
       <Composition key={id} id={`poster-${id}`} component={Poster} durationInFrames={1} fps={FPS} width={PW} height={PH} defaultProps={{ id }} />
     ))}

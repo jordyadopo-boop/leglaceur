@@ -71,8 +71,8 @@ const SFX: Cue[] = [
   { f: 'sparkle', at: L(58) + 54, pk: 1.38, v: 0.45, len: 60 }, // éclat du logo
 ];
 const startOf = (c: Cue) => Math.max(0, Math.round(c.at - c.pk * 30 - 1.28));
-const BGM_FROM = Math.round(61.069 * 30);
-const BGM_VOL = 0.34;
+export const BGM_FROM = Math.round(61.069 * 30);
+export const BGM_VOL = 0.34;
 
 export const Main: React.FC<{ bgm: boolean }> = ({ bgm }) => (
   <AbsoluteFill style={{ background: '#040e24' }}>
