@@ -36,16 +36,16 @@
     "source": "https://www.pexels.com/photo/man-unloading-ice-blocks-at-a-fish-market-26728029/"
   },
   "pilee": {
-    "w": 1600,
-    "h": 2000,
+    "w": 1280,
+    "h": 1600,
     "widths": [
       480,
       960,
-      1600
+      1280
     ],
-    "alt": "Glace pilée en gros plan, fragments cristallins aux reflets bleutés",
-    "credit": "Andre Moura — Pexels",
-    "source": "https://www.pexels.com/photo/hole-with-crushed-ice-20312243/"
+    "alt": "Glace pilée Le Glaceur, fine et neigeuse",
+    "credit": "Le Glaceur — photo fournie par le client",
+    "source": "tools/source/glace-pilee-le-glaceur.jpg"
   },
   "carboglace": {
     "w": 1600,

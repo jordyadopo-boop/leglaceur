@@ -1,0 +1,371 @@
+<!-- Vitrine des produits (agent products). Module : src/js/modules/products.js · Styles : src/styles/modules/products.css
+     Les noms, textes et prix ci-dessous sont générés depuis config.js (PRODUCTS) et revérifiés par le module au chargement :
+     toute modification de config.js (prix, libellé, nouveau produit) est reflétée automatiquement.
+     Grand écran : section épinglée à défilement horizontal (dalles de glace). Mobile / tablette : carrousel tactile scroll-snap. -->
+<section class="products" id="produits" data-module="products" aria-labelledby="produits-title">
+  <div class="products__stage">
+    <div class="products__backdrop" aria-hidden="true">
+      <div class="products__night"></div>
+      <div class="products__shards">
+        <span class="products__shard products__shard--1"></span>
+        <span class="products__shard products__shard--2"></span>
+        <span class="products__shard products__shard--3"></span>
+        <span class="products__shard products__shard--4"></span>
+        <span class="products__shard products__shard--5"></span>
+      </div>
+    </div>
+
+    <div class="products__rail">
+      <header class="products__intro">
+        <p class="eyebrow products__eyebrow">Nos produits</p>
+        <h2 class="products__title" id="produits-title"><span class="products__title-a">Des solutions de glace</span> <span class="products__title-b ice-text">pour tous vos usages</span></h2>
+        <p class="lead products__lead">Tous nos produits sont disponibles, 24h/24 et 7j/7. Choisissez librement la quantité de chaque article&#8239;: votre devis se compose au fil de vos ajouts.</p>
+        <ul class="products__perks" role="list">
+          <li class="products__perk products__perk--hot"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.6" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><span data-free-label>Livraison offerte dès 20 articles</span></li>
+          <li class="products__perk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><span>Retrait gratuit à Abatta</span></li>
+        </ul>
+        <p class="products__hint" aria-hidden="true"><span>Faites défiler</span><svg viewBox="0 0 48 12"><path d="M0 6h44M38 1l6 5-6 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+      </header>
+
+      <div class="products__viewport" data-viewport>
+        <ol class="products__track" role="list" aria-label="Nos produits">
+      <li class="slab" id="produit-glacons" data-product="glacons">
+        <article class="slab__card" data-module="fx-tilt" aria-labelledby="produit-glacons-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="glacons" alt="Glaçons cubiques transparents" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Glaçons alimentaires</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">01</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>01</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-glacons-nom">Glace cubique</h3>
+            <p class="slab__tagline">Fraîcheur longue durée</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="glacons-5kg" data-price-main>750&nbsp;F</span><span class="slab__per" data-price-label>Pack de 5 kg</span></p>
+            </div>
+            <p class="slab__desc">Des glaçons denses, cristallins et 100 % alimentaires. Leur fonte lente permet un refroidissement efficace sans trop diluer vos boissons.</p>
+            <div class="slab__more" id="produit-glacons-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Boissons</li>
+                  <li>Cocktails</li>
+                  <li>Jus</li>
+                  <li>Restaurants</li>
+                  <li>Événements</li>
+                  <li>Usage domestique</li>
+                </ul>
+              </div>
+              <div class="slab__howto">
+                <h4 class="slab__label">Mode d’emploi</h4>
+                <p>À utiliser directement dans vos boissons.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-glacons-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="glacons-5kg">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Glace cubique"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Glace cubique, pack de 5 kg">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Glace cubique"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>packs</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="slab" id="produit-grain" data-product="grain">
+        <article class="slab__card" data-module="fx-tilt" aria-labelledby="produit-grain-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="grain" alt="Glace en grain, petits grains de glace" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Nugget ice</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">02</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>02</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-grain-nom">Glace en grain</h3>
+            <p class="slab__tagline">Douce, croquante, gourmande</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="grain-5kg" data-price-main>750&nbsp;F</span><span class="slab__per" data-price-label>Pack de 5 kg</span></p>
+            </div>
+            <p class="slab__desc">De petits grains de glace compactés, à la texture moelleuse. Ils absorbent le sirop et le jus de la boisson et se croquent avec plaisir.</p>
+            <div class="slab__more" id="produit-grain-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Smoothies</li>
+                  <li>Cocktails d’été</li>
+                  <li>Sodas</li>
+                  <li>Jus de fruits</li>
+                  <li>Fontaines à boissons</li>
+                  <li>Événements</li>
+                </ul>
+              </div>
+              <div class="slab__howto">
+                <h4 class="slab__label">Mode d’emploi</h4>
+                <p>À verser directement dans vos boissons et préparations glacées.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-grain-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="grain-5kg">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Glace en grain"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Glace en grain, pack de 5 kg">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Glace en grain"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>packs</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="slab" id="produit-pilee" data-product="pilee">
+        <article class="slab__card" data-module="fx-tilt" aria-labelledby="produit-pilee-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="pilee" alt="Glace pilée en gros plan" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Glace concassée</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">03</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>03</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-pilee-nom">Glace pilée</h3>
+            <p class="slab__tagline">Une fraîcheur intense</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="pilee-50kg" data-price-main>3&#8239;000&nbsp;F</span><span class="slab__per" data-price-label>Sac de 50 kg</span></p>
+            </div>
+            <p class="slab__desc">De petits fragments de glace à la texture légère, offrant un refroidissement rapide et un apport d’eau maîtrisé.</p>
+            <div class="slab__more" id="produit-pilee-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Cocktails (Mojito, Caïpirinha…)</li>
+                  <li>Frappés</li>
+                  <li>Smoothies</li>
+                  <li>Présentoirs de fruits de mer</li>
+                  <li>Poissonneries</li>
+                  <li>Événements</li>
+                </ul>
+              </div>
+              <div class="slab__howto">
+                <h4 class="slab__label">Mode d’emploi</h4>
+                <p>À utiliser directement dans vos préparations ou pour la présentation.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-pilee-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="pilee-50kg">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Glace pilée"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Glace pilée, sac de 50 kg">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Glace pilée"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>sacs</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="slab slab--night" id="produit-carboglace" data-product="carboglace">
+        <article class="slab__card" data-module="fx-tilt fx-fog" aria-labelledby="produit-carboglace-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="carboglace" alt="Carboglace dégageant une brume blanche" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Glace carbonique · glace sèche</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">04</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>04</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-carboglace-nom">Carboglace</h3>
+            <p class="slab__tagline">Froid extrême · effet fumée</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="carboglace-kg" data-price-main>7&#8239;500&nbsp;F</span><span class="slab__per" data-price-label>Le kilo</span></p>
+            </div>
+            <p class="slab__desc">Du dioxyde de carbone solide à −78,5&nbsp;°C. Elle passe directement de l’état solide à l’état gazeux et crée une brume blanche spectaculaire.</p>
+            <div class="slab__more" id="produit-carboglace-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Conservation</li>
+                  <li>Transport cryogénique</li>
+                  <li>Événementiel</li>
+                  <li>Mixologie spectaculaire</li>
+                </ul>
+              </div>
+              <div class="slab__howto slab__howto--safety">
+                <h4 class="slab__label"><svg class="slab__warn-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2 21.5 20H2.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9.5v4.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor"/></svg>Mode d’emploi et sécurité</h4>
+                <p>Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-carboglace-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="carboglace-kg">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Carboglace"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Carboglace, le kilo">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Carboglace"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>kg</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="slab" id="produit-gobelet" data-product="gobelet">
+        <article class="slab__card" data-module="fx-tilt" aria-labelledby="produit-gobelet-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="gobelet" alt="Ice Cup : gobelet de glaçons" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Gobelet de glaçons</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">05</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>05</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-gobelet-nom">Ice Cup</h3>
+            <p class="slab__tagline">Pratique et prêt à l’emploi</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="gobelet" data-price-main>250&nbsp;F</span><span class="slab__per" data-price-label>1 Ice Cup</span></p>
+            </div>
+            <p class="slab__desc">Des glaçons creux, légers et rafraîchissants, conditionnés en gobelet à couvercle pour une consommation immédiate.</p>
+            <div class="slab__more" id="produit-gobelet-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Sodas</li>
+                  <li>Jus de fruits</li>
+                  <li>Fast-food</li>
+                  <li>Ventes à emporter</li>
+                  <li>Événements</li>
+                </ul>
+              </div>
+              <div class="slab__howto">
+                <h4 class="slab__label">Mode d’emploi</h4>
+                <p>Prêt à l’emploi. Verser directement dans la boisson.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-gobelet-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="gobelet">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Ice Cup"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Ice Cup, 1 ice cup">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Ice Cup"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>Ice Cups</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="slab" id="produit-barres" data-product="barres">
+        <article class="slab__card" data-module="fx-tilt" aria-labelledby="produit-barres-nom">
+          <div class="slab__sheen" aria-hidden="true"></div>
+          <figure class="slab__visual" data-module="fx-droplets">
+            <div class="slab__media"><!-- @img slot="barres" alt="Barres de glace de grand format" sizes="(min-width: 1024px) 40vw, (min-width: 640px) 46vw, 88vw" class="slab__img" --></div>
+            <figcaption class="slab__alias">Pains de glace</figcaption>
+            <div class="slab__num" aria-hidden="true"><span class="slab__num-ice">06</span></div>
+          </figure>
+          <div class="slab__body">
+            <p class="slab__kicker"><span class="slab__index"><span data-index>06</span><span class="slab__of"> / <span data-count>06</span></span></span><span class="slab__avail" data-avail>Disponible</span></p>
+            <h3 class="slab__name" id="produit-barres-nom">Barres de glace</h3>
+            <p class="slab__tagline">Fraîcheur et conservation</p>
+            <div class="slab__offer">
+              <p class="slab__price"><span class="slab__amount" data-price="barre-5kg" data-price-main>350&nbsp;F</span><span class="slab__per" data-price-label>Barre de 5 kg</span></p>
+            <fieldset class="slab__formats" data-formats>
+              <legend class="slab__label">Format</legend>
+              <div class="slab__formats-row">
+                <label class="slab__format"><input type="radio" name="format-barres" value="barre-5kg" checked><span class="slab__format-face"><span class="slab__format-name">Barre de 5 kg</span><span class="slab__format-price" data-price="barre-5kg">350&nbsp;F</span></span></label>
+                <label class="slab__format"><input type="radio" name="format-barres" value="barre-10kg"><span class="slab__format-face"><span class="slab__format-name">Barre de 10 kg</span><span class="slab__format-price" data-price="barre-10kg">650&nbsp;F</span></span></label>
+              </div>
+            </fieldset>
+            </div>
+            <p class="slab__desc">Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.</p>
+            <div class="slab__more" id="produit-barres-plus">
+              <div class="slab__uses">
+                <h4 class="slab__label">Utilisations</h4>
+                <ul class="slab__chips" role="list">
+                  <li>Conservation des produits alimentaires</li>
+                  <li>Transport de marchandises</li>
+                  <li>Pêche</li>
+                  <li>Marchés</li>
+                  <li>Événements</li>
+                  <li>Usage professionnel</li>
+                </ul>
+              </div>
+              <div class="slab__howto">
+                <h4 class="slab__label">Mode d’emploi</h4>
+                <p>À placer dans des glacières, conservateurs ou zones de stockage.</p>
+              </div>
+            </div>
+            <button type="button" class="slab__toggle" aria-expanded="true" aria-controls="produit-barres-plus" hidden><span>Utilisations et mode d’emploi</span><svg class="slab__toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="slab__cta" data-cta data-sku="barre-5kg">
+              <button type="button" class="btn slab__add" data-add data-module="fx-shatter"><svg class="slab__add-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 8.6v6.8M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Ajouter au devis</span></button>
+              <div class="slab__qty" data-qty hidden>
+                <div class="stepper slab__stepper">
+                  <button type="button" data-step="-1" aria-label="Diminuer la quantité : Barres de glace"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty-input aria-label="Quantité dans le devis : Barres de glace, barre de 5 kg">
+                  <button type="button" data-step="1" aria-label="Augmenter la quantité : Barres de glace"><span aria-hidden="true">+</span></button>
+                </div>
+                <span class="slab__unit" data-unit>barres</span>
+              </div>
+              <p class="slab__inquote" data-inquote hidden></p>
+            </div>
+          </div>
+        </article>
+      </li>
+        </ol>
+      </div>
+
+      <aside class="products__outro" aria-labelledby="produits-outro-title">
+        <div class="products__outro-card">
+          <p class="eyebrow">Votre devis</p>
+          <h3 class="products__outro-title" id="produits-outro-title">Composé en quelques clics, <span class="ice-text">envoyé sur WhatsApp</span></h3>
+          <p class="products__outro-sum" data-outro-sum>Votre devis est encore vide&#8239;: ajoutez vos articles.</p>
+          <p class="products__outro-note">Aucun paiement en ligne. Livraison partout à Abidjan ou retrait gratuit à Abatta – Carrefour Drogba.</p>
+          <div class="products__outro-ctas">
+            <a class="btn btn--lg" href="devis.html" data-module="fx-magnetic">Voir mon devis</a>
+            <a class="link-arrow" href="#commande">Composer ma commande<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="products__hud">
+      <nav class="products__nav" aria-label="Aller à un produit">
+        <p class="products__now" aria-hidden="true"><span class="products__now-num" data-now-num>01</span><span class="products__now-name" data-now-name>Glace cubique</span></p>
+        <div class="products__bar">
+          <span class="products__bar-fill" data-bar-fill></span>
+          <ol class="products__ticks" role="list">
+            <li><a class="products__tick" href="#produit-glacons" data-tick="0"><span class="products__tick-num" aria-hidden="true">01</span><span class="sr-only">Glace cubique</span></a></li>
+            <li><a class="products__tick" href="#produit-grain" data-tick="1"><span class="products__tick-num" aria-hidden="true">02</span><span class="sr-only">Glace en grain</span></a></li>
+            <li><a class="products__tick" href="#produit-pilee" data-tick="2"><span class="products__tick-num" aria-hidden="true">03</span><span class="sr-only">Glace pilée</span></a></li>
+            <li><a class="products__tick" href="#produit-carboglace" data-tick="3"><span class="products__tick-num" aria-hidden="true">04</span><span class="sr-only">Carboglace</span></a></li>
+            <li><a class="products__tick" href="#produit-gobelet" data-tick="4"><span class="products__tick-num" aria-hidden="true">05</span><span class="sr-only">Ice Cup</span></a></li>
+            <li><a class="products__tick" href="#produit-barres" data-tick="5"><span class="products__tick-num" aria-hidden="true">06</span><span class="sr-only">Barres de glace</span></a></li>
+          </ol>
+        </div>
+      </nav>
+      <div class="products__dock">
+        <div class="pq-gauge" data-gauge>
+          <p class="pq-gauge__label"><span class="pq-gauge__title" data-gauge-title>Livraison offerte dès 20 articles</span><span class="pq-gauge__status" data-gauge-status></span></p>
+          <div class="pq-gauge__bar" data-gauge-bar role="progressbar" aria-label="Articles pour la livraison offerte" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span class="pq-gauge__fill" data-gauge-fill></span></div>
+        </div>
+        <a class="btn btn--sm products__devis" href="devis.html"><span>Voir mon devis</span><span class="products__count" data-pq-count aria-label="articles">0</span></a>
+      </div>
+    </div>
+  </div>
+</section>

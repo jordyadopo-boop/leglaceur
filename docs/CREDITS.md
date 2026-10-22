@@ -1,7 +1,7 @@
 # Crédits photo — Le Glaceur
 
 Toutes les photographies du site proviennent de banques d'images libres de droits pour un usage commercial
-(**Unsplash** et **Pexels**), à l'exception du sac siglé, extrait de l'affiche officielle de Le Glaceur.
+(**Unsplash** et **Pexels**), à l'exception du sac siglé (extrait de l'affiche officielle), de la glace pilée (photo fournie par Le Glaceur) et des rendus 3D réalisés pour le site.
 Les fichiers publiés sont dans `public/img/` ; leurs dimensions, textes alternatifs et crédits sont décrits
 dans `public/img/manifest.json` (lu par la directive `<!-- @img slot="…" -->`).
 
@@ -12,7 +12,7 @@ dans `public/img/manifest.json` (lu par la directive `<!-- @img slot="…" -->`)
 | `glacons` | Glaçons cubiques sur fond bleu profond | Ting lee | Unsplash | [unsplash.com/photos/…-YBTEMvm85qI](https://unsplash.com/photos/clear-ice-cubes-casting-shadows-on-a-deep-blue-background-YBTEMvm85qI) |
 | `gobelet` | Gobelet transparent rempli de glaçons, menthe | Kunal Lakhotia | Pexels | [pexels.com/photo/…-28944486](https://www.pexels.com/photo/refreshing-cold-drink-with-mint-garnish-28944486/) |
 | `barres` | Pains de glace empilés (marché, Đà Nẵng) | baolong thai | Pexels | [pexels.com/photo/…-26728029](https://www.pexels.com/photo/man-unloading-ice-blocks-at-a-fish-market-26728029/) |
-| `pilee` | Glace pilée en gros plan | Andre Moura | Pexels | [pexels.com/photo/…-20312243](https://www.pexels.com/photo/hole-with-crushed-ice-20312243/) |
+| `pilee` | Glace pilée Le Glaceur, fine et neigeuse | Le Glaceur | Photo fournie par le client | `tools/source/glace-pilee-le-glaceur.jpg` |
 | `carboglace` | Glace carbonique et brume blanche | cottonbro studio | Pexels | [pexels.com/photo/…-9694195](https://www.pexels.com/photo/white-smoke-in-a-glass-container-against-black-background-9694195/) |
 | `sac-glaceur` | Sac de glaçons siglé « Le Glaceur » | Le Glaceur | Affiche officielle (client) | Visuel de marque fourni par le client |
 | `usage-cocktail` | Mojito sur glace pilée | Aram Diseño | Pexels | [pexels.com/photo/…-7259044](https://www.pexels.com/photo/close-up-shot-of-ice-in-the-drinking-glass-7259044/) |

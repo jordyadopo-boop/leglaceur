@@ -37,7 +37,14 @@
 >    approximatives, sans anneaux de prix ni tableau de tarifs) ; message central « Livraison offerte dès 20 articles,
 >    partout à Abidjan, 24h/24 et 7j/7 » ; en dessous de 20 articles : « devis hors frais de livraison, tarif communiqué par
 >    Le Glaceur » ; carte « Retrait sur place » gratuite à Abatta – Carrefour Drogba.
-> 9. **Logos** : utilise les logos officiels visibles sur les affiches (Le Glaceur et SDLSIT Group), recréés fidèlement par l'agent brand.
+> 9. **FOND BLANC (consigne client, comme les affiches)** : le site est majoritairement BLANC / givré très clair avec les bleus
+>    de la marque (marine #0a1f44, bleu #1563d6, glace #8ecfff…). Le hero est CLAIR (glaçons 3D sur fond blanc-bleuté, comme les
+>    affiches). Les sections marines sont rares (pied de page, éventuellement un bandeau) ; préfère des fonds blancs, `--grad-ice`,
+>    des panneaux `.frost` et des aplats bleus. Le site doit être dynamique et unique (aucun modèle reconnaissable).
+> 10. **CATALOGUE** : chaque produit a dans config.js `description`, `uses`, `howto`, `storage` (conservation) et `safety`
+>    (sécurité). Ces informations doivent être consultables : section « Catalogue » de l'accueil (fiches détaillées dépliables)
+>    ET dans le configurateur de devis (bouton « i » / « En savoir plus » sur chaque article, sans quitter le formulaire).
+> 11. **Logos** : utilise les logos officiels visibles sur les affiches (Le Glaceur et SDLSIT Group), recréés fidèlement par l'agent brand.
 
 Site vitrine + devis en ligne de **Le Glaceur** (glace alimentaire, Abidjan, marque de SDLSIT Group).
 Site statique (Vite multi-pages, JS natif, GSAP, Three.js, Lenis) déployé sur GitHub Pages.

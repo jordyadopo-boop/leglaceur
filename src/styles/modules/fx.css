@@ -1,0 +1,257 @@
+/* ==========================================================================
+   Effets « glace » (agent fx) — calques des modules src/js/modules/fx-*.js
+   Plan :
+   1. Tout calque d'effet est décoratif : pointer-events: none, aria-hidden, jamais de contenu.
+   2. Ambiance globale (.fx-ambient) : poussière de givre (canvas 2D) sous l'en-tête et voile de
+      givre WebGL sur les bords, révélé par la vitesse de défilement (fond à l'arrêt).
+   3. Curseur (.fx-cursor) : cristal + anneau double (blanc + bleu, lisible sur fond clair et marine),
+      traînée de poussière de glace ; morphing sur les boutons, libellé data-cursor.
+   4. Calques locaux (.fx-layer) : vitre à essuyer, condensation, brume, bordure givrée —
+      position absolue, border-radius hérité, au-dessus du visuel, sous les contrôles.
+   5. Inclinaison 3D (.fx-tilt__glare) : reflet glacé déplacé par transform uniquement.
+   6. Éclats (.fx-shatter-layer) : canvas global partagé, créé au premier clic.
+   7. Mouvement réduit / pointeur grossier : les modules ne s'initialisent pas ; ces règles
+      garantissent qu'aucun calque ne masque le contenu.
+   ========================================================================== */
+
+/* ---------- Calque générique ---------- */
+.fx-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* ---------- 1. Ambiance ---------- */
+.fx-ambient {
+  /* Aucun contexte d'empilement : chaque calque fixe garde son propre z-index. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.fx-ambient__dust,
+.fx-ambient__veil {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100lvh;
+  pointer-events: none;
+}
+.fx-ambient__dust { z-index: var(--z-sticky); }
+.fx-ambient__veil { z-index: calc(var(--z-header) - 1); }
+.fx-ambient.is-off { display: none; }
+
+/* ---------- 2. Curseur ---------- */
+.fx-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.fx-cursor__trail {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: calc(var(--z-cursor) - 1);
+  pointer-events: none;
+}
+.fx-cursor__ring,
+.fx-cursor__dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 0.35s var(--ease-out);
+}
+.fx-cursor.is-visible .fx-cursor__ring,
+.fx-cursor.is-visible .fx-cursor__dot { opacity: 1; }
+.fx-cursor__ring {
+  --ring-w: 36px;
+  --ring-h: 36px;
+  width: var(--ring-w);
+  height: var(--ring-h);
+  margin: calc(var(--ring-h) / -2) 0 0 calc(var(--ring-w) / -2);
+  border-radius: var(--ring-r, 999px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.85),
+    inset 0 0 0 1px rgba(21, 99, 214, 0.7),
+    0 6px 18px -8px rgba(10, 31, 68, 0.45);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.28), rgba(191, 228, 255, 0) 60%);
+  display: grid;
+  place-items: center;
+  transition:
+    opacity 0.35s var(--ease-out),
+    width 0.5s var(--ease-out),
+    height 0.5s var(--ease-out),
+    margin 0.5s var(--ease-out),
+    border-radius 0.5s var(--ease-out),
+    background-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+.fx-cursor__ring::after {
+  /* reflet en arc, comme sur une bille de glace */
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-right: 1.5px solid transparent;
+  border-bottom: 1.5px solid transparent;
+  opacity: 0.8;
+}
+.fx-cursor.is-hover .fx-cursor__ring {
+  --ring-w: 58px;
+  --ring-h: 58px;
+  background-color: rgba(191, 228, 255, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.95),
+    inset 0 0 0 1.5px rgba(77, 155, 255, 0.85),
+    0 0 26px -4px rgba(77, 155, 255, 0.55);
+}
+.fx-cursor.is-stuck .fx-cursor__ring {
+  background-color: rgba(191, 228, 255, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1.5px rgba(142, 207, 255, 0.9),
+    0 0 30px -6px rgba(77, 155, 255, 0.7);
+}
+.fx-cursor.is-label .fx-cursor__ring {
+  --ring-w: 92px;
+  --ring-h: 92px;
+  background-color: rgba(10, 31, 68, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.fx-cursor.is-text .fx-cursor__ring { opacity: 0.25; --ring-w: 10px; --ring-h: 10px; }
+.fx-cursor.is-down .fx-cursor__ring { --ring-w: 28px; --ring-h: 28px; }
+.fx-cursor.is-hover.is-down .fx-cursor__ring { --ring-w: 48px; --ring-h: 48px; }
+.fx-cursor__label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s var(--ease-out), transform 0.45s var(--ease-out);
+  white-space: nowrap;
+}
+.fx-cursor.is-label .fx-cursor__label { opacity: 1; transform: none; }
+.fx-cursor__dot {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  filter: drop-shadow(0 2px 4px rgba(10, 31, 68, 0.35)) drop-shadow(0 0 6px rgba(142, 207, 255, 0.8));
+}
+.fx-cursor__dot svg { width: 100%; height: 100%; overflow: visible; transition: transform 0.45s var(--ease-out), opacity 0.3s; }
+.fx-cursor.is-hover .fx-cursor__dot svg,
+.fx-cursor.is-text .fx-cursor__dot svg { transform: scale(0); opacity: 0; }
+.fx-cursor.is-hidden .fx-cursor__ring,
+.fx-cursor.is-hidden .fx-cursor__dot { opacity: 0; }
+
+/* ---------- 3. Vitre à essuyer ---------- */
+.fx-wipe { z-index: 2; touch-action: pan-y; }
+.fx-wipe-host { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.fx-wipe-hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  max-width: calc(100% - 32px);
+  padding: 0.7rem 1.1rem 0.7rem 0.8rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 12px 30px -14px rgba(10, 31, 68, 0.5);
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s var(--ease-out);
+}
+.fx-wipe-hint svg { width: 1.7em; height: 1.7em; flex: none; color: var(--blue-600); }
+.fx-wipe-hint svg .fx-wipe-hint__hand { animation: fx-wipe-hand 2.4s var(--ease-in-out) infinite; transform-origin: 50% 80%; }
+.fx-wipe-hint.is-gone { opacity: 0; filter: blur(6px); transform: translate(-50%, -50%) scale(0.92); }
+@keyframes fx-wipe-hand {
+  0%, 100% { transform: translateX(-3px) rotate(-8deg); }
+  50% { transform: translateX(3px) rotate(8deg); }
+}
+
+/* ---------- 4. Condensation, brume, bordure givrée ---------- */
+.fx-droplets { z-index: 2; }
+.fx-fog { z-index: 2; }
+.fx-frost-border { z-index: 2; }
+.fx-frost-border--final { opacity: 0; }
+
+/* ---------- 5. Inclinaison 3D ---------- */
+.fx-tilt-host { transform-style: flat; will-change: transform; }
+.fx-tilt__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+.fx-tilt-host.is-tilting .fx-tilt__glare { opacity: 1; }
+.fx-tilt__glare-spot {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.42) 0%, rgba(227, 243, 255, 0.16) 18%, rgba(255, 255, 255, 0) 38%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.16) 48%, rgba(191, 228, 255, 0.08) 52%, rgba(255, 255, 255, 0) 60%);
+  mix-blend-mode: soft-light;
+  will-change: transform;
+}
+.section--dark .fx-tilt__glare-spot,
+.fx-tilt-host[data-fx-tone='dark'] .fx-tilt__glare-spot { mix-blend-mode: screen; opacity: 0.7; }
+
+/* ---------- 6. Éclats ---------- */
+.fx-shatter-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: calc(var(--z-cursor) - 2);
+  pointer-events: none;
+}
+
+/* ---------- 7. Garde-fous ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fx-ambient__dust, .fx-ambient__veil, .fx-cursor, .fx-shatter-layer, .fx-wipe, .fx-wipe-hint { display: none !important; }
+}
+@media (hover: none), (pointer: coarse) {
+  .fx-cursor { display: none; }
+}
+@media print {
+  .fx-ambient, .fx-cursor, .fx-layer, .fx-shatter-layer, .fx-tilt__glare, .fx-wipe-hint { display: none !important; }
+}

@@ -56,6 +56,8 @@ export const PRODUCTS = [
       'Des glaçons denses, cristallins et 100 % alimentaires. Leur fonte lente permet un refroidissement efficace sans trop diluer vos boissons.',
     uses: ['Boissons', 'Cocktails', 'Jus', 'Restaurants', 'Événements', 'Usage domestique'],
     howto: 'À utiliser directement dans vos boissons.',
+    storage: "Conserver en glacière ou en congélateur, à l'abri du soleil.",
+    safety: 'Servir avec une pelle propre, jamais à mains nues. Ne pas recongeler une glace qui a commencé à fondre.',
     variants: [{ sku: 'glacons-5kg', label: 'Pack de 5 kg', unit: 'pack', units: 'packs', kg: 5, price: 750 }],
   },
   {
@@ -69,6 +71,8 @@ export const PRODUCTS = [
       'De petits grains de glace compactés, à la texture moelleuse. Ils absorbent le sirop et le jus de la boisson et se croquent avec plaisir.',
     uses: ['Smoothies', "Cocktails d'été", 'Sodas', 'Jus de fruits', 'Fontaines à boissons', 'Événements'],
     howto: 'À verser directement dans vos boissons et préparations glacées.',
+    storage: 'Conserver en glacière ou en congélateur ; à consommer rapidement une fois ouverte.',
+    safety: 'Servir avec une pelle ou une cuillère propre. Ne pas recongeler une glace qui a commencé à fondre.',
     variants: [{ sku: 'grain-5kg', label: 'Pack de 5 kg', unit: 'pack', units: 'packs', kg: 5, price: 750 }],
   },
   {
@@ -82,6 +86,8 @@ export const PRODUCTS = [
       "De petits fragments de glace à la texture légère, offrant un refroidissement rapide et un apport d'eau maîtrisé.",
     uses: ['Cocktails (Mojito, Caïpirinha…)', 'Frappés', 'Smoothies', 'Présentoirs de fruits de mer', 'Poissonneries', 'Événements'],
     howto: 'À utiliser directement dans vos préparations ou pour la présentation.',
+    storage: "Garder le sac fermé, en glacière ou conservateur, à l'ombre.",
+    safety: "Pour le contact avec les aliments (poissons, fruits de mer), utiliser des bacs propres et vidanger l'eau de fonte régulièrement.",
     variants: [{ sku: 'pilee-50kg', label: 'Sac de 50 kg', unit: 'sac', units: 'sacs', kg: 50, price: 3000 }],
   },
   {
@@ -96,6 +102,8 @@ export const PRODUCTS = [
       'Du dioxyde de carbone solide à -78,5 °C. Elle passe directement de l’état solide à l’état gazeux et crée une brume blanche spectaculaire.',
     uses: ['Conservation', 'Transport cryogénique', 'Événementiel', 'Mixologie spectaculaire'],
     howto: 'Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.',
+    storage: 'Conserver dans une glacière isotherme non hermétique, jamais dans un récipient fermé ni dans une pièce close.',
+    safety: "Température de -78,5 °C : toujours manipuler avec des gants épais ou une pince. Ne jamais ingérer, ne jamais mettre en bouche. Utiliser dans un lieu aéré (le CO₂ dégagé remplace l'air). Tenir hors de portée des enfants.",
     variants: [{ sku: 'carboglace-kg', label: 'Le kilo', unit: 'kg', units: 'kg', kg: 1, price: 7500 }],
   },
   {
@@ -109,6 +117,8 @@ export const PRODUCTS = [
       'Des glaçons creux, légers et rafraîchissants, conditionnés en gobelet à couvercle pour une consommation immédiate.',
     uses: ['Sodas', 'Jus de fruits', 'Fast-food', 'Ventes à emporter', 'Événements'],
     howto: "Prêt à l'emploi. Verser directement dans la boisson.",
+    storage: "Garder le couvercle fermé jusqu'au service ; conserver au frais.",
+    safety: 'Produit alimentaire à usage unique : ne pas réutiliser le gobelet pour la glace.',
     variants: [{ sku: 'gobelet', label: '1 Ice Cup', unit: 'Ice Cup', units: 'Ice Cups', kg: null, price: 250 }],
   },
   {
@@ -122,6 +132,8 @@ export const PRODUCTS = [
       'Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.',
     uses: ['Conservation des produits alimentaires', 'Transport de marchandises', 'Pêche', 'Marchés', 'Événements', 'Usage professionnel'],
     howto: 'À placer dans des glacières, conservateurs ou zones de stockage.',
+    storage: "Stocker à l'ombre, en glacière ou chambre froide ; plus le bloc est gros, plus il dure.",
+    safety: 'Manipuler avec des gants (bloc lourd et glissant). Pour le contact direct avec des aliments, utiliser la glace pilée.',
     variants: [
       { sku: 'barre-5kg', label: 'Barre de 5 kg', unit: 'barre', units: 'barres', kg: 5, price: 350 },
       { sku: 'barre-10kg', label: 'Barre de 10 kg', unit: 'barre', units: 'barres', kg: 10, price: 650 },
