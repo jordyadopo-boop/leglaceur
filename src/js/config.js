@@ -35,7 +35,7 @@ export const BRAND = {
   deliveryClaim: 'Livraison partout à Abidjan',
   // URL du registre des devis (Google Apps Script, docs/apps-script/registre-devis.gs) : reçoit chaque devis
   // et alimente la page /admin. null = registre non branché.
-  quoteWebhook: null,
+  quoteWebhook: 'https://script.google.com/macros/s/AKfycbwo3y_lZxhRLQzj0YwQZRYmdUN52uGkwM_jOwpa6V1wIcKYiHBAyaQ-Us7OQqFOBbr6Yw/exec',
 };
 
 export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`;
