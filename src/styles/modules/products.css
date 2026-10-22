@@ -92,7 +92,7 @@
 }
 .products__viewport::-webkit-scrollbar { display: none; }
 .products__viewport:focus-visible { outline-offset: -4px; }
-.products__track { display: flex; gap: clamp(14px, 2.4vw, 24px); width: max-content; list-style: none; padding-inline: var(--gutter); perspective: 1600px; }
+.products__track { display: flex; align-items: flex-start; gap: clamp(14px, 2.4vw, 24px); width: max-content; list-style: none; padding-inline: var(--gutter); perspective: 1600px; }
 
 /* ---------- Dalle ---------- */
 .slab { flex: 0 0 min(86vw, 430px); display: flex; scroll-snap-align: start; transform-style: preserve-3d; }
@@ -630,4 +630,14 @@
 @media (prefers-reduced-motion: reduce) {
   .slab__amount::after, .products .pq-gauge__fill::after, .slab--night .slab__card::before, .cat--night::before { animation: none; }
   .slab__img { transform: none; }
+}
+
+/* ---------- Petits écrans : dalles plus compactes (le détail complet reste dans le catalogue) ---------- */
+@media (max-width: 639px) {
+  .slab__visual { aspect-ratio: 16 / 11; }
+  .slab__body { gap: 0.65rem; }
+  .slab__desc { font-size: 0.96rem; }
+  .slab__uses li:nth-child(n + 5) { display: none; }
+  .slab__howto { font-size: 0.9rem; }
+  .slab__num { font-size: clamp(5rem, 21vw, 7rem); }
 }

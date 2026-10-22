@@ -1,0 +1,161 @@
+<!-- Guide — 03 · Matrice comparative + course de fonte (agent guide). Module : guide-race.js.
+     Généré depuis ICE_TYPES (config.js). Mobile : chaque ligne du tableau devient une fiche (data-label).
+     Sans JS : tableau complet ; la course reste à l'état initial (boutons masqués). -->
+<section class="guide g-section g-matrix" id="matrice" data-module="guide-race" aria-labelledby="matrice-title">
+  <div class="g-matrix__bg" aria-hidden="true"></div>
+  <div class="container">
+    <header class="g-head">
+      <p class="g-head__num" aria-hidden="true">03</p>
+      <div class="g-head__txt">
+        <p class="eyebrow">Matrice comparative</p>
+        <h2 id="matrice-title" data-split>Comparez <span class="ice-text">d’un coup d’œil</span></h2>
+        <p class="lead">Température, vitesse de fonte, dilution et secteur de prédilection&#8239;: les sept glaces côte à côte.</p>
+      </div>
+    </header>
+
+    <div class="g-mx frost ice-edge">
+      <table class="g-mx__table">
+        <caption class="sr-only">Matrice comparative des sept types de glace alimentaire</caption>
+        <thead>
+          <tr><th scope="col">Type de glace</th><th scope="col">Température</th><th scope="col">Vitesse de fonte</th><th scope="col">Dilution</th><th scope="col">Secteur principal</th></tr>
+        </thead>
+        <tbody>
+          <tr data-g-row="plein">
+            <th scope="row"><a class="g-mx__type" href="#type-plein"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-plein"/></svg><span>Glaçon plein</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−2&nbsp;°C à −5&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:43%" aria-hidden="true"><span></span></span>Lente</span></td>
+            <td data-label="Dilution">Faible</td>
+            <td data-label="Secteur principal">Bars & spiritueux</td>
+          </tr>
+          <tr data-g-row="creux">
+            <th scope="row"><a class="g-mx__type" href="#type-creux"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-creux"/></svg><span>Glaçon creux</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−1&nbsp;°C à −3&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:100%" aria-hidden="true"><span></span></span>Rapide</span></td>
+            <td data-label="Dilution">Élevée</td>
+            <td data-label="Secteur principal">Fast-food & softs</td>
+          </tr>
+          <tr data-g-row="pilee">
+            <th scope="row"><a class="g-mx__type" href="#type-pilee"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-pilee"/></svg><span>Glace pilée</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−1&nbsp;°C à −4&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:86%" aria-hidden="true"><span></span></span>Moyenne à rapide</span></td>
+            <td data-label="Dilution">Contrôlée</td>
+            <td data-label="Secteur principal">Mixologie (mojito)</td>
+          </tr>
+          <tr data-g-row="sphere">
+            <th scope="row"><a class="g-mx__type" href="#type-sphere"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-sphere"/></svg><span>Sphère de glace</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−3&nbsp;°C à −6&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:14%" aria-hidden="true"><span></span></span>Ultra-lente</span></td>
+            <td data-label="Dilution">Traces</td>
+            <td data-label="Secteur principal">Cocktails premium</td>
+          </tr>
+          <tr data-g-row="ecailles">
+            <th scope="row"><a class="g-mx__type" href="#type-ecailles"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-ecailles"/></svg><span>Glace en écailles</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−7&nbsp;°C à −10&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:29%" aria-hidden="true"><span></span></span>Très lente</span></td>
+            <td data-label="Dilution">Nulle à sec</td>
+            <td data-label="Secteur principal">Poissonneries & industrie</td>
+          </tr>
+          <tr data-g-row="grains">
+            <th scope="row"><a class="g-mx__type" href="#type-grains"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-grains"/></svg><span>Glace en grains</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp">−1&nbsp;°C à −3&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:100%" aria-hidden="true"><span></span></span>Rapide</span></td>
+            <td data-label="Dilution">Élevée</td>
+            <td data-label="Secteur principal">Smoothies & soda</td>
+          </tr>
+          <tr data-g-row="carbo">
+            <th scope="row"><a class="g-mx__type" href="#type-carbo"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#gi-carbo"/></svg><span>Carboglace (CO₂)</span></a></th>
+            <td data-label="Température"><span class="g-mx__temp g-mx__temp--extreme">−78,5&nbsp;°C</span></td>
+            <td data-label="Vitesse de fonte"><span class="g-mx__melt"><span class="g-mx__bar" style="--melt:0%" aria-hidden="true"><span></span></span>Sublimation</span></td>
+            <td data-label="Dilution">Aucune (gaz)</td>
+            <td data-label="Secteur principal">Événementiel & cryogénie</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="g-race frost ice-edge" data-g-race aria-labelledby="race-title">
+      <div class="g-race__head">
+        <div>
+          <p class="eyebrow">Démonstration</p>
+          <h3 id="race-title" class="g-race__title">La course <span class="ice-text">de fonte</span></h3>
+          <p class="g-race__lead">Les sept glaces sont plongées en même temps dans une boisson. Laquelle tient le plus longtemps&#8239;?</p>
+        </div>
+        <div class="g-race__ctrl">
+          <button class="btn g-race__btn" type="button" data-g-race-btn hidden>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5v14l11-7z" data-g-race-ico/></svg>
+            <span data-g-race-label>Lancer la course</span>
+          </button>
+          <span class="g-race__prog" aria-hidden="true"><span data-g-race-prog></span></span>
+        </div>
+      </div>
+      <div class="g-race__cols" aria-hidden="true"><span>Glace</span><span>Fonte</span><span>Glace restante</span></div>
+      <ol class="g-race__lanes" data-g-lanes>
+        <li class="g-lane" data-g-lane="plein" data-melt="3">
+          <span class="g-lane__name">Glaçon plein</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-plein"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane" data-g-lane="creux" data-melt="7">
+          <span class="g-lane__name">Glaçon creux</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-creux"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane" data-g-lane="pilee" data-melt="6">
+          <span class="g-lane__name">Glace pilée</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-pilee"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane" data-g-lane="sphere" data-melt="1">
+          <span class="g-lane__name">Sphère de glace</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-sphere"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane" data-g-lane="ecailles" data-melt="2">
+          <span class="g-lane__name">Glace en écailles</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-ecailles"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane" data-g-lane="grains" data-melt="7">
+          <span class="g-lane__name">Glace en grains</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-grains"/></svg></span>
+            
+          </span>
+          <span class="g-lane__pct" data-g-pct>100&nbsp;%</span>
+        </li>
+        <li class="g-lane g-lane--carbo" data-g-lane="carbo" data-melt="0">
+          <span class="g-lane__name">Carboglace (CO₂)</span>
+          <span class="g-lane__track" aria-hidden="true">
+            <span class="g-lane__water" data-g-water></span>
+            <span class="g-lane__ice" data-g-ice><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-carbo"/></svg></span>
+            <span class="g-lane__vapor" data-g-vapor><i></i><i></i><i></i></span>
+          </span>
+          <span class="g-lane__pct" data-g-pct>Sublimation</span>
+        </li>
+      </ol>
+      <p class="g-race__status" role="status" aria-live="polite" data-g-race-status></p>
+      <p class="g-race__note">Simulation illustrative, proportionnelle à l’échelle relative de fonte du guide&#8239;; ce n’est pas une mesure. La carboglace ne fond pas&#8239;: elle se sublime, sans aucune eau.</p>
+    </div>
+  </div>
+</section>

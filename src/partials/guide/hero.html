@@ -1,0 +1,91 @@
+<!-- Guide des glaces — ouverture (agent guide). Module : guide-hero.js · rail : guide-toc.js · styles : guide.css
+     Sans JS : titre, spécimens et sommaire restent visibles ; le rail collant n'apparaît qu'avec JS (bureau). -->
+<section class="guide g-hero" id="guide-haut" data-module="guide-hero" aria-labelledby="g-hero-title">
+  <!-- @include guide/sprite.html -->
+  <div class="g-hero__bg" aria-hidden="true">
+    <span class="g-glow g-glow--a"></span>
+    <span class="g-glow g-glow--b"></span>
+    <span class="g-hero__grid-lines"></span>
+  </div>
+
+  <div class="container g-hero__inner">
+    <div class="g-hero__copy">
+      <p class="g-crumbs"><a href="index.html">Accueil</a><span aria-hidden="true">/</span><span>Guide des glaces</span></p>
+      <p class="eyebrow">Guide pédagogique · Le Glaceur</p>
+      <h1 class="g-hero__title" id="g-hero-title">
+        <span class="g-hero__line" data-g-line>Les glaces</span>
+        <span class="g-hero__line ice-text" data-g-line>alimentaires</span>
+      </h1>
+      <p class="g-hero__sub" data-g-sub><span>Typologies</span> <span class="g-amp" aria-hidden="true">&amp;</span><span class="sr-only">et</span> <span>usages métiers</span></p>
+      <p class="lead g-hero__lead" data-g-fade>Comprendre la science de la fonte, la densité et les applications de la glace en mixologie, en gastronomie et dans l’industrie. Sept glaces, sept comportements&#8239;: choisir la bonne, c’est mieux servir.</p>
+      <div class="cluster g-hero__actions" data-g-fade>
+        <a class="btn btn--lg" href="#science">
+          Commencer la lecture
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </a>
+        <a class="btn btn--glass btn--lg" href="index.html#commande">Commander de la glace</a>
+      </div>
+      <dl class="g-hero__facts" data-g-fade>
+        <div class="g-fact"><dt>Types de glace étudiés</dt><dd class="g-fact__num">7</dd></div>
+        <div class="g-fact"><dt>Absorbés par gramme à la fusion</dt><dd class="g-fact__num">334<small>&nbsp;J/g</small></dd></div>
+        <div class="g-fact"><dt>Température de la carboglace</dt><dd class="g-fact__num">−78,5<small>&nbsp;°C</small></dd></div>
+      </dl>
+    </div>
+
+    <figure class="g-hero__stage" role="img" aria-label="Les sept glaces du guide : glaçon plein, glaçon creux, glace pilée, sphère, glace en écailles, glace en grains et carboglace.">
+      <div class="g-plate" data-g-plate>
+        <span class="g-plate__ring g-plate__ring--1"></span>
+        <span class="g-plate__ring g-plate__ring--2"></span>
+        <span class="g-plate__ring g-plate__ring--3"></span>
+        <svg class="g-plate__flake" viewBox="0 0 400 400" focusable="false" aria-hidden="true" data-g-flake>
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polygon class="g-flake__hex" points="200,150 243,175 243,225 200,250 157,225 157,175"/>
+            <polygon class="g-flake__hex g-flake__hex--thin" points="200,112 276,156 276,244 200,288 124,244 124,156"/>
+            <g class="g-flake__arms">
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13"/>
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13" transform="rotate(60 200 200)"/>
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13" transform="rotate(120 200 200)"/>
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13" transform="rotate(180 200 200)"/>
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13" transform="rotate(240 200 200)"/>
+              <path d="M200 200V40M200 120l-30-18M200 120l30-18M200 82l-22-13M200 82l22-13" transform="rotate(300 200 200)"/>
+            </g>
+          </g>
+        </svg>
+        <span class="g-plate__core"><span class="g-plate__num">7</span><span class="g-plate__cap">glaces</span></span>
+      </div>
+      <ul class="g-specimens" aria-hidden="true">
+        <li class="g-spec" style="--x:50%;--y:10%;--d:1.2" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-plein"/></svg><span>Plein</span></li>
+        <li class="g-spec" style="--x:80.5%;--y:25%;--d:0.7" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-creux"/></svg><span>Creux</span></li>
+        <li class="g-spec" style="--x:88%;--y:58.5%;--d:1" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-pilee"/></svg><span>Pilée</span></li>
+        <li class="g-spec" style="--x:67%;--y:86%;--d:1.4" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-sphere"/></svg><span>Sphère</span></li>
+        <li class="g-spec" style="--x:33%;--y:86%;--d:0.8" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-ecailles"/></svg><span>Écailles</span></li>
+        <li class="g-spec" style="--x:12%;--y:58.5%;--d:1.1" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-grains"/></svg><span>Grains</span></li>
+        <li class="g-spec g-spec--carbo" style="--x:19.5%;--y:25%;--d:0.9" data-g-spec><svg viewBox="0 0 200 200" focusable="false"><use href="#gi-carbo"/></svg><span>Carboglace</span></li>
+      </ul>
+    </figure>
+  </div>
+
+  <nav class="container g-toc" aria-labelledby="g-toc-title">
+    <h2 class="g-toc__title" id="g-toc-title">Sommaire</h2>
+    <ol class="g-toc__list" data-g-toc>
+      <li><a class="g-toc__card frost ice-edge" href="#science"><span class="g-toc__num">01</span><span class="g-toc__txt"><strong>La science de la glace</strong><span>334&nbsp;J/g, surface de contact et dilution</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+      <li><a class="g-toc__card frost ice-edge" href="#types"><span class="g-toc__num">02</span><span class="g-toc__txt"><strong>Les 7 types de glace</strong><span>Du glaçon plein à la carboglace</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+      <li><a class="g-toc__card frost ice-edge" href="#matrice"><span class="g-toc__num">03</span><span class="g-toc__txt"><strong>Matrice comparative</strong><span>Température, fonte, dilution… et la course de fonte</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+      <li><a class="g-toc__card frost ice-edge" href="#secteurs"><span class="g-toc__num">04</span><span class="g-toc__txt"><strong>Usages par secteur</strong><span>Mixologie, agroalimentaire, boulangerie</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+      <li><a class="g-toc__card frost ice-edge" href="#hygiene"><span class="g-toc__num">05</span><span class="g-toc__txt"><strong>Hygiène &amp; HACCP</strong><span>Les règles d’or de la glace alimentaire</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+      <li><a class="g-toc__card frost ice-edge" href="#guide-commande"><span class="g-toc__num">06</span><span class="g-toc__txt"><strong>Passer commande</strong><span>Devis gratuit, livraison offerte dès 20&nbsp;articles</span></span><span class="g-toc__arrow" aria-hidden="true"></span></a></li>
+    </ol>
+  </nav>
+
+  <nav class="g-rail" data-module="guide-toc" aria-label="Progression dans le guide">
+    <span class="g-rail__track" aria-hidden="true"><span class="g-rail__fill" data-g-rail-fill></span></span>
+    <ol class="g-rail__list">
+      <li><a class="g-rail__link" href="#science" data-g-rail="science"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">01</span><span class="g-rail__label">Science</span></a></li>
+      <li><a class="g-rail__link" href="#types" data-g-rail="types"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">02</span><span class="g-rail__label">Les 7 glaces</span></a></li>
+      <li><a class="g-rail__link" href="#matrice" data-g-rail="matrice"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">03</span><span class="g-rail__label">Comparatif</span></a></li>
+      <li><a class="g-rail__link" href="#secteurs" data-g-rail="secteurs"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">04</span><span class="g-rail__label">Secteurs</span></a></li>
+      <li><a class="g-rail__link" href="#hygiene" data-g-rail="hygiene"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">05</span><span class="g-rail__label">Hygiène</span></a></li>
+      <li><a class="g-rail__link" href="#guide-commande" data-g-rail="guide-commande"><span class="g-rail__dot" aria-hidden="true"></span><span class="g-rail__num">06</span><span class="g-rail__label">Commander</span></a></li>
+    </ol>
+  </nav>
+</section>

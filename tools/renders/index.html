@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Studio de rendu — Le Glaceur</title>
+  <meta name="robots" content="noindex">
+  <style>html,body{margin:0;background:#020a1c}canvas{display:block;max-width:100vw;height:auto}</style>
+  <script type="importmap">
+    { "imports": {
+      "three": "/node_modules/three/build/three.module.js",
+      "three/addons/": "/node_modules/three/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <!-- Outil interne (hors build Vite) : node tools/renders/render.mjs <scène>. Paramètres : ?scene=barres|gobelet&w=1600&h=2000&variant=0 -->
+  <script type="module">
+    const p = new URLSearchParams(location.search);
+    const scene = p.get('scene') || 'barres';
+    const w = +(p.get('w') || 800), h = +(p.get('h') || 1000);
+    const variant = +(p.get('variant') || 0);
+    window.__status = 'loading';
+    try {
+      const mod = await import(`./scene-${scene}.js`);
+      const t0 = performance.now();
+      await mod.default({ w, h, variant });
+      window.__ms = Math.round(performance.now() - t0);
+      window.__status = 'done';
+    } catch (e) {
+      console.error(e);
+      window.__status = 'error: ' + (e && e.stack || e);
+    }
+  </script>
+</body>
+</html>

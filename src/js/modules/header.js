@@ -36,23 +36,24 @@ export default function init(header, ctx) {
   /* ---------- État de la barre : verre, ton, compact, masquage ---------- */
   const state = { glass: null, tone: null, hidden: false, compact: null, menu: false, lastY: window.scrollY, acc: 0 };
   const toneCache = new WeakMap();
-  const firstSection = isHome ? document.querySelector('main > :first-child') : null;
+  let hoverLink = null; // lien survolé (pastille), déclaré tôt : setActive() peut appeler placePill() dès l'init
 
   function bgTone(el) {
     const cs = getComputedStyle(el);
+    if (cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text') return null;
+    const opaque = (c) => {
+      const m = c.match(/rgba?\(([^)]+)\)/);
+      if (!m) return true;
+      const parts = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+      return (parts[3] ?? 1) >= 0.55;
+    };
+    let colors = [];
     const img = cs.backgroundImage;
-    let color = null;
-    if (img && img !== 'none' && img.includes('gradient')) color = img.match(/rgba?\([^)]+\)|#[\da-f]{3,8}\b/i)?.[0];
-    if (!color) {
-      const c = cs.backgroundColor;
-      const a = c.match(/rgba?\(([^)]+)\)/);
-      if (a) {
-        const parts = a[1].split(/[\s,/]+/).filter(Boolean).map(Number);
-        if ((parts[3] ?? 1) >= 0.55) color = c;
-      }
-    }
-    if (!color) return null;
-    return luminance(color) < 0.35 ? 'dark' : 'light';
+    if (img && img !== 'none' && img.includes('gradient')) colors = (img.match(/rgba?\([^)]+\)|#[\da-f]{3,8}\b/gi) || []).filter(opaque);
+    if (!colors.length && opaque(cs.backgroundColor) && cs.backgroundColor !== 'transparent') colors = [cs.backgroundColor];
+    if (!colors.length) return null;
+    const lum = colors.reduce((a, c) => a + luminance(c), 0) / colors.length;
+    return lum < 0.3 ? 'dark' : 'light';
   }
 
   function toneOf(el) {
@@ -62,13 +63,12 @@ export default function init(header, ctx) {
         const ds = n.dataset?.headerTone;
         if (ds === 'dark' || ds === 'light') t = ds;
         else if (n.classList.contains('section--dark') || n.classList.contains('site-footer')) t = 'dark';
-        else if (n === firstSection) t = bgTone(n) === 'light' ? 'light' : 'dark';
         else t = bgTone(n);
         toneCache.set(n, t);
       }
       if (t) return t;
     }
-    return 'light';
+    return bgTone(document.body) || 'light';
   }
 
   function detectTone() {
@@ -154,7 +154,6 @@ export default function init(header, ctx) {
   }
 
   /* ---------- Pastille de glace (bureau) ---------- */
-  let hoverLink = null;
   function placePill(instant = false) {
     if (!pill || !nav) return;
     const link = hoverLink || navLinks.find((a) => a.dataset.nav === activeKey);

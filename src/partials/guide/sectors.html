@@ -1,0 +1,102 @@
+<!-- Guide — 04 · Applications par secteur (agent guide). Module : guide-draw.js (tracé des illustrations au défilement).
+     Illustrations au trait maison ; sans JS elles sont affichées entières. -->
+<section class="guide g-section g-sectors" id="secteurs" data-module="guide-draw" aria-labelledby="secteurs-title">
+  <div class="container">
+    <header class="g-head">
+      <p class="g-head__num" aria-hidden="true">04</p>
+      <div class="g-head__txt">
+        <p class="eyebrow">Applications par secteur d’activité</p>
+        <h2 id="secteurs-title" data-split>Une glace <span class="ice-text">par métier</span></h2>
+        <p class="lead">Du comptoir du bar à l’étal du poissonnier jusqu’au fournil&#8239;: la glace ne joue pas le même rôle partout.</p>
+      </div>
+    </header>
+
+    <ol class="g-sectors__grid" data-reveal-stagger="0.12">
+      <li class="g-sector frost ice-edge">
+        <div class="g-sector__art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" focusable="false">
+            <g class="g-draw" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path class="g-draw__main" d="M62 46l8 92q1 9 10 9h52q9 0 10-9l8-92"/>
+              <path class="g-draw__soft" d="M66 80h84"/>
+              <rect class="g-draw__ice" x="82" y="88" width="26" height="26" rx="4" transform="rotate(-8 95 101)"/>
+              <rect class="g-draw__ice" x="110" y="96" width="24" height="24" rx="4" transform="rotate(10 122 108)"/>
+              <rect class="g-draw__ice" x="92" y="116" width="22" height="22" rx="4" transform="rotate(4 103 127)"/>
+              <path class="g-draw__main" d="M128 24l-12 100"/>
+              <circle class="g-draw__accent" cx="152" cy="50" r="15"/>
+              <path class="g-draw__accent" d="M152 35v30M137 50h30M141.4 39.4l21.2 21.2M162.6 39.4l-21.2 21.2"/>
+              <path class="g-draw__main" d="M184 64h30l-5 78h-20z"/>
+              <path class="g-draw__main" d="M186 64q13-26 26 0M193 40h12"/>
+              <path class="g-draw__soft" d="M190 100h18"/>
+            </g>
+          </svg>
+        </div>
+        <span class="g-sector__num" aria-hidden="true">A</span>
+        <h3 class="g-sector__title">Mixologie</h3>
+        <p>Valoriser l’esthétique du verre, contrôler précisément la dilution et la température pour <strong>l’équilibre des saveurs</strong>.</p>
+        <div class="g-sector__ices">
+          <p class="g-sector__k">Glaces conseillées</p>
+          <ul class="cluster">
+            <li><a class="chip" href="#type-plein">Glaçon plein</a></li>
+            <li><a class="chip" href="#type-pilee">Glace pilée</a></li>
+            <li><a class="chip" href="#type-sphere">Sphère</a></li>
+            <li><a class="chip" href="#type-carbo">Carboglace</a></li>
+          </ul>
+        </div>
+        <p class="g-sector__lg"><span>Chez Le Glaceur</span> Glace cubique, glace pilée, glace en grain, carboglace</p>
+      </li>
+
+      <li class="g-sector frost ice-edge">
+        <div class="g-sector__art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" focusable="false">
+            <g class="g-draw" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path class="g-draw__main" d="M24 118h192l-14 26H38z"/>
+              <path class="g-draw__ice" d="M32 118l8-10 8 6 8-9 8 7 8-8 8 6 8-10 8 8 8-7 8 9 8-8 8 6 8-9 8 7 8-8 8 6 8-10 8 8 8-7 8 9 8-6 8 4"/>
+              <path class="g-draw__main" d="M58 88c22-28 84-28 112 0-28 26-90 26-112 0z"/>
+              <path class="g-draw__main" d="M170 88l22-18v36z"/>
+              <circle class="g-draw__accent" cx="76" cy="84" r="3"/>
+              <path class="g-draw__soft" d="M92 74q9 14 0 28M112 80q6 8 0 16M128 80q6 8 0 16M144 80q6 8 0 16"/>
+              <path class="g-draw__accent" d="M200 22v28M188 29l24 14M188 43l24-14"/>
+            </g>
+          </svg>
+        </div>
+        <span class="g-sector__num" aria-hidden="true">B</span>
+        <h3 class="g-sector__title">Agroalimentaire</h3>
+        <p>Maintenir le froid sur toute la chaîne de distribution et <strong>préserver la fraîcheur</strong> comme l’aspect visuel des produits frais.</p>
+        <div class="g-sector__ices">
+          <p class="g-sector__k">Glaces conseillées</p>
+          <ul class="cluster">
+            <li><a class="chip" href="#type-ecailles">Glace en écailles</a></li>
+            <li><a class="chip" href="#type-pilee">Glace pilée</a></li>
+            <li><a class="chip" href="#type-carbo">Carboglace</a></li>
+          </ul>
+        </div>
+        <p class="g-sector__lg"><span>Chez Le Glaceur</span> Glace pilée, barres de glace, carboglace</p>
+      </li>
+
+      <li class="g-sector frost ice-edge">
+        <div class="g-sector__art" aria-hidden="true">
+          <svg viewBox="0 0 240 160" focusable="false">
+            <g class="g-draw" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path class="g-draw__main" d="M36 92h150q-6 52-75 52T36 92z"/>
+              <path class="g-draw__soft" d="M54 92q18-32 57-28 39-4 57 28"/>
+              <path class="g-draw__soft" d="M80 82q14-10 30-4M114 76q16-6 30 6"/>
+              <path class="g-draw__ice" d="M84 26l14-4 3 3-14 4zM108 40l14-4 3 3-14 4zM90 56l13-3 3 3-13 3zM126 18l13-3 3 3-13 3zM120 58l12-3 3 3-12 3z"/>
+              <path class="g-draw__accent" d="M206 140V40"/>
+              <path class="g-draw__accent" d="M206 52q-14-4-14-16 14 2 14 16zM206 52q14-4 14-16-14 2-14 16zM206 72q-14-4-14-16 14 2 14 16zM206 72q14-4 14-16-14 2-14 16zM206 92q-14-4-14-16 14 2 14 16zM206 92q14-4 14-16-14 2-14 16z"/>
+            </g>
+          </svg>
+        </div>
+        <span class="g-sector__num" aria-hidden="true">C</span>
+        <h3 class="g-sector__title">Boulangerie</h3>
+        <p>Incorporée au pétrissage, la glace <strong>absorbe la chaleur due à la friction</strong> mécanique, sans activer les levures prématurément.</p>
+        <div class="g-sector__ices">
+          <p class="g-sector__k">Glace conseillée</p>
+          <ul class="cluster">
+            <li><a class="chip" href="#type-ecailles">Glace en écailles</a></li>
+          </ul>
+        </div>
+        <p class="g-sector__lg"><span>Un conseil&#8239;?</span> <a class="link-arrow" href="https://wa.me/2250789851686" data-g-wa="Bonjour Le Glaceur, j’aimerais un conseil sur la glace adaptée à mon activité." target="_blank" rel="noopener">Écrivez-nous sur WhatsApp</a></p>
+      </li>
+    </ol>
+  </div>
+</section>

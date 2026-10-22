@@ -1,0 +1,142 @@
+<!-- Guide des glaces — planche d'illustrations maison (agent guide).
+     7 symboles SVG (viewBox 0 0 200 200, posés sur une ligne de sol y ≈ 172) réutilisés par <use href="#gi-…">
+     dans le hero, les fiches types et la course de fonte. Aucune photo du PDF (droits).
+     Le calque reste dans le flux (pas de display:none) pour que les dégradés restent résolus. -->
+<svg class="g-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gi-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9efff"/></linearGradient>
+    <linearGradient id="gi-l" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#e3f3ff"/><stop offset="0.55" stop-color="#a9dafd"/><stop offset="1" stop-color="#7cc2f7"/></linearGradient>
+    <linearGradient id="gi-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ecfff"/><stop offset="0.6" stop-color="#4d9bff"/><stop offset="1" stop-color="#2a7deb"/></linearGradient>
+    <radialGradient id="gi-sph" cx="0.36" cy="0.32" r="0.75"><stop offset="0" stop-color="#ffffff"/><stop offset="0.22" stop-color="#eaf6ff"/><stop offset="0.6" stop-color="#9fd5ff"/><stop offset="0.9" stop-color="#3b88ec"/><stop offset="1" stop-color="#1563d6"/></radialGradient>
+    <linearGradient id="gi-cyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7cc2f7"/><stop offset="0.2" stop-color="#e9f6ff"/><stop offset="0.42" stop-color="#bfe4ff"/><stop offset="0.78" stop-color="#4d9bff"/><stop offset="1" stop-color="#2a7deb"/></linearGradient>
+    <radialGradient id="gi-cav" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stop-color="#1563d6"/><stop offset="0.7" stop-color="#4d9bff"/><stop offset="1" stop-color="#bfe4ff"/></radialGradient>
+    <linearGradient id="gi-flake" x1="0" y1="0" x2="1" y2="0.6"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#eef8ff"/><stop offset="1" stop-color="#bfe4ff"/></linearGradient>
+    <linearGradient id="gi-nug" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.45" stop-color="#d6eeff"/><stop offset="1" stop-color="#7cc2f7"/></linearGradient>
+    <linearGradient id="gi-ct" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4ebf3"/></linearGradient>
+    <linearGradient id="gi-cl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8eef5"/><stop offset="1" stop-color="#b9c6d6"/></linearGradient>
+    <linearGradient id="gi-cr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c3cfdd"/><stop offset="1" stop-color="#8496ad"/></linearGradient>
+    <radialGradient id="gi-shadow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#0a1f44" stop-opacity="0.22"/><stop offset="1" stop-color="#0a1f44" stop-opacity="0"/></radialGradient>
+    <filter id="gi-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <g id="gi-nugget">
+      <rect x="-12" y="-8.5" width="24" height="17" rx="8" fill="url(#gi-nug)" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1"/>
+      <ellipse cx="-3.5" cy="-4" rx="6" ry="1.8" fill="#ffffff" opacity="0.9"/>
+      <path d="M-8 5.2h13" stroke="#4d9bff" stroke-opacity="0.45" stroke-width="1.4" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <!-- 1. Glaçon plein : cube dense, cristallin, sans bulle d'air -->
+  <symbol id="gi-plein" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="170" rx="70" ry="10" fill="url(#gi-shadow)"/>
+    <polygon points="46.3,71 100,102 100,164 46.3,133" fill="url(#gi-l)"/>
+    <polygon points="100,102 153.7,71 153.7,133 100,164" fill="url(#gi-r)"/>
+    <polygon points="100,40 153.7,71 100,102 46.3,71" fill="url(#gi-t)"/>
+    <polygon points="55,90 63,94.6 63,140 55,135.4" fill="#ffffff" opacity="0.55"/>
+    <polygon points="69,98 72,99.7 72,146 69,144.3" fill="#ffffff" opacity="0.35"/>
+    <path d="M112 128l14-9 8 15M118 145l12-20" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <polygon points="100,49 128,65 120,69.5 92,53.5" fill="#ffffff" opacity="0.85"/>
+    <path d="M46.3 71L100 40l53.7 31L100 102z M100 102v62" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round" opacity="0.95"/>
+    <path d="M46.3 71v62L100 164l53.7-31V71" fill="none" stroke="#1563d6" stroke-opacity="0.35" stroke-width="1.2" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- 2. Glaçon creux : « dé à coudre » avec cavité centrale -->
+  <symbol id="gi-creux" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="170" rx="66" ry="10" fill="url(#gi-shadow)"/>
+    <path d="M48 70v76a52 20 0 0 0 104 0V70a52 20 0 0 1-104 0z" fill="url(#gi-cyl)"/>
+    <rect x="61" y="86" width="9" height="66" rx="4.5" fill="#ffffff" opacity="0.6"/>
+    <rect x="76" y="90" width="4" height="64" rx="2" fill="#ffffff" opacity="0.35"/>
+    <ellipse cx="100" cy="70" rx="52" ry="20" fill="url(#gi-t)" stroke="#ffffff" stroke-width="1.8"/>
+    <ellipse cx="100" cy="72" rx="31" ry="11.5" fill="url(#gi-cav)"/>
+    <path d="M70 74a31 11.5 0 0 0 60 0" fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2"/>
+    <path d="M48 146a52 20 0 0 0 104 0" fill="none" stroke="#1563d6" stroke-opacity="0.3" stroke-width="1.2"/>
+  </symbol>
+
+  <!-- 3. Glace pilée : éclats irréguliers de 5 à 15 mm -->
+  <symbol id="gi-pilee" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="176" rx="80" ry="10" fill="url(#gi-shadow)"/>
+    <g stroke="#ffffff" stroke-width="1.4" stroke-linejoin="round">
+      <polygon points="62,112 84,96 102,108 92,128 66,126" fill="url(#gi-l)"/>
+      <polygon points="98,104 122,90 142,108 128,124 104,120" fill="url(#gi-t)"/>
+      <polygon points="128,118 150,106 168,128 152,142 132,136" fill="url(#gi-r)"/>
+      <polygon points="38,140 58,120 80,128 76,150 50,154" fill="url(#gi-t)"/>
+      <polygon points="78,130 100,118 120,134 110,156 84,154" fill="url(#gi-l)"/>
+      <polygon points="112,138 136,128 154,146 140,164 116,160" fill="url(#gi-t)"/>
+      <polygon points="52,158 74,146 94,160 84,176 58,174" fill="url(#gi-r)"/>
+      <polygon points="90,160 116,152 134,166 120,180 96,178" fill="url(#gi-l)"/>
+      <polygon points="130,160 152,150 170,164 158,178 136,178" fill="url(#gi-t)"/>
+    </g>
+    <path d="M70 108l12-8M106 104l14-8M44 138l12-12M120 142l14-8M136 164l14-8" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" opacity="0.9"/>
+  </symbol>
+
+  <!-- 4. Sphère de glace : ratio surface/volume minimal -->
+  <symbol id="gi-sphere" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="172" rx="56" ry="9" fill="url(#gi-shadow)"/>
+    <circle cx="100" cy="104" r="62" fill="url(#gi-sph)"/>
+    <path d="M52 118a52 52 0 0 0 82 30" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path d="M140 70a46 46 0 0 1 10 48" fill="none" stroke="#ffffff" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="78" cy="76" rx="18" ry="10" transform="rotate(-32 78 76)" fill="#ffffff" opacity="0.92"/>
+    <circle cx="104" cy="66" r="3.4" fill="#ffffff" opacity="0.8"/>
+    <circle cx="100" cy="104" r="62" fill="none" stroke="#ffffff" stroke-opacity="0.8" stroke-width="1.6"/>
+  </symbol>
+
+  <!-- 5. Glace en écailles : lames plates et sèches de 1,5 à 2 mm -->
+  <symbol id="gi-ecailles" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="176" rx="78" ry="9" fill="url(#gi-shadow)"/>
+    <g stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round">
+      <polygon points="116,92 152,84 166,94 128,102" fill="url(#gi-flake)"/><polygon points="128,102 166,94 166,98 128,106" fill="#8ecfff"/>
+      <polygon points="56,110 102,98 124,108 78,122" fill="url(#gi-flake)"/><polygon points="78,122 124,108 124,112 78,126" fill="#8ecfff"/>
+      <polygon points="88,122 136,110 160,122 110,136" fill="url(#gi-flake)"/><polygon points="110,136 160,122 160,126 110,140" fill="#7cc2f7"/>
+      <polygon points="36,140 90,126 112,136 58,152" fill="url(#gi-flake)"/><polygon points="58,152 112,136 112,140 58,156" fill="#8ecfff"/>
+      <polygon points="100,146 148,134 170,146 120,160" fill="url(#gi-flake)"/><polygon points="120,160 170,146 170,150 120,164" fill="#7cc2f7"/>
+      <polygon points="32,162 78,152 100,162 54,172" fill="url(#gi-flake)"/><polygon points="54,172 100,162 100,166 54,176" fill="#8ecfff"/>
+      <polygon points="90,166 140,156 162,166 112,178" fill="url(#gi-flake)"/><polygon points="112,178 162,166 162,170 112,182" fill="#7cc2f7"/>
+    </g>
+    <path d="M66 112l26-7M48 142l30-8M104 148l26-7M100 124l28-8" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.95"/>
+  </symbol>
+
+  <!-- 6. Glace en grains : petits amalgames compactés, moelleux -->
+  <symbol id="gi-grains" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="176" rx="76" ry="9" fill="url(#gi-shadow)"/>
+    <use href="#gi-nugget" transform="translate(88 104) rotate(-14)"/>
+    <use href="#gi-nugget" transform="translate(112 106) rotate(18)"/>
+    <use href="#gi-nugget" transform="translate(66 124) rotate(10)"/>
+    <use href="#gi-nugget" transform="translate(90 122) rotate(-6)"/>
+    <use href="#gi-nugget" transform="translate(114 124) rotate(24)"/>
+    <use href="#gi-nugget" transform="translate(136 126) rotate(-12)"/>
+    <use href="#gi-nugget" transform="translate(54 144) rotate(-20)"/>
+    <use href="#gi-nugget" transform="translate(78 142) rotate(8)"/>
+    <use href="#gi-nugget" transform="translate(102 142) rotate(-16)"/>
+    <use href="#gi-nugget" transform="translate(126 144) rotate(12)"/>
+    <use href="#gi-nugget" transform="translate(148 146) rotate(-4)"/>
+    <use href="#gi-nugget" transform="translate(42 164) rotate(6)"/>
+    <use href="#gi-nugget" transform="translate(66 162) rotate(-10)"/>
+    <use href="#gi-nugget" transform="translate(90 162) rotate(16)"/>
+    <use href="#gi-nugget" transform="translate(114 163) rotate(-8)"/>
+    <use href="#gi-nugget" transform="translate(138 164) rotate(20)"/>
+    <use href="#gi-nugget" transform="translate(160 166) rotate(-14)"/>
+  </symbol>
+
+  <!-- 7. Carboglace : CO₂ solide, sublimation (brume) -->
+  <symbol id="gi-carbo" viewBox="0 0 200 200" overflow="visible">
+    <ellipse cx="100" cy="174" rx="74" ry="10" fill="url(#gi-shadow)"/>
+    <g style="fill: var(--gi-vapor, #dfe9f5)" filter="url(#gi-soft)" opacity="0.85">
+      <ellipse cx="62" cy="168" rx="40" ry="10"/><ellipse cx="140" cy="170" rx="42" ry="10"/>
+    </g>
+    <polygon points="45.1,115 78,134 78,172 45.1,153" fill="url(#gi-cl)"/>
+    <polygon points="78,134 110.9,115 110.9,153 78,172" fill="url(#gi-cr)"/>
+    <polygon points="78,96 110.9,115 78,134 45.1,115" fill="url(#gi-ct)"/>
+    <polygon points="94.6,121 124,138 124,172 94.6,155" fill="url(#gi-cl)"/>
+    <polygon points="124,138 153.4,121 153.4,155 124,172" fill="url(#gi-cr)"/>
+    <polygon points="124,104 153.4,121 124,138 94.6,121" fill="url(#gi-ct)"/>
+    <polygon points="62.9,91 82,102 82,124 62.9,113" fill="url(#gi-cl)"/>
+    <polygon points="82,102 101.1,91 101.1,113 82,124" fill="url(#gi-cr)"/>
+    <polygon points="82,80 101.1,91 82,102 62.9,91" fill="url(#gi-ct)"/>
+    <g fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linejoin="round" opacity="0.9">
+      <path d="M45.1 115L78 96l32.9 19L78 134z"/><path d="M94.6 121L124 104l29.4 17L124 138z"/><path d="M62.9 91L82 80l19.1 11L82 102z"/>
+    </g>
+    <g class="gi-vapor" fill="none" style="stroke: var(--gi-vapor, #dfe9f5)" stroke-linecap="round" filter="url(#gi-soft)" opacity="0.9">
+      <path d="M80 82c-10-14 8-20 0-36" stroke-width="9"/>
+      <path d="M124 100c10-12-6-22 4-38" stroke-width="8"/>
+      <path d="M104 92c-6-10 6-16 0-28" stroke-width="6"/>
+    </g>
+  </symbol>
+</svg>

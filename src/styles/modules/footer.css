@@ -192,6 +192,7 @@
   color: var(--sf-muted);
   text-decoration: none;
   font-size: 1rem;
+  white-space: nowrap;
   transition: color 0.35s var(--ease-out), transform 0.45s var(--ease-out);
 }
 .site-footer__list a::after { /* trait de givre qui se dessine */
@@ -262,7 +263,7 @@
 .site-footer__mail:hover { text-decoration-color: var(--ice-300); }
 .site-footer__place { align-items: flex-start; color: var(--sf-muted); }
 .site-footer__place .icon { margin-top: 0.15rem; color: var(--ice-300); }
-.site-footer__place > span { display: grid; }
+.site-footer__place-text { display: grid; gap: 0.15rem; }
 .site-footer__place small {
   font-family: var(--font-display);
   font-weight: 700;
@@ -271,7 +272,7 @@
   text-transform: uppercase;
   color: var(--ice-300);
 }
-.site-footer__place:hover > span > span { color: #fff; }
+.site-footer__place:hover .site-footer__place-text > span { color: #fff; }
 .site-footer__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; list-style: none; }
 .site-footer__badge {
   display: inline-flex;
@@ -391,7 +392,9 @@
 
 @media (max-width: 559px) {
   .site-footer__bottom { flex-direction: column; align-items: flex-start; }
-  .site-footer__nav { gap: 1.25rem; }
+  .site-footer .site-footer__legal { flex-basis: auto; }
+  .site-footer__nav { gap: 1rem; }
+  .site-footer__new { font-size: 0.6rem; padding: 0.14rem 0.4rem; letter-spacing: 0.1em; }
   .site-footer__btn { flex: 1 1 auto; }
 }
 

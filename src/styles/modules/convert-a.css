@@ -271,6 +271,8 @@ html:not(.js) .oe-ticker { display: none; }
   animation: oe-sheen 7s var(--ease-in-out) 2s infinite;
 }
 @keyframes oe-sheen { 0%, 70% { transform: translateX(-140%) skewX(-12deg); } 100% { transform: translateX(380%) skewX(-12deg); } }
+@media (min-width: 560px) and (max-width: 1023px) { .oe-bin { aspect-ratio: 5 / 2.8; } }
+@media (min-width: 1024px) { .oe-bin { aspect-ratio: 5 / 3.4; } }
 .oe-bin__canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 .oe-bin__empty {
   position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 0.6rem;
@@ -506,7 +508,8 @@ html:not(.js) .oe-bin { display: none; }
 /* Schéma sur petit écran : libellés plus grands, seuls les plus utiles restent visibles. */
 @media (max-width: 640px) {
   .dmap__label { font-size: 30px; stroke-width: 7px; }
-  .dmap__hub-tag { transform: translate(0px, -50px) scale(1.75); }
+  .dmap__hub-tag { transform: translate(66px, -50px) scale(1.5); }
+  .delivery__map .dmap { margin-inline: calc(-1 * var(--gutter) + 6px); padding: 0.35rem; border-radius: var(--r-lg); }
   .dmap__water-label { font-size: 22px; }
   .dmap__compass { transform: translate(770px, 56px) scale(1.3); }
   .dmap__legend { position: static; margin-top: 0.4rem; }

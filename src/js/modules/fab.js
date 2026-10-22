@@ -26,8 +26,19 @@ export default function init(fab, ctx) {
     peekOnce(fab);
   };
   whenPreloaderDone(start);
+  liftAboveFooter(fab);
 
   // Libellé ouvert au toucher long / clavier : géré en CSS (:hover, :focus-visible). Sur mobile, un tap ouvre WhatsApp directement.
+}
+
+/** Ne recouvre pas le lien « Haut de page » du pied de page. */
+function liftAboveFooter(fab) {
+  const bottom = document.querySelector('.site-footer__bottom');
+  if (!bottom || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) fab.style.setProperty('--fab-lift', `${Math.round(e.intersectionRect.height + 12)}px`);
+    fab.classList.toggle('is-lifted', e.isIntersecting);
+  }, { threshold: [0, 0.25, 0.5, 0.75, 1] }).observe(bottom);
 }
 
 function peekOnce(fab) {

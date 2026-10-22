@@ -1,0 +1,93 @@
+<!-- Guide — 01 · Les principes physiques (agent guide). Module : guide-science.js (démonstration surface/volume).
+     Sans JS : les trois cas (1, 8, 64 cubes) restent lisibles dans le tableau ; le compteur 334 est statique. -->
+<section class="guide g-section g-science" id="science" data-module="guide-science" aria-labelledby="science-title">
+  <div class="container">
+    <header class="g-head">
+      <p class="g-head__num" aria-hidden="true">01</p>
+      <div class="g-head__txt">
+        <p class="eyebrow">Les principes physiques</p>
+        <h2 id="science-title" data-split>La science <span class="ice-text">de la glace</span></h2>
+        <p class="lead">Avant de choisir une glace, deux notions suffisent&#8239;: ce qu’elle absorbe en fondant, et la vitesse à laquelle elle le fait.</p>
+      </div>
+    </header>
+
+    <div class="g-science__grid">
+      <!-- Capacité frigorifique -->
+      <article class="g-heat frost ice-edge" aria-labelledby="heat-title">
+        <div class="g-heat__art" aria-hidden="true">
+          <svg class="g-heat__svg" viewBox="0 0 320 260" focusable="false">
+            <g class="g-heat__waves" fill="none" stroke-linecap="round">
+              <path class="g-heat__wave" d="M20 70c18-10 30 10 48 0s30 10 48 0"/>
+              <path class="g-heat__wave" d="M12 130c18-10 30 10 48 0s30 10 48 0"/>
+              <path class="g-heat__wave" d="M20 190c18-10 30 10 48 0s30 10 48 0"/>
+              <path class="g-heat__wave" d="M300 70c-18-10-30 10-48 0s-30 10-48 0"/>
+              <path class="g-heat__wave" d="M308 130c-18-10-30 10-48 0s-30 10-48 0"/>
+              <path class="g-heat__wave" d="M300 190c-18-10-30 10-48 0s-30 10-48 0"/>
+            </g>
+            <svg x="96" y="40" width="128" height="128" viewBox="0 0 200 200" overflow="visible"><use href="#gi-plein"/></svg>
+            <g class="g-heat__drops">
+              <path d="M140 196c0-6 6-10 6-14 0 4 6 8 6 14a6 6 0 0 1-12 0z"/>
+              <path d="M170 204c0-5 5-8 5-11 0 3 5 6 5 11a5 5 0 0 1-10 0z"/>
+            </g>
+            <ellipse class="g-heat__puddle" cx="160" cy="226" rx="70" ry="9"/>
+          </svg>
+        </div>
+        <div class="g-heat__body">
+          <p class="eyebrow">Capacité frigorifique</p>
+          <h3 id="heat-title" class="g-heat__value"><span class="ice-text" data-count="334">334</span><span class="g-heat__unit">J/g</span></h3>
+          <p class="g-heat__lede">C’est l’énergie qu’absorbe chaque gramme de glace alimentaire au moment de fondre.</p>
+          <p>Sa fonction ne se limite pas à rafraîchir par contact&#8239;: en passant de l’état solide à l’état liquide, la glace <strong>capte la chaleur environnante</strong>. C’est ce changement d’état qui refroidit vos boissons et vos produits.</p>
+          <ul class="g-heat__eq">
+            <li><span class="g-heat__eq-k">1&nbsp;kg de glace qui fond</span><span class="g-heat__eq-v">334&nbsp;kJ absorbés</span></li>
+            <li><span class="g-heat__eq-k">Un pack de 5&nbsp;kg</span><span class="g-heat__eq-v">1&nbsp;670&nbsp;kJ absorbés</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Taux de dilution : démonstration surface / volume -->
+      <article class="g-dil frost ice-edge" aria-labelledby="dil-title" data-g-dil>
+        <div class="g-dil__intro">
+          <p class="eyebrow">Taux de dilution</p>
+          <h3 id="dil-title">Même volume, <span class="ice-text">surface multipliée</span></h3>
+          <p>La vitesse de fonte dépend du <strong>rapport surface / volume</strong>. Plus le morceau de glace est petit, ou creux, plus sa surface de contact avec le liquide est grande&#8239;: le refroidissement s’accélère… et la dilution aussi.</p>
+        </div>
+
+        <fieldset class="g-dil__ctrl">
+          <legend class="g-dil__legend">Découpez un bloc de 4&nbsp;cm de côté (64&nbsp;cm³)</legend>
+          <div class="g-seg" data-g-seg>
+            <span class="g-seg__puck" aria-hidden="true" data-g-seg-puck></span>
+            <label class="g-seg__opt"><input type="radio" name="g-dil" value="1" checked><span><b>1</b> cube</span></label>
+            <label class="g-seg__opt"><input type="radio" name="g-dil" value="2"><span><b>8</b> cubes</span></label>
+            <label class="g-seg__opt"><input type="radio" name="g-dil" value="4"><span><b>64</b> cubes</span></label>
+          </div>
+        </fieldset>
+
+        <div class="g-dil__stage">
+          <svg class="g-dil__svg" viewBox="-130 -150 260 280" focusable="false" aria-hidden="true" data-g-dil-svg>
+            <g data-g-dil-cubes>
+              <svg x="-110" y="-140" width="220" height="220" viewBox="0 0 200 200" overflow="visible"><use href="#gi-plein"/></svg>
+            </g>
+          </svg>
+          <div class="g-dil__readout" aria-live="polite" data-g-dil-readout>
+            <p class="g-dil__big"><span data-g-dil-area>96</span><small>&nbsp;cm²</small></p>
+            <p class="g-dil__cap">de surface de contact</p>
+            <p class="g-dil__mult"><span data-g-dil-mult>×1</span> par rapport au bloc entier</p>
+          </div>
+        </div>
+
+        <div class="g-dil__table-wrap">
+          <table class="g-dil__table">
+            <caption class="sr-only">Surface de contact d’un même volume de glace (64&nbsp;cm³) selon le découpage</caption>
+            <thead><tr><th scope="col">Découpage</th><th scope="col">Arête</th><th scope="col">Surface</th><th scope="col">Surface / volume</th></tr></thead>
+            <tbody>
+              <tr data-g-dil-row="1" class="is-active"><th scope="row">1&nbsp;cube</th><td>4&nbsp;cm</td><td>96&nbsp;cm²</td><td>1,5&nbsp;cm⁻¹</td></tr>
+              <tr data-g-dil-row="2"><th scope="row">8&nbsp;cubes</th><td>2&nbsp;cm</td><td>192&nbsp;cm²</td><td>3&nbsp;cm⁻¹</td></tr>
+              <tr data-g-dil-row="4"><th scope="row">64&nbsp;cubes</th><td>1&nbsp;cm</td><td>384&nbsp;cm²</td><td>6&nbsp;cm⁻¹</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="g-dil__moral"><strong>À retenir&#8239;:</strong> un gros glaçon dense fond lentement et dilue peu (spiritueux)&#8239;; de petits fragments refroidissent très vite mais apportent plus d’eau (cocktails frappés).</p>
+      </article>
+    </div>
+  </div>
+</section>

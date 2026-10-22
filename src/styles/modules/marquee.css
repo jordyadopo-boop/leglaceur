@@ -23,13 +23,14 @@
 }
 .marquee__defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
-.marquee__stage { position: relative; display: grid; gap: 0; }
+.marquee__stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 
 /* --- Rubans --- */
 .marquee__band {
   position: relative;
   /* déborde des deux côtés : l'inclinaison ne laisse jamais voir les bouts */
   width: calc(100% + 12vw);
+  min-width: 0;
   margin-left: -6vw;
   white-space: nowrap;
   -webkit-user-select: none;

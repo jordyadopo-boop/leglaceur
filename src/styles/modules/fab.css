@@ -39,6 +39,8 @@ body:has(.quote-mobilebar.is-visible) .fab {
   transition: transform 0.5s var(--ease-out), opacity 0.3s var(--ease-out), visibility 0s linear 0.5s;
 }
 html.preload:not(.preloader-done) .fab { opacity: 0; }
+/* au-dessus de la barre basse du pied de page (« Haut de page ») quand elle est visible */
+.fab.is-lifted { transform: translateY(calc(-1 * var(--fab-lift, 72px))); }
 
 /* ---------- Bouton ---------- */
 .fab__btn {

@@ -1,7 +1,8 @@
 /**
- * Scène WebGL du hero : « nuit polaire ».
- * - Fond plein écran (shader) : dégradé marine, halo bleu, caustiques de lumière, et le très grand mot « GLACEUR ».
- *   Il est OPAQUE : il est donc capturé par la passe de transmission et RÉFRACTÉ par les glaçons.
+ * Scène WebGL du hero : « vitrine de glace » sur fond CLAIR (blanc-bleuté lumineux, comme les affiches).
+ * - Fond plein écran (shader) : blanc givré, halo bleu glacier, caustiques douces, ombres caustiques des glaçons
+ *   et le très grand mot « GLACEUR ». Il est OPAQUE : il est donc capturé par la passe de transmission et
+ *   RÉFRACTÉ par les glaçons (le mot se tord et se dédouble à travers la glace).
  * - 4 à 7 glaçons : RoundedBoxGeometry légèrement irrégulière, MeshPhysicalMaterial (transmission 1, ior 1.31,
  *   dispersion, normal map procédurale, cœur laiteux, arêtes givrées), environnement PMREM froid.
  * - Givre en suspension (Points), éclats de lumière (sprites), éclats de glace et onde de choc au clic.
@@ -20,23 +21,25 @@ const R0 = 0.5; // rugosité de base (modulée par la carte de détails)
 /* Points d'ancrage des glaçons, exprimés dans la « zone libre » (u, v ∈ [0, 1], v vers le bas).
    z : profondeur (vers la caméra si > 0), s : taille relative. */
 const ANCHORS = {
-  wide: [
-    { u: 0.47, v: 0.42, z: 0.8, s: 1.2 },
-    { u: 0.86, v: 0.17, z: -1.2, s: 0.86 },
-    { u: 0.15, v: 0.8, z: 1.6, s: 0.66 },
-    { u: 0.8, v: 0.74, z: 0.1, s: 0.98 },
-    { u: 0.33, v: 0.07, z: -2.8, s: 0.6 },
-    { u: 1.02, v: 0.48, z: -3.4, s: 0.78 },
-    { u: 0.04, v: 0.3, z: -4.2, s: 0.52 },
+  // Bureau : la zone libre est la colonne de droite (portrait). Les glaçons du bas chevauchent le mot géant.
+  side: [
+    { u: 0.5, v: 0.5, z: 0.9, s: 1.12 },
+    { u: 0.84, v: 0.2, z: -0.8, s: 0.78 },
+    { u: 0.8, v: 0.82, z: 1.5, s: 0.74 },
+    { u: 0.14, v: 0.26, z: -1.6, s: 0.66 },
+    { u: 0.2, v: 0.86, z: 0.4, s: 0.58 },
+    { u: 0.46, v: 0.13, z: -3.4, s: 0.48 },
+    { u: 1.06, v: 0.56, z: -3.8, s: 0.56 },
   ],
-  tall: [
-    { u: 0.78, v: 0.5, z: 0.6, s: 1 },
-    { u: 0.22, v: 0.3, z: -1.4, s: 0.72 },
-    { u: 0.99, v: 0.02, z: -2.8, s: 0.58 },
-    { u: 0.05, v: 0.98, z: 1.1, s: 0.48 },
-    { u: 0.52, v: 0.06, z: -3.6, s: 0.5 },
-    { u: 0.45, v: 0.86, z: -0.8, s: 0.5 },
-    { u: 0.93, v: 0.98, z: 1.7, s: 0.42 },
+  // Mobile / tablette : bande libre sous le texte (paysage).
+  band: [
+    { u: 0.3, v: 0.52, z: 0.6, s: 1 },
+    { u: 0.77, v: 0.36, z: -0.8, s: 0.84 },
+    { u: 0.94, v: 0.86, z: 1.4, s: 0.54 },
+    { u: 0.03, v: 0.16, z: -1.8, s: 0.56 },
+    { u: 0.56, v: 0.94, z: 1.9, s: 0.42 },
+    { u: 0.52, v: 0.02, z: -3.2, s: 0.44 },
+    { u: -0.06, v: 0.9, z: 0.4, s: 0.48 },
   ],
 };
 
@@ -50,7 +53,9 @@ void main() {
   gl_Position = vec4(position.xy, 0.9999, 1.0);
 }`;
 
+const NSH = 7; // ombres caustiques (une par glaçon au maximum)
 const BG_FRAG = /* glsl */ `
+#define NSH ${NSH}
 uniform vec2 uRes;
 uniform float uTime;
 uniform vec2 uHalo;
@@ -61,16 +66,17 @@ uniform float uWordAlpha;
 uniform float uWordLift;
 uniform float uFade;
 uniform float uCaustic;
-uniform vec3 cDeep;
-uniform vec3 cNavy;
-uniform vec3 cMid;
-uniform vec3 cBlue;
-uniform vec3 cIce;
+uniform vec4 uShadow[NSH];
+uniform vec3 cTop;
+uniform vec3 cBottom;
+uniform vec3 cHalo;
+uniform vec3 cLine;
+uniform vec3 cShadow;
 varying vec2 vUv;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
 
-// Caustiques (eau / glace traversée par la lumière)
+// Caustiques (lumière traversant l'eau / la glace)
 float caustic(vec2 p, float t) {
   vec2 i = p;
   float c = 1.0;
@@ -90,19 +96,28 @@ void main() {
   float asp = uRes.x / uRes.y;
   vec2 p = vec2((uv.x - 0.5) * asp, uv.y - 0.5);
 
-  // Nuit polaire : plus clair en haut
-  vec3 col = mix(cDeep, cNavy, smoothstep(-0.05, 0.85, uv.y));
-  col = mix(col, cMid, smoothstep(0.6, 1.1, uv.y) * 0.55);
+  // Blanc givré, légèrement bleuté vers le bas (comme les affiches)
+  vec3 col = mix(cBottom, cTop, smoothstep(-0.05, 0.72, uv.y));
 
-  // Halo bleu derrière les glaçons
+  // Halo bleu glacier derrière les glaçons + source de lumière blanche en haut
   vec2 h = vec2((uv.x - uHalo.x) * asp, uv.y - uHalo.y) + uPar * 0.35;
-  float halo = exp(-dot(h, h) * 2.4);
-  col += cBlue * halo * 0.62;
-  col += cIce * exp(-dot(h, h) * 16.0) * 0.1;
+  float halo = exp(-dot(h, h) * 2.1);
+  col = mix(col, cHalo, halo * 0.62);
 
-  // Caustiques très douces, surtout dans le halo
-  float c = caustic(p * 3.2 + uPar * 0.8 - 250.0, uTime * 0.32);
-  col += cIce * c * uCaustic * (0.18 + halo * 0.9);
+  // Caustiques bleutées, surtout dans le halo
+  float c = clamp(caustic(p * 3.0 + uPar * 0.8 - 250.0, uTime * 0.3), 0.0, 1.0);
+  col = mix(col, cLine, c * uCaustic * (0.22 + halo * 0.9));
+
+  // Ombres caustiques des glaçons : pénombre bleue + cœur de lumière concentrée
+  for (int k = 0; k < NSH; k++) {
+    vec4 s = uShadow[k];
+    if (s.w <= 0.001) continue;
+    vec2 d = (uv - s.xy) * vec2(asp, 1.0) / s.z;
+    float r2 = dot(d, d);
+    col = mix(col, cShadow, exp(-r2 * 2.6) * s.w * 0.2);
+    col = mix(col, cLine, exp(-r2 * 7.0) * s.w * 0.16);
+    col = mix(col, vec3(1.0), exp(-r2 * 26.0) * s.w * 0.55);
+  }
 
   // Le très grand mot
   vec2 w = (uv - uWordRect.xy - vec2(0.0, uWordLift)) / uWordRect.zw + 0.5 + uPar * 0.02;
@@ -111,13 +126,12 @@ void main() {
     col = mix(col, t.rgb, t.a * uWordAlpha);
   }
 
-  // Vignette
-  float v = smoothstep(1.3, 0.15, length(p * vec2(0.82, 1.08)));
-  col *= mix(0.6, 1.0, v);
-  col *= uFade;
+  // Coins à peine bleutés (profondeur douce)
+  float v = smoothstep(1.25, 0.25, length(p * vec2(0.8, 1.1)));
+  col = mix(cBottom * 0.94, col, mix(0.55, 1.0, v));
+  col = mix(vec3(1.0), col, uFade);
 
   gl_FragColor = vec4(col, 1.0);
-  #include <tonemapping_fragment>
   #include <colorspace_fragment>
   gl_FragColor.rgb += (hash(gl_FragCoord.xy + fract(uTime) * 61.0) - 0.5) / 255.0;
 }`;
@@ -173,11 +187,13 @@ varying float vSpark;
 void main() {
   vec2 c = gl_PointCoord - 0.5;
   float d = length(c);
-  float core = pow(smoothstep(0.5, 0.0, d), 2.4);
-  float cross = (smoothstep(0.045, 0.0, abs(c.x)) + smoothstep(0.045, 0.0, abs(c.y))) * smoothstep(0.5, 0.05, d) * vSpark;
-  float a = (core + cross) * vA;
+  // Sur fond clair : paillette de givre (cœur blanc, frange bleutée) ou étoile à 4 branches pour les éclats.
+  float disc = smoothstep(0.5, 0.0, d);
+  float star = (smoothstep(0.06, 0.0, abs(c.x)) * smoothstep(0.5, 0.0, abs(c.y)) + smoothstep(0.06, 0.0, abs(c.y)) * smoothstep(0.5, 0.0, abs(c.x)));
+  float a = mix(pow(disc, 1.6), max(star, pow(disc, 6.0)), vSpark) * vA;
   if (a < 0.004) discard;
-  gl_FragColor = vec4(uColor, a);
+  vec3 col = mix(uColor, vec3(1.0), smoothstep(0.32, 0.0, d) * 0.85);
+  gl_FragColor = vec4(col, a);
 }`;
 
 /* ------------------------------------------------------------------ */
@@ -191,9 +207,9 @@ function buildEnvironment(renderer) {
       side: THREE.BackSide,
       depthWrite: false,
       uniforms: {
-        top: { value: new THREE.Color('#a8d8ff') },
-        mid: { value: new THREE.Color('#1b4c92') },
-        bottom: { value: new THREE.Color('#050f26') },
+        top: { value: new THREE.Color('#ffffff') },
+        mid: { value: new THREE.Color('#bfe0ff') },
+        bottom: { value: new THREE.Color('#0d2a5c') },
       },
       vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
       fragmentShader: 'uniform vec3 top, mid, bottom; varying vec3 vP; void main(){ float y = vP.y; vec3 c = y > 0.0 ? mix(mid, top, pow(y, 0.75)) : mix(mid, bottom, pow(-y, 0.5)); gl_FragColor = vec4(c, 1.0); }',
@@ -210,12 +226,19 @@ function buildEnvironment(renderer) {
     m.lookAt(0, 0, 0);
     env.add(m);
   };
-  panel(16, 3.2, [0, 13, 5], '#ffffff', 9);
-  panel(2.2, 18, [-13, 2, 5], '#cfeaff', 7);
-  panel(1.4, 15, [13, 1, -1], '#ffffff', 10);
-  panel(12, 4, [0, -1, -15], '#2a7deb', 4);
-  panel(7, 7, [7, -11, 8], '#4d9bff', 2.2);
+  panel(16, 3.2, [0, 13, 5], '#ffffff', 8);
+  panel(2.2, 18, [-13, 2, 5], '#e6f4ff', 5);
+  panel(1.4, 15, [13, 1, -1], '#ffffff', 9);
+  panel(3, 20, [-12, 0, -6], '#0a1f44', 1); // bandes marines : arêtes nettes sur fond blanc
+  panel(2, 16, [11, -2, 8], '#0f2c5e', 1);
+  panel(12, 4, [0, -1, -15], '#2a7deb', 2.5);
+  panel(7, 7, [7, -11, 8], '#1563d6', 1.6);
   panel(3, 3, [6, 6, 12], '#ffffff', 6);
+  // Derrière la caméra : bandes marines et réglettes blanches → reflets nets et contrastés sur les faces avant.
+  panel(26, 5, [0, -6, 16], '#071a3d', 1);
+  panel(1.2, 10, [-5, 3, 15], '#ffffff', 9);
+  panel(0.8, 9, [4.5, 2, 15], '#ffffff', 7);
+  panel(10, 1.2, [0, 8, 13], '#dff0ff', 6);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const rt = pmrem.fromScene(env, 0.02);
   env.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); });
@@ -263,9 +286,9 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   let dprCap = mobile ? 1.25 : 1.5;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, dprCap));
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.08;
   renderer.transmissionResolutionScale = mobile ? 0.5 : 0.7;
-  renderer.setClearColor('#040e24', 1);
+  renderer.setClearColor('#ffffff', 1);
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 80);
@@ -278,7 +301,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   const key = new THREE.DirectionalLight('#ffffff', 2.6);
   key.position.set(6, 9, 8);
   scene.add(key);
-  const rim = new THREE.PointLight('#4d9bff', 38, 0, 2);
+  const rim = new THREE.PointLight('#4d9bff', 30, 0, 2);
   rim.position.set(3, -1, -4);
   scene.add(rim);
 
@@ -293,15 +316,16 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     uWordRect: { value: new THREE.Vector4(0.5, 0.45, 1, 0.3) },
     uWordAlpha: { value: reduced ? 1 : 0 },
     uWordLift: { value: 0 },
-    uFade: { value: reduced ? 1 : 0.6 },
-    uCaustic: { value: mobile ? 0.18 : 0.22 },
-    cDeep: { value: new THREE.Color('#040e24') },
-    cNavy: { value: new THREE.Color('#0a1f44') },
-    cMid: { value: new THREE.Color('#173c7a') },
-    cBlue: { value: new THREE.Color('#1f6fe0') },
-    cIce: { value: new THREE.Color('#bfe4ff') },
+    uFade: { value: reduced ? 1 : 0.4 },
+    uCaustic: { value: mobile ? 0.3 : 0.36 },
+    uShadow: { value: Array.from({ length: NSH }, () => new THREE.Vector4(0, 0, 1, 0)) },
+    cTop: { value: new THREE.Color('#ffffff') },
+    cBottom: { value: new THREE.Color('#e3f1ff') },
+    cHalo: { value: new THREE.Color('#b3d9ff') },
+    cLine: { value: new THREE.Color('#9fd0ff') },
+    cShadow: { value: new THREE.Color('#2a6fcf') },
   };
-  const bgMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: BG_VERT, fragmentShader: BG_FRAG, depthWrite: false, depthTest: false });
+  const bgMat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: BG_VERT, fragmentShader: BG_FRAG, depthWrite: false, depthTest: false, toneMapped: false });
   const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bgMat);
   bg.frustumCulled = false;
   bg.renderOrder = -1000;
@@ -321,18 +345,18 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
       roughnessMap: maps.detail,
       transmission: 1,
       transmissionMap: maps.detail,
-      thickness: 1.15,
+      thickness: 1.4,
       ior: 1.31,
-      attenuationColor: new THREE.Color('#a9dcff'),
-      attenuationDistance: 2.8,
+      attenuationColor: new THREE.Color('#b4dcff'),
+      attenuationDistance: 5.5,
       specularIntensity: 1,
-      clearcoat: 0.55,
-      clearcoatRoughness: 0.06,
+      clearcoat: 1,
+      clearcoatRoughness: 0.03,
       normalMap: maps.normal,
       normalScale: new THREE.Vector2(0.42, 0.42),
-      envMapIntensity: 1.75,
+      envMapIntensity: 2,
       dispersion: mobile ? 0 : 0.22,
-      emissive: new THREE.Color('#a8dcff'),
+      emissive: new THREE.Color('#d9efff'),
       emissiveIntensity: 0,
       side: mobile ? THREE.FrontSide : THREE.DoubleSide,
     });
@@ -363,7 +387,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   }
 
   /* ---------- Givre en suspension ---------- */
-  const NP = mobile ? 170 : 420;
+  const NP = mobile ? 110 : 260;
   const fGeo = new THREE.BufferGeometry();
   const fPos = new Float32Array(NP * 3);
   const fSeed = new Float32Array(NP);
@@ -373,7 +397,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     fPos[i * 3 + 1] = (rand() - 0.5);
     fPos[i * 3 + 2] = -8 + rand() * 11;
     fSeed[i] = rand();
-    fSize[i] = 0.025 + Math.pow(rand(), 2.5) * 0.09;
+    fSize[i] = 0.02 + Math.pow(rand(), 3) * 0.07;
   }
   fGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3));
   fGeo.setAttribute('aSeed', new THREE.BufferAttribute(fSeed, 1));
@@ -385,11 +409,11 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     uIntro: { value: reduced ? 1 : 0 },
     uPointer: { value: new THREE.Vector3(0, 0, 0) },
     uBox: { value: new THREE.Vector3(10, 10, 11) },
-    uColor: { value: new THREE.Color('#d9f0ff') },
+    uColor: { value: new THREE.Color('#5ea6f2') },
   };
   const frost = new THREE.Points(fGeo, new THREE.ShaderMaterial({
     uniforms: fU, vertexShader: FROST_VERT, fragmentShader: POINT_FRAG,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    transparent: true, depthWrite: false,
   }));
   frost.frustumCulled = false;
   scene.add(frost);
@@ -406,10 +430,10 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   bGeo.setAttribute('position', new THREE.BufferAttribute(bPos, 3).setUsage(THREE.DynamicDrawUsage));
   bGeo.setAttribute('aAlpha', new THREE.BufferAttribute(bAlpha, 1).setUsage(THREE.DynamicDrawUsage));
   bGeo.setAttribute('aSize', new THREE.BufferAttribute(bSize, 1).setUsage(THREE.DynamicDrawUsage));
-  const bU = { uScale: fU.uScale, uColor: { value: new THREE.Color('#e8f6ff') } };
+  const bU = { uScale: fU.uScale, uColor: { value: new THREE.Color('#3f8fe6') } };
   const burst = new THREE.Points(bGeo, new THREE.ShaderMaterial({
     uniforms: bU, vertexShader: BURST_VERT, fragmentShader: POINT_FRAG,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    transparent: true, depthWrite: false,
   }));
   burst.frustumCulled = false;
   scene.add(burst);
@@ -419,7 +443,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   /* ---------- Éclats de glace ---------- */
   const NS = 64;
   const shardGeo = new THREE.OctahedronGeometry(1, 0);
-  const shardMat = new THREE.MeshStandardMaterial({ color: '#eaf7ff', roughness: 0.04, metalness: 0.1, envMapIntensity: 2.8, transparent: true, opacity: 0.9, flatShading: true });
+  const shardMat = new THREE.MeshStandardMaterial({ color: '#d6ecff', roughness: 0.04, metalness: 0.2, envMapIntensity: 2.4, transparent: true, opacity: 0.92, flatShading: true });
   const shards = new THREE.InstancedMesh(shardGeo, shardMat, NS);
   shards.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   shards.frustumCulled = false;
@@ -436,14 +460,14 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   const glintTex = makeGlintTexture();
   const ringTex = makeRingTexture();
   const glints = Array.from({ length: 3 }, () => {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glintTex, color: '#eef9ff', blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true, opacity: 0 }));
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glintTex, depthWrite: false, depthTest: false, transparent: true, opacity: 0 }));
     s.scale.setScalar(0.001);
     s.renderOrder = 10;
     scene.add(s);
     return s;
   });
   const rings = Array.from({ length: 2 }, () => {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: ringTex, color: '#dff3ff', blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: ringTex, depthWrite: false, transparent: true, opacity: 0 }));
     s.scale.setScalar(0.001);
     scene.add(s);
     return s;
@@ -454,7 +478,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   /* ---------- État ---------- */
   let W = 1, H = 1, visH = 2 * CAM_Z * TAN, visW = visH, unitW = 1;
   let zoneCenter = new THREE.Vector2();
-  let mode = 'wide';
+  let mode = 'side';
   let time = 0;
   let scroll = 0;
   let running = false;
@@ -477,11 +501,11 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   function layout(zone) {
     const k = visH / H; // unités monde par pixel (plan z = 0)
     const toWorld = (px, py) => [(px - W / 2) * k, (H / 2 - py) * k];
-    mode = zone.mode;
+    mode = zone.mode === 'band' ? 'band' : 'side';
     const anchors = ANCHORS[mode];
-    const unitPx = mode === 'wide'
-      ? Math.min(zone.w * 0.3, zone.h * 0.4, 330)
-      : Math.min(W * 0.3, Math.max(zone.h * 0.72, 108), 230);
+    const unitPx = mode === 'side'
+      ? Math.min(zone.w * 0.36, zone.h * 0.3, 300)
+      : Math.min(zone.h * 0.6, zone.w * 0.3, 210);
     unitW = unitPx * k;
     const [zx, zy] = toWorld(zone.x + zone.w / 2, zone.y + zone.h / 2);
     zoneCenter.set(zx, zy);
@@ -496,11 +520,11 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
       if (c.dir.lengthSq() < 1e-4) c.dir.set(0.3, 1);
       c.dir.normalize();
     });
-    // Halo centré sur la zone libre, mot géant posé derrière les glaçons.
-    U.uHalo.value.set((zone.x + zone.w * 0.5) / W, 1 - (zone.y + zone.h * 0.46) / H);
-    const wordW = W * (mode === 'wide' ? 0.97 : 0.95);
+    // Halo centré sur la zone libre ; mot géant : toute la largeur, posé en bas (bureau) ou au cœur de la bande (mobile).
+    U.uHalo.value.set((zone.x + zone.w * 0.5) / W, 1 - (zone.y + zone.h * 0.45) / H);
+    const wordW = W * (mode === 'side' ? 0.985 : 1.04);
     const wordH = wordW / word.aspect;
-    const cy = mode === 'wide' ? zone.y + zone.h * 0.6 : zone.y + zone.h * 0.55;
+    const cy = mode === 'side' ? H - wordH * 0.4 : zone.y + zone.h * 0.56;
     U.uWordRect.value.set(0.5, 1 - cy / H, wordW / W, wordH / H);
     fU.uBox.value.set(visW * 1.35, visH * 1.3, 11);
   }
@@ -611,6 +635,21 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
 
   /* ---------- Boucle ---------- */
   const cubeMeshes = cubes.map((c) => c.mesh);
+  const _p = new THREE.Vector3();
+
+  // Ombres caustiques projetées sur le fond (lumière en haut à droite → ombre en bas à gauche).
+  function updateShadows(s) {
+    const arr = U.uShadow.value;
+    for (let i = 0; i < NSH; i++) {
+      const c = cubes[i];
+      if (!c) { arr[i].w = 0; continue; }
+      const m = c.mesh.position;
+      _p.set(m.x - c.size * 0.32, m.y - c.size * 0.62, m.z).project(camera);
+      const near = 1 - Math.min(1, Math.max(0, c.drop.y) / (c.size * 4));
+      const sh = (2 * (CAM_Z - m.z) * TAN) || 1;
+      arr[i].set(_p.x * 0.5 + 0.5, _p.y * 0.5 + 0.5, (c.size * 0.95) / sh, near * near * (1 - s) * (0.75 + 0.25 * c.size / (unitW || 1)));
+    }
+  }
 
   function update(dt) {
     time += dt;
@@ -622,8 +661,8 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     const ease = 1 - Math.pow(0.0015, dt);
     pointerSmooth.lerp(pointer, ease || 0);
     pointerActiveSmooth += (pointerActive - pointerActiveSmooth) * (ease || 0);
-    const autoX = mode === 'tall' ? Math.sin(time * 0.25) * 0.35 : 0;
-    const autoY = mode === 'tall' ? Math.cos(time * 0.2) * 0.25 : 0;
+    const autoX = mode === 'band' ? Math.sin(time * 0.25) * 0.35 : 0;
+    const autoY = mode === 'band' ? Math.cos(time * 0.2) * 0.25 : 0;
     const px = pointerSmooth.x + autoX, py = pointerSmooth.y + autoY;
     shake.v *= Math.pow(0.02, dt);
     camera.position.set(px * 0.55, py * 0.32 + Math.sin(time * 40) * shake.v, CAM_Z);
@@ -655,6 +694,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
       c.mat.emissiveIntensity = c.flash.v + c.hover * 0.1;
       c.mat.roughness = R0 + c.frost.v * (1 - R0);
     }
+    updateShadows(s);
 
     // Paillettes
     if (bActive > 0) {
@@ -775,6 +815,11 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
       cancelAnimationFrame(raf);
     },
     renderOnce,
+    /** Compile les shaders sans bloquer (KHR_parallel_shader_compile si disponible). */
+    async warm() {
+      if (!renderer.extensions.has('KHR_parallel_shader_compile')) return; // sinon compileAsync bloque et prévient en console
+      try { await renderer.compileAsync(scene, camera); } catch { /* compilation au premier rendu */ }
+    },
     /** Entrée : les glaçons tombent et se figent avec un léger rebond. */
     intro() {
       if (introStarted || disposed) return;

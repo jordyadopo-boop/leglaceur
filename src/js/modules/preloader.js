@@ -25,10 +25,12 @@ export default function init(el) {
       window.dispatchEvent(new Event('preloader:done'));
     }
   };
-  const remove = () => { done(); html.classList.remove('preload'); el.remove(); };
+  const remove = () => { done(); html.classList.remove('preload', 'preload-running'); el.remove(); };
 
   if (reducedMotion || !html.classList.contains('preload') || window.__lgPreloaderDone) { remove(); return; }
   try { sessionStorage.setItem(KEY, '1'); } catch { /* stockage indisponible */ }
+  clearTimeout(window.__lgPreTimer); // la séquence prend le relais du filet de sécurité
+  html.classList.add('preload-running');
 
   html.classList.add('preload-lock');
   stopScroll();
@@ -78,7 +80,7 @@ export default function init(el) {
     .to(q('.preloader__cold'), { opacity: 1, duration: 1.1, ease: 'power1.inOut' }, 0.15)
     .to(q('.preloader__heat'), { opacity: 0, duration: 1, ease: 'power1.in' }, 0.35)
     .fromTo(q('.preloader__frost'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 0.3)
-    .fromTo(crystalPaths, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.75, ease: 'power2.out', stagger: { each: 0.004, from: 'start' } }, 0.25)
+    .fromTo(crystalPaths, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.7, ease: 'power2.out', stagger: { amount: 0.55, from: 'random' } }, 0.2)
     // le symbole se dessine
     .fromTo(gPaths, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut', stagger: 0.1 }, 0.1)
     .to(gPaths, { fillOpacity: 1, strokeOpacity: 0, duration: 0.45, ease: 'power1.out' }, 0.75)
@@ -140,17 +142,23 @@ function growFrost(svg, W, H) {
   const seeds = [
     { x: 0, y: 0, a: Math.PI / 4 }, { x: W, y: 0, a: (3 * Math.PI) / 4 },
     { x: 0, y: H, a: -Math.PI / 4 }, { x: W, y: H, a: (-3 * Math.PI) / 4 },
-    { x: W * 0.5, y: 0, a: Math.PI / 2, small: true }, { x: W * 0.5, y: H, a: -Math.PI / 2, small: true },
-    { x: 0, y: H * 0.5, a: 0, small: true }, { x: W, y: H * 0.5, a: Math.PI, small: true },
   ];
+  // frange de givre tout le long des bords
+  const step = Math.max(110, Math.min(W, H) / 4);
+  for (let x = step * 0.7; x < W - step * 0.4; x += step * rand(0.8, 1.2)) {
+    seeds.push({ x, y: 0, a: Math.PI / 2, small: true }, { x: x + step * 0.4, y: H, a: -Math.PI / 2, small: true });
+  }
+  for (let y = step * 0.7; y < H - step * 0.4; y += step * rand(0.8, 1.2)) {
+    seeds.push({ x: 0, y, a: 0, small: true }, { x: W, y: y + step * 0.4, a: Math.PI, small: true });
+  }
   const glow = [];
   const main = [];
   const twigs = [];
   for (const s of seeds) {
-    const n = s.small ? 3 : 5;
+    const n = s.small ? 2 : 6;
     for (let i = 0; i < n; i++) {
       const a = s.a + rand(-0.75, 0.75);
-      const L = D * (s.small ? rand(0.07, 0.12) : rand(0.13, 0.24));
+      const L = s.small ? Math.min(D * rand(0.05, 0.09), 150) : D * rand(0.13, 0.24);
       let x = s.x;
       let y = s.y;
       let d = `M${f(x)} ${f(y)}`;

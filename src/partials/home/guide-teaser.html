@@ -1,0 +1,333 @@
+<!-- Guide des glaces — « Chaque glace a son usage » (agent convert-b).
+     Module : src/js/modules/guide-teaser.js · Styles : src/styles/modules/convert-b.css
+     Fiches générées depuis config.js (ICE_TYPES, PRODUCTS) par le gabarit renderBody() du module, puis re-rendues au chargement.
+     Sans JS : les six fiches s'affichent les unes sous les autres et les tuiles sont des ancres. -->
+<section class="guide-teaser" id="guide" data-module="guide-teaser" aria-labelledby="guide-title">
+  <div class="gt-decor" aria-hidden="true">
+    <span class="gt-decor__glow gt-decor__glow--a"></span>
+    <span class="gt-decor__glow gt-decor__glow--b"></span>
+    <svg class="gt-crystal" data-gt-crystal viewBox="0 0 400 400" focusable="false"><polyline points="200,154 240,177 240,223 200,246 160,223 160,177 200,154"/><polyline points="200,108 280,154 280,246 200,292 120,246 120,154 200,108" class="gt-crystal__thin"/><line x1="200" y1="200" x2="200" y2="22"/><line x1="200" y1="130" x2="169" y2="112"/><line x1="200" y1="130" x2="231" y2="112"/><line x1="200" y1="88" x2="174" y2="73"/><line x1="200" y1="88" x2="226" y2="73"/><line x1="200" y1="52" x2="184" y2="43"/><line x1="200" y1="52" x2="216" y2="43"/><line x1="200" y1="200" x2="354" y2="111"/><line x1="261" y1="165" x2="261" y2="129"/><line x1="261" y1="165" x2="292" y2="183"/><line x1="297" y1="144" x2="297" y2="114"/><line x1="297" y1="144" x2="323" y2="159"/><line x1="328" y1="126" x2="328" y2="108"/><line x1="328" y1="126" x2="344" y2="135"/><line x1="200" y1="200" x2="354" y2="289"/><line x1="261" y1="235" x2="292" y2="217"/><line x1="261" y1="235" x2="261" y2="271"/><line x1="297" y1="256" x2="323" y2="241"/><line x1="297" y1="256" x2="297" y2="286"/><line x1="328" y1="274" x2="344" y2="265"/><line x1="328" y1="274" x2="328" y2="292"/><line x1="200" y1="200" x2="200" y2="378"/><line x1="200" y1="270" x2="231" y2="288"/><line x1="200" y1="270" x2="169" y2="288"/><line x1="200" y1="312" x2="226" y2="327"/><line x1="200" y1="312" x2="174" y2="327"/><line x1="200" y1="348" x2="216" y2="357"/><line x1="200" y1="348" x2="184" y2="357"/><line x1="200" y1="200" x2="46" y2="289"/><line x1="139" y1="235" x2="139" y2="271"/><line x1="139" y1="235" x2="108" y2="217"/><line x1="103" y1="256" x2="103" y2="286"/><line x1="103" y1="256" x2="77" y2="241"/><line x1="72" y1="274" x2="72" y2="292"/><line x1="72" y1="274" x2="56" y2="265"/><line x1="200" y1="200" x2="46" y2="111"/><line x1="139" y1="165" x2="108" y2="183"/><line x1="139" y1="165" x2="139" y2="129"/><line x1="103" y1="144" x2="77" y2="159"/><line x1="103" y1="144" x2="103" y2="114"/><line x1="72" y1="126" x2="56" y2="135"/><line x1="72" y1="126" x2="72" y2="108"/></svg>
+  </div>
+  <div class="container">
+    <header class="gt-head">
+      <div class="gt-head__intro">
+        <p class="eyebrow">Guide des glaces</p>
+        <h2 class="gt-head__title" id="guide-title">Chaque glace <span class="ice-text">a son usage</span></h2>
+        <p class="lead gt-head__lead">Un whisky ne se sert pas sur la même glace qu’un mojito ou qu’un étal de poissons. Choisissez votre besoin&nbsp;: nous vous montrons la glace qui convient, sa vitesse de fonte et le produit Le Glaceur à commander.</p>
+      </div>
+    </header>
+
+    <div class="gt-stage">
+      <div class="gt-tabs" data-gt-tabs>
+        <p class="gt-tabs__q" id="gt-question">Quelle glace pour…&nbsp;?</p>
+        <span class="gt-puck" data-gt-puck aria-hidden="true"></span>
+        <a class="gt-tab" href="#gt-whisky" data-gt-tab style="--i:0">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14l-1.4 13.2a1.6 1.6 0 0 1-1.6 1.4H8a1.6 1.6 0 0 1-1.6-1.4L5 6Z"/><path d="M6 11.5h12"/><rect x="8.6" y="12.6" width="5.2" height="5.2" rx="1" transform="rotate(-8 11.2 15.2)"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Whisky &amp; spiritueux</span><span class="gt-tab__hint">Glaçon plein</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+        <a class="gt-tab" href="#gt-cocktails" data-gt-tab style="--i:1">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4.5h16L12 13v6.5M8.5 20.5h7"/><path d="m15.5 2.5-2.6 6.4"/><circle cx="17.6" cy="6.9" r="1.6"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Cocktails</span><span class="gt-tab__hint">Glace pilée</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+        <a class="gt-tab" href="#gt-sodas" data-gt-tab style="--i:2">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 7.5h11l-1.3 12.4a1.5 1.5 0 0 1-1.5 1.3H9.3a1.5 1.5 0 0 1-1.5-1.3L6.5 7.5Z"/><path d="M6 7.5h12M13 7.5l1.6-5h3"/><path d="M8.6 12.5h3.2v3.2H8.6zM12.6 14.6h2.6v2.6h-2.6z"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Sodas &amp; jus</span><span class="gt-tab__hint">Glaçon creux</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+        <a class="gt-tab" href="#gt-poisson" data-gt-tab style="--i:3">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 12c2.4-3.6 5.6-5.4 9.2-5.4 3.2 0 5.7 1.6 7.4 3.4l2-2.2v8.4l-2-2.2c-1.7 1.8-4.2 3.4-7.4 3.4-3.6 0-6.8-1.8-9.2-5.4Z"/><circle cx="7.6" cy="11" r=".9"/><path d="M12.5 8.8c.9 1 .9 5.4 0 6.4"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Poissonnerie</span><span class="gt-tab__hint">Glace pilée</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+        <a class="gt-tab" href="#gt-evenement" data-gt-tab style="--i:4">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 13.5c-2 0-3.5-1.4-3.5-3.2S5 7 7 7.2C7.6 5 9.6 3.6 12 3.6s4.4 1.4 5 3.6c2 0 3.5 1.4 3.5 3.2s-1.5 3.1-3.5 3.1"/><path d="M5 17.2c2.3 0 2.3 1.6 4.6 1.6s2.3-1.6 4.6-1.6 2.3 1.6 4.6 1.6M7.8 21c1.4 0 1.4-1 2.8-1s1.4 1 2.8 1"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Événement &amp; effets de fumée</span><span class="gt-tab__hint">Carboglace (CO₂)</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+        <a class="gt-tab" href="#gt-conservation" data-gt-tab style="--i:5">
+          <span class="gt-tab__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 9.5h17v9.8a1.4 1.4 0 0 1-1.4 1.4H4.9a1.4 1.4 0 0 1-1.4-1.4V9.5Z"/><path d="M2.6 6.2h18.8v3.3H2.6zM9 6.2V4.6a1.2 1.2 0 0 1 1.2-1.2h3.6A1.2 1.2 0 0 1 15 4.6v1.6"/><path d="M12 12.6v5.2M9.8 13.8l4.4 2.8M14.2 13.8l-4.4 2.8"/></svg></span>
+          <span class="gt-tab__txt"><span class="gt-tab__label">Conservation &amp; transport</span><span class="gt-tab__hint">Barres de glace</span></span>
+          <span class="gt-tab__arrow" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="gt-panels">
+        <article class="gt-panel is-active" id="gt-whisky" data-gt-panel="whisky" aria-label="Whisky &amp; spiritueux">
+          <div class="gt-card frost ice-edge">
+            <figure class="gt-card__media">
+              <!-- @img slot="usage-whisky" alt="Whisky versé sur un gros glaçon dans un verre bas" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6h14l-1.4 13.2a1.6 1.6 0 0 1-1.6 1.4H8a1.6 1.6 0 0 1-1.6-1.4L5 6Z"/><path d="M6 11.5h12"/><rect x="8.6" y="12.6" width="5.2" height="5.2" rx="1" transform="rotate(-8 11.2 15.2)"/></svg></span>Whisky &amp; spiritueux</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Glaçon plein</span> <span class="gt-card__alt">Cube gourmet</span></h3>
+              <p class="gt-card__lede">Très lente. Refroidissement continu sans diluer la boisson.</p>
+              <div class="gt-melt" style="--melt:0.43">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Lente</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="3" aria-valuetext="Lente">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__drop" aria-hidden="true"></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Ultra-lente</span><span>Rapide</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Température</dt><dd>−2 °C à −5 °C</dd></div><div class="gt-stat"><dt>Dilution</dt><dd>Faible</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Spiritueux nobles (whisky, cognac), cocktails « on the rocks », verres old fashioned.</p>
+              <p class="gt-card__tip"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/></svg><span><strong>Conseil :</strong> Servir avec une pelle propre, jamais à mains nues. Ne pas recongeler une glace qui a commencé à fondre.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Glace cubique</p>
+              <a class="gt-product__link" href="#produit-glacons">Voir le produit<span class="sr-only"> Glace cubique</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Pack de 5 kg</span> <span class="gt-buy__price price" data-price="glacons-5kg">750 F</span></p>
+              <button type="button" class="gt-add" data-add="glacons-5kg" aria-label="Ajouter au devis : Glace cubique, Pack de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="glacons-5kg" hidden></span></button>
+              </div></div>
+
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gt-panel" id="gt-cocktails" data-gt-panel="cocktails" aria-label="Cocktails">
+          <div class="gt-card frost ice-edge">
+            <figure class="gt-card__media">
+              <!-- @img slot="usage-cocktail" alt="Mojito servi sur glace pilée, avec citron vert et menthe" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4.5h16L12 13v6.5M8.5 20.5h7"/><path d="m15.5 2.5-2.6 6.4"/><circle cx="17.6" cy="6.9" r="1.6"/></svg></span>Cocktails</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Glace pilée</span> <span class="gt-card__alt">Crushed ice</span></h3>
+              <p class="gt-card__lede">Modérée à rapide. Fraîcheur intense et apport d’eau maîtrisé.</p>
+              <div class="gt-melt" style="--melt:0.86">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Moyenne à rapide</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="6" aria-valuetext="Moyenne à rapide">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__drop" aria-hidden="true"></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Ultra-lente</span><span>Rapide</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Température</dt><dd>−1 °C à −4 °C</dd></div><div class="gt-stat"><dt>Dilution</dt><dd>Contrôlée</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Mojito, caïpirinha, caïpiroska, seaux à champagne, présentoirs d’huîtres.</p>
+              <p class="gt-card__tip"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/></svg><span><strong>Conseil :</strong> Pour le contact avec les aliments (poissons, fruits de mer), utiliser des bacs propres et vidanger l’eau de fonte régulièrement.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Glace pilée</p>
+              <a class="gt-product__link" href="#produit-pilee">Voir le produit<span class="sr-only"> Glace pilée</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Sac de 50 kg</span> <span class="gt-buy__price price" data-price="pilee-50kg">3 000 F</span></p>
+              <button type="button" class="gt-add" data-add="pilee-50kg" aria-label="Ajouter au devis : Glace pilée, Sac de 50 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="pilee-50kg" hidden></span></button>
+              </div></div>
+              <div class="gt-also"><p class="gt-also__k">Aussi adapté : <a href="#produit-grain">Glace en grain</a></p><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Pack de 5 kg</span> <span class="gt-buy__price price" data-price="grain-5kg">750 F</span></p>
+              <button type="button" class="gt-add" data-add="grain-5kg" aria-label="Ajouter au devis : Glace en grain, Pack de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="grain-5kg" hidden></span></button>
+              </div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gt-panel" id="gt-sodas" data-gt-panel="sodas" aria-label="Sodas &amp; jus">
+          <div class="gt-card frost ice-edge">
+            <figure class="gt-card__media">
+              <!-- @img slot="usage-jus" alt="Boissons fraîches aux fruits servies avec des glaçons" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 7.5h11l-1.3 12.4a1.5 1.5 0 0 1-1.5 1.3H9.3a1.5 1.5 0 0 1-1.5-1.3L6.5 7.5Z"/><path d="M6 7.5h12M13 7.5l1.6-5h3"/><path d="M8.6 12.5h3.2v3.2H8.6zM12.6 14.6h2.6v2.6h-2.6z"/></svg></span>Sodas &amp; jus</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Glaçon creux</span> <span class="gt-card__alt">Cylindrique</span></h3>
+              <p class="gt-card__lede">Rapide : les surfaces interne et externe sont en contact avec le liquide.</p>
+              <div class="gt-melt" style="--melt:1">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Rapide</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="7" aria-valuetext="Rapide">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__drop" aria-hidden="true"></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Ultra-lente</span><span>Rapide</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Température</dt><dd>−1 °C à −3 °C</dd></div><div class="gt-stat"><dt>Dilution</dt><dd>Élevée</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Sodas, jus de fruits, fast-food, verres de brasserie.</p>
+              <p class="gt-card__tip"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/></svg><span><strong>Conseil :</strong> Produit alimentaire à usage unique : ne pas réutiliser le gobelet pour la glace.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Ice Cup</p>
+              <a class="gt-product__link" href="#produit-gobelet">Voir le produit<span class="sr-only"> Ice Cup</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">1 Ice Cup</span> <span class="gt-buy__price price" data-price="gobelet">250 F</span></p>
+              <button type="button" class="gt-add" data-add="gobelet" aria-label="Ajouter au devis : Ice Cup, 1 Ice Cup"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="gobelet" hidden></span></button>
+              </div></div>
+              <div class="gt-also"><p class="gt-also__k">Aussi adapté : <a href="#produit-grain">Glace en grain</a></p><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Pack de 5 kg</span> <span class="gt-buy__price price" data-price="grain-5kg">750 F</span></p>
+              <button type="button" class="gt-add" data-add="grain-5kg" aria-label="Ajouter au devis : Glace en grain, Pack de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="grain-5kg" hidden></span></button>
+              </div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gt-panel" id="gt-poisson" data-gt-panel="poisson" aria-label="Poissonnerie">
+          <div class="gt-card frost ice-edge">
+            <figure class="gt-card__media">
+              <!-- @img slot="usage-poisson" alt="Poissons frais disposés sur un lit de glace" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 12c2.4-3.6 5.6-5.4 9.2-5.4 3.2 0 5.7 1.6 7.4 3.4l2-2.2v8.4l-2-2.2c-1.7 1.8-4.2 3.4-7.4 3.4-3.6 0-6.8-1.8-9.2-5.4Z"/><circle cx="7.6" cy="11" r=".9"/><path d="M12.5 8.8c.9 1 .9 5.4 0 6.4"/></svg></span>Poissonnerie</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Glace pilée</span> <span class="gt-card__alt">Crushed ice</span></h3>
+              <p class="gt-card__lede">Modérée à rapide. Fraîcheur intense et apport d’eau maîtrisé.</p>
+              <div class="gt-melt" style="--melt:0.86">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Moyenne à rapide</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="6" aria-valuetext="Moyenne à rapide">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__drop" aria-hidden="true"></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Ultra-lente</span><span>Rapide</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Température</dt><dd>−1 °C à −4 °C</dd></div><div class="gt-stat"><dt>Dilution</dt><dd>Contrôlée</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Présentoirs de fruits de mer, Poissonneries, Pêche, Marchés.</p>
+              <p class="gt-card__tip"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/></svg><span><strong>Conseil :</strong> Pour le contact avec les aliments (poissons, fruits de mer), utiliser des bacs propres et vidanger l’eau de fonte régulièrement.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Glace pilée</p>
+              <a class="gt-product__link" href="#produit-pilee">Voir le produit<span class="sr-only"> Glace pilée</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Sac de 50 kg</span> <span class="gt-buy__price price" data-price="pilee-50kg">3 000 F</span></p>
+              <button type="button" class="gt-add" data-add="pilee-50kg" aria-label="Ajouter au devis : Glace pilée, Sac de 50 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="pilee-50kg" hidden></span></button>
+              </div></div>
+              <div class="gt-also"><p class="gt-also__k">Aussi adapté : <a href="#produit-barres">Barres de glace</a></p><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Barre de 5 kg</span> <span class="gt-buy__price price" data-price="barre-5kg">350 F</span></p>
+              <button type="button" class="gt-add" data-add="barre-5kg" aria-label="Ajouter au devis : Barres de glace, Barre de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="barre-5kg" hidden></span></button>
+              </div><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Barre de 10 kg</span> <span class="gt-buy__price price" data-price="barre-10kg">650 F</span></p>
+              <button type="button" class="gt-add" data-add="barre-10kg" aria-label="Ajouter au devis : Barres de glace, Barre de 10 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="barre-10kg" hidden></span></button>
+              </div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gt-panel" id="gt-evenement" data-gt-panel="evenement" aria-label="Événement &amp; effets de fumée">
+          <div class="gt-card frost ice-edge gt-card--night">
+            <figure class="gt-card__media">
+              <!-- @img slot="carboglace" alt="Glace carbonique dégageant une épaisse brume blanche" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 13.5c-2 0-3.5-1.4-3.5-3.2S5 7 7 7.2C7.6 5 9.6 3.6 12 3.6s4.4 1.4 5 3.6c2 0 3.5 1.4 3.5 3.2s-1.5 3.1-3.5 3.1"/><path d="M5 17.2c2.3 0 2.3 1.6 4.6 1.6s2.3-1.6 4.6-1.6 2.3 1.6 4.6 1.6M7.8 21c1.4 0 1.4-1 2.8-1s1.4 1 2.8 1"/></svg></span>Événement &amp; effets de fumée</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Carboglace (CO₂)</span> <span class="gt-card__alt">Glace sèche</span></h3>
+              <p class="gt-card__lede">Brume blanche dense au contact d’un liquide chaud ou tiède.</p>
+              <div class="gt-melt gt-melt--sub" style="--melt:0">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Sublimation</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" aria-valuetext="Sublimation">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__vapor" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Aucune fonte</span><span>Passe de solide à gaz</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Température</dt><dd>−78,5 °C</dd></div><div class="gt-stat"><dt>Dilution</dt><dd>Aucune (gaz)</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Mixologie spectaculaire, transport cryogénique. Ne jamais ingérer.</p>
+              <p class="gt-card__tip gt-card__tip--danger"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5 2.8 19.5h18.4L12 3.5Z"/><path d="M12 10v4.4M12 17.2v.1"/></svg><span><strong>Sécurité :</strong> Température de −78,5 °C : toujours manipuler avec des gants épais ou une pince. Ne jamais ingérer, ne jamais mettre en bouche. Utiliser dans un lieu aéré (le CO₂ dégagé remplace l’air). Tenir hors de portée des enfants.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Carboglace</p>
+              <a class="gt-product__link" href="#produit-carboglace">Voir le produit<span class="sr-only"> Carboglace</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Le kilo</span> <span class="gt-buy__price price" data-price="carboglace-kg">7 500 F</span></p>
+              <button type="button" class="gt-add" data-add="carboglace-kg" aria-label="Ajouter au devis : Carboglace, Le kilo"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="carboglace-kg" hidden></span></button>
+              </div></div>
+              <div class="gt-also"><p class="gt-also__k">Aussi adapté : <a href="#produit-glacons">Glace cubique</a></p><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Pack de 5 kg</span> <span class="gt-buy__price price" data-price="glacons-5kg">750 F</span></p>
+              <button type="button" class="gt-add" data-add="glacons-5kg" aria-label="Ajouter au devis : Glace cubique, Pack de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="glacons-5kg" hidden></span></button>
+              </div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gt-panel" id="gt-conservation" data-gt-panel="conservation" aria-label="Conservation &amp; transport">
+          <div class="gt-card frost ice-edge">
+            <figure class="gt-card__media">
+              <!-- @img slot="barres" alt="Pains de glace rectangulaires empilés" sizes="(min-width: 1100px) 380px, (min-width: 700px) 40vw, 92vw" class="gt-card__img" -->
+              <figcaption class="gt-card__tag"><span class="gt-card__tag-ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 9.5h17v9.8a1.4 1.4 0 0 1-1.4 1.4H4.9a1.4 1.4 0 0 1-1.4-1.4V9.5Z"/><path d="M2.6 6.2h18.8v3.3H2.6zM9 6.2V4.6a1.2 1.2 0 0 1 1.2-1.2h3.6A1.2 1.2 0 0 1 15 4.6v1.6"/><path d="M12 12.6v5.2M9.8 13.8l4.4 2.8M14.2 13.8l-4.4 2.8"/></svg></span>Conservation &amp; transport</figcaption>
+              <span class="gt-card__frost" aria-hidden="true"></span>
+            </figure>
+            <div class="gt-card__body" data-gt-body>
+              <p class="gt-card__kicker">Glace recommandée</p>
+              <h3 class="gt-card__name"><span class="gt-card__name-main" data-gt-name>Barres de glace</span> <span class="gt-card__alt">Pains de glace</span></h3>
+              <p class="gt-card__lede">Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.</p>
+              <div class="gt-melt" style="--melt:0.43">
+              <div class="gt-melt__head"><span class="gt-melt__k">Vitesse de fonte</span><strong class="gt-melt__v">Lente et homogène</strong></div>
+              <div class="gt-melt__track" role="meter" aria-label="Vitesse de fonte" aria-valuemin="0" aria-valuemax="7" aria-valuenow="3" aria-valuetext="Lente et homogène">
+              <span class="gt-melt__cube" aria-hidden="true"></span>
+              <span class="gt-melt__fill" aria-hidden="true"><span class="gt-melt__wave"></span></span>
+              <span class="gt-melt__drop" aria-hidden="true"></span>
+              </div>
+              <div class="gt-melt__scale" aria-hidden="true"><span>Ultra-lente</span><span>Rapide</span></div>
+              </div>
+              <dl class="gt-stats">
+              <div class="gt-stat"><dt>Formats</dt><dd>5 kg · 10 kg</dd></div><div class="gt-stat"><dt>Fonte</dt><dd>Lente et homogène</dd></div>
+              </dl>
+              <p class="gt-card__ideal"><strong>Idéal pour :</strong> Conservation des produits alimentaires, Transport de marchandises, Pêche, Marchés, Événements, Usage professionnel.</p>
+              <p class="gt-card__tip"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2s-6 6.6-6 11a6 6 0 0 0 12 0c0-4.4-6-11-6-11Z"/></svg><span><strong>Conseil :</strong> Manipuler avec des gants (bloc lourd et glissant). Pour le contact direct avec des aliments, utiliser la glace pilée.</span></p>
+              <div class="gt-product">
+              <p class="gt-product__kicker">Chez Le Glaceur</p>
+              <div class="gt-product__head">
+              <p class="gt-product__name">Barres de glace</p>
+              <a class="gt-product__link" href="#produit-barres">Voir le produit<span class="sr-only"> Barres de glace</span> <svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
+              <div class="gt-product__buys"><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Barre de 5 kg</span> <span class="gt-buy__price price" data-price="barre-5kg">350 F</span></p>
+              <button type="button" class="gt-add" data-add="barre-5kg" aria-label="Ajouter au devis : Barres de glace, Barre de 5 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="barre-5kg" hidden></span></button>
+              </div><div class="gt-buy">
+              <p class="gt-buy__line"><span class="gt-buy__label">Barre de 10 kg</span> <span class="gt-buy__price price" data-price="barre-10kg">650 F</span></p>
+              <button type="button" class="gt-add" data-add="barre-10kg" aria-label="Ajouter au devis : Barres de glace, Barre de 10 kg"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="barre-10kg" hidden></span></button>
+              </div></div>
+              <div class="gt-also"><p class="gt-also__k">Aussi adapté : <a href="#produit-carboglace">Carboglace</a></p><div class="gt-buy gt-buy--small">
+              <p class="gt-buy__line"><span class="gt-buy__label">Le kilo</span> <span class="gt-buy__price price" data-price="carboglace-kg">7 500 F</span></p>
+              <button type="button" class="gt-add" data-add="carboglace-kg" aria-label="Ajouter au devis : Carboglace, Le kilo"><span class="gt-add__ico"><svg class="gt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span><span class="gt-add__txt">Ajouter</span><span class="gt-add__count" data-count-for="carboglace-kg" hidden></span></button>
+              </div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <aside class="gt-guide frost ice-edge" aria-labelledby="gt-guide-title">
+      <div class="gt-guide__text">
+        <p class="eyebrow">Le guide complet</p>
+        <h3 class="gt-guide__title" id="gt-guide-title">Les glaces alimentaires, <span class="ice-text">typologies &amp; usages</span></h3>
+        <p class="gt-guide__lead">7&nbsp;glaces passées au crible&nbsp;: forme, température, vitesse de fonte, dilution et usages métiers, avec les bons gestes d’hygiène.</p>
+        <ul class="gt-guide__chips" aria-label="Glaces présentées dans le guide"><li>Glaçon plein</li><li>Glaçon creux</li><li>Glace pilée</li><li>Sphère de glace</li><li>Glace en écailles</li><li>Glace en grains</li><li>Carboglace (CO₂)</li></ul>
+      </div>
+      <a class="btn btn--lg gt-guide__btn" href="guide.html" data-module="fx-magnetic">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5.5c2.8-1.2 5.5-1.2 8 .6 2.5-1.8 5.2-1.8 8-.6v13c-2.8-1.2-5.5-1.2-8 .6-2.5-1.8-5.2-1.8-8-.6v-13Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 6.1v13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+        <span>Lire le guide</span>
+      </a>
+    </aside>
+  </div>
+</section>

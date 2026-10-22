@@ -2,7 +2,7 @@
  * Textures procédurales de la scène du hero, dessinées sur canvas (aucun fichier image à charger).
  *  - makeIceMaps()     : normal map (micro-rayures, bulles d'air, craquelures, ondulations de fonte)
  *                        + carte de détails (R = transmission : cœur laiteux ; G = rugosité : arêtes givrées).
- *  - makeWordTexture() : le très grand mot « GLACEUR » en verre givré (Barlow Condensed 800).
+ *  - makeWordTexture() : le très grand mot « GLACEUR » en glace bleutée (Barlow Condensed 800), pour fond clair.
  *  - makeGlintTexture(): éclat de lumière en étoile à 4 branches.
  *  - makeRingTexture() : onde de choc givrée (clic sur un glaçon).
  */
@@ -252,44 +252,66 @@ export async function makeWordTexture(renderer, text = 'GLACEUR', width = 2048) 
   g.textAlign = 'center';
   const x = width / 2, y = pad + asc;
 
-  // 1. Matière : verre givré, plus lumineux en haut.
+  // 0. Ombre portée très douce (le mot est un bloc de glace posé dans la lumière).
+  g.save();
+  g.shadowColor = 'rgba(21,99,214,0.28)';
+  g.shadowBlur = width / 60;
+  g.shadowOffsetY = width / 220;
+  g.fillStyle = 'rgba(214,236,255,1)';
+  g.fillText(text, x, y);
+  g.restore();
+
+  // 1. Matière : glace bleutée, plus claire en haut, plus dense en bas.
   const fill = g.createLinearGradient(0, pad, 0, height - pad);
-  fill.addColorStop(0, 'rgba(226,244,255,0.46)');
-  fill.addColorStop(0.45, 'rgba(150,204,255,0.24)');
-  fill.addColorStop(1, 'rgba(77,155,255,0.10)');
+  fill.addColorStop(0, '#e4f2ff');
+  fill.addColorStop(0.45, '#acd6ff');
+  fill.addColorStop(1, '#5fa9f5');
   g.fillStyle = fill;
   g.fillText(text, x, y);
 
-  // 2. Givre et reflets à l'intérieur des lettres uniquement.
+  // 2. Givre, bulles et reflets à l'intérieur des lettres uniquement.
   g.globalCompositeOperation = 'source-atop';
   const rand = mulberry32(31);
-  for (let i = 0; i < 5200; i++) {
-    const px = rand() * width, py = rand() * height, r = 0.6 + rand() * rand() * 3.2;
-    g.fillStyle = `rgba(235,247,255,${0.04 + rand() * 0.22})`;
+  for (let i = 0; i < 4200; i++) {
+    const px = rand() * width, py = rand() * height, r = 0.6 + rand() * rand() * 3.4;
+    g.fillStyle = rand() < 0.55 ? `rgba(255,255,255,${0.15 + rand() * 0.5})` : `rgba(21,99,214,${0.06 + rand() * 0.14})`;
     g.fillRect(px, py, r, r);
   }
+  // Craquelures fines
+  g.lineCap = 'round';
+  for (let i = 0; i < 26; i++) {
+    let cx = rand() * width, cy = pad + rand() * (height - pad * 2), a = rand() * Math.PI * 2;
+    g.strokeStyle = `rgba(255,255,255,${0.5 + rand() * 0.4})`;
+    g.lineWidth = 1 + rand() * 1.4;
+    g.beginPath(); g.moveTo(cx, cy);
+    for (let k = 0; k < 6; k++) { a += (rand() - 0.5) * 1.1; cx += Math.cos(a) * width * 0.012; cy += Math.sin(a) * width * 0.012; g.lineTo(cx, cy); }
+    g.stroke();
+  }
   for (let i = 0; i < 5; i++) { // reflets diagonaux
-    const bx = width * (0.08 + i * 0.2 + rand() * 0.06);
-    const grd = g.createLinearGradient(bx - 120, 0, bx + 120, height);
+    const bx = width * (0.06 + i * 0.21 + rand() * 0.05);
+    const grd = g.createLinearGradient(bx - 140, 0, bx + 140, height);
     grd.addColorStop(0, 'rgba(255,255,255,0)');
-    grd.addColorStop(0.5, 'rgba(255,255,255,0.22)');
+    grd.addColorStop(0.5, 'rgba(255,255,255,0.42)');
     grd.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = grd;
     g.fillRect(0, 0, width, height);
   }
-  // Arête supérieure lumineuse (épaisseur du verre)
-  const top = g.createLinearGradient(0, pad, 0, pad + asc * 0.12);
-  top.addColorStop(0, 'rgba(255,255,255,0.55)');
-  top.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = top;
+  // Base plus dense (épaisseur de la glace)
+  const base = g.createLinearGradient(0, height - pad - asc * 0.3, 0, height - pad);
+  base.addColorStop(0, 'rgba(77,155,255,0)');
+  base.addColorStop(1, 'rgba(77,155,255,0.28)');
+  g.fillStyle = base;
   g.fillRect(0, 0, width, height);
 
-  // 3. Contour net : la tranche du verre.
+  // 3. Contour net : la tranche de la glace, bleu de la marque, avec un liseré blanc intérieur.
   g.globalCompositeOperation = 'source-over';
   g.lineJoin = 'round';
-  g.lineWidth = Math.max(2, width / 700);
-  g.strokeStyle = 'rgba(205,234,255,0.72)';
+  g.lineWidth = Math.max(2, width / 520);
+  g.strokeStyle = 'rgba(21,99,214,0.7)';
   g.strokeText(text, x, y);
+  g.lineWidth = Math.max(1, width / 1400);
+  g.strokeStyle = 'rgba(255,255,255,0.9)';
+  g.strokeText(text, x - width / 1600, y - width / 1100);
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -308,9 +330,10 @@ export function makeGlintTexture(N = 128) {
   const h = N / 2;
   const glow = g.createRadialGradient(h, h, 0, h, h, h);
   glow.addColorStop(0, 'rgba(255,255,255,1)');
-  glow.addColorStop(0.08, 'rgba(225,244,255,0.85)');
-  glow.addColorStop(0.25, 'rgba(142,207,255,0.22)');
-  glow.addColorStop(1, 'rgba(142,207,255,0)');
+  glow.addColorStop(0.07, 'rgba(240,249,255,0.95)');
+  glow.addColorStop(0.16, 'rgba(110,180,255,0.42)');
+  glow.addColorStop(0.4, 'rgba(77,155,255,0.12)');
+  glow.addColorStop(1, 'rgba(77,155,255,0)');
   g.fillStyle = glow;
   g.fillRect(0, 0, N, N);
   const spike = (angle, sx, sy, alpha) => {
@@ -320,8 +343,9 @@ export function makeGlintTexture(N = 128) {
     g.scale(sx, sy);
     const s = g.createRadialGradient(0, 0, 0, 0, 0, h);
     s.addColorStop(0, `rgba(255,255,255,${alpha})`);
-    s.addColorStop(0.4, `rgba(200,232,255,${alpha * 0.35})`);
-    s.addColorStop(1, 'rgba(200,232,255,0)');
+    s.addColorStop(0.18, `rgba(120,186,255,${alpha * 0.8})`);
+    s.addColorStop(0.55, `rgba(42,125,235,${alpha * 0.3})`);
+    s.addColorStop(1, 'rgba(42,125,235,0)');
     g.fillStyle = s;
     g.beginPath(); g.arc(0, 0, h, 0, Math.PI * 2); g.fill();
     g.restore();
@@ -339,18 +363,19 @@ export function makeRingTexture(N = 256) {
   const [c, g] = canvas2d(N);
   const h = N / 2;
   const grd = g.createRadialGradient(h, h, 0, h, h, h);
-  grd.addColorStop(0, 'rgba(191,228,255,0)');
-  grd.addColorStop(0.55, 'rgba(191,228,255,0)');
-  grd.addColorStop(0.78, 'rgba(225,244,255,0.85)');
-  grd.addColorStop(0.86, 'rgba(142,207,255,0.25)');
-  grd.addColorStop(1, 'rgba(142,207,255,0)');
+  grd.addColorStop(0, 'rgba(142,207,255,0)');
+  grd.addColorStop(0.55, 'rgba(142,207,255,0)');
+  grd.addColorStop(0.74, 'rgba(255,255,255,0.9)');
+  grd.addColorStop(0.8, 'rgba(77,155,255,0.55)');
+  grd.addColorStop(0.9, 'rgba(77,155,255,0.12)');
+  grd.addColorStop(1, 'rgba(77,155,255,0)');
   g.fillStyle = grd;
   g.fillRect(0, 0, N, N);
   // Petits cristaux sur l'anneau
   const rand = mulberry32(5);
   for (let i = 0; i < 40; i++) {
     const a = rand() * Math.PI * 2, r = h * (0.72 + rand() * 0.12);
-    g.fillStyle = `rgba(255,255,255,${0.3 + rand() * 0.6})`;
+    g.fillStyle = rand() < 0.5 ? `rgba(255,255,255,${0.5 + rand() * 0.5})` : `rgba(42,125,235,${0.4 + rand() * 0.5})`;
     g.fillRect(h + Math.cos(a) * r, h + Math.sin(a) * r, 1.5 + rand() * 2, 1.5 + rand() * 2);
   }
   const tex = new THREE.CanvasTexture(c);

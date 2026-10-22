@@ -1,0 +1,273 @@
+<!-- Questions fréquentes (agent convert-b). Module : src/js/modules/faq.js · Styles : src/styles/modules/convert-b.css
+     Accordéon accessible (button + aria-expanded + role="region"). Sans JS, toutes les réponses restent ouvertes.
+     Prix (data-price), numéros (data-tel), WhatsApp (data-wa) et adresse sont revérifiés contre config.js au chargement.
+     Le JSON-LD FAQPage ci-dessous reprend mot pour mot les réponses affichées : modifiez les deux ensemble. -->
+<section class="faq" id="faq" data-module="faq" aria-labelledby="faq-title">
+  <div class="faq__decor" aria-hidden="true"><span class="faq__glow"></span><span class="faq__qmark">?</span></div>
+  <div class="container faq__inner">
+    <div class="faq__aside">
+      <div class="faq__intro">
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 class="faq__title" id="faq-title">Tout savoir <span class="ice-text">avant de commander</span></h2>
+        <p class="lead faq__lead">Commande, livraison, conservation, carboglace&nbsp;: les réponses claires aux questions que l’on nous pose le plus.</p>
+      </div>
+      <div class="faq__help frost ice-edge">
+        <p class="faq__help-title">Une autre question&nbsp;?</p>
+        <p class="faq__help-text">Notre équipe vous répond sur WhatsApp ou par téléphone, 24h/24 et 7j/7.</p>
+        <div class="faq__help-actions">
+          <a class="btn btn--wa" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20j%E2%80%99ai%20une%20question." target="_blank" rel="noopener" data-wa="Bonjour Le Glaceur, j’ai une question.">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8a9.2 9.2 0 0 0-7.9 13.9L2.9 21l4.5-1.2A9.2 9.2 0 1 0 12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.9 7.6c.3 0 .6 0 .8.5l.9 2.1c.1.2 0 .5-.1.7l-.7.8c-.1.2-.1.4 0 .6.8 1.4 1.9 2.4 3.3 3.1.2.1.4.1.6-.1l.9-1c.2-.2.4-.2.6-.1l2.1 1c.2.1.4.3.3.6-.1.8-.5 1.5-1.2 1.9-.8.5-1.9.6-3.2 0a10.3 10.3 0 0 1-5.4-5.1c-.6-1.4-.5-2.5 0-3.3.5-.7 1.1-1.1 1.4-1.1Z" fill="currentColor"/></svg>
+            <span>WhatsApp</span><span class="sr-only"> (nouvel onglet)</span>
+          </a>
+          <a class="btn btn--glass" href="tel:+2250789851686" data-tel="0">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 3.5h3l1.5 4-2 1.3a11 11 0 0 0 6.1 6.1l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span>Appeler</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="faq__list-wrap">
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-01" aria-expanded="true" aria-controls="faq-a-01">
+            <span class="faq__num" aria-hidden="true">01</span>
+            <span class="faq__qtext">Comment passer commande ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-01" role="region" aria-labelledby="faq-q-01">
+          <div class="faq__answer">
+            <p>Choisissez librement vos articles et leurs quantités dans <a href="#commande">« Composez votre commande »</a> ou sur la <a href="devis.html">page devis</a>, puis indiquez vos coordonnées. Votre devis est généré automatiquement en <strong>PDF</strong> et en <strong>Excel</strong>.</p>
+            <p>Un clic sur « Envoyer sur WhatsApp » ouvre la discussion avec notre équipe, qui confirme votre commande. Vous préférez nous parler&nbsp;? Appelez le <a href="tel:+2250789851686" data-tel="0">+225 07 89 85 16 86</a>, 24h/24 et 7j/7.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-02" aria-expanded="true" aria-controls="faq-a-02">
+            <span class="faq__num" aria-hidden="true">02</span>
+            <span class="faq__qtext">Quelle quantité commander ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-02" role="region" aria-labelledby="faq-q-02">
+          <div class="faq__answer">
+            <p>C’est vous qui décidez&nbsp;: packs, sacs, barres, Ice Cups ou kilos de carboglace, article par article, dans les quantités qui vous conviennent. Votre choix génère directement votre devis.</p>
+            <p>Besoin d’un conseil&nbsp;? <a href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20j%E2%80%99ai%20une%20question." target="_blank" rel="noopener" data-wa="Bonjour Le Glaceur, j’aimerais un conseil sur les quantités à commander.">Écrivez-nous sur WhatsApp</a> en décrivant votre besoin (événement, commerce, conservation…)&nbsp;: nous vous répondons volontiers.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-03" aria-expanded="true" aria-controls="faq-a-03">
+            <span class="faq__num" aria-hidden="true">03</span>
+            <span class="faq__qtext">Livrez-vous partout à Abidjan ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-03" role="region" aria-labelledby="faq-q-03">
+          <div class="faq__answer">
+            <p>Oui, nous livrons <strong>partout à Abidjan, 24h/24 et 7j/7</strong>.</p>
+            <p><strong>La livraison est offerte dès 20 articles</strong> au total (toutes quantités additionnées). En dessous de 20 articles, le devis est établi <strong>hors frais de livraison</strong>&nbsp;: Le Glaceur vous communique ensuite le tarif.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-04" aria-expanded="true" aria-controls="faq-a-04">
+            <span class="faq__num" aria-hidden="true">04</span>
+            <span class="faq__qtext">Puis-je venir chercher ma commande ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-04" role="region" aria-labelledby="faq-q-04">
+          <div class="faq__answer">
+            <p>Bien sûr. Le <strong>retrait sur place est gratuit</strong>, à <span data-address>Abatta – Carrefour Drogba, Abidjan</span>, 24h/24 et 7j/7. Choisissez simplement « Retrait sur place » dans votre devis.</p>
+            <p><a href="https://www.google.com/maps/search/?api=1&query=Abatta%20Carrefour%20Drogba%2C%20Abidjan" target="_blank" rel="noopener" data-maps>Voir l’itinéraire<span class="sr-only"> (Google Maps, nouvel onglet)</span></a></p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-05" aria-expanded="true" aria-controls="faq-a-05">
+            <span class="faq__num" aria-hidden="true">05</span>
+            <span class="faq__qtext">Comment se fait le paiement ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-05" role="region" aria-labelledby="faq-q-05">
+          <div class="faq__answer">
+            <p>Il n’y a <strong>aucun paiement en ligne</strong> sur le site. Le règlement se fait à la livraison ou au retrait de votre commande.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-06" aria-expanded="true" aria-controls="faq-a-06">
+            <span class="faq__num" aria-hidden="true">06</span>
+            <span class="faq__qtext">Votre glace est-elle vraiment alimentaire ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-06" role="region" aria-labelledby="faq-q-06">
+          <div class="faq__answer">
+            <p>Oui, elle est <strong>100 % alimentaire</strong>. Elle est fabriquée à partir d’une eau traitée et contrôlée, selon des procédés de fabrication rigoureux, avec un froid maîtrisé en continu.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-07" aria-expanded="true" aria-controls="faq-a-07">
+            <span class="faq__num" aria-hidden="true">07</span>
+            <span class="faq__qtext">Comment conserver la glace ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-07" role="region" aria-labelledby="faq-q-07">
+          <div class="faq__answer">
+            <p>Gardez-la en glacière ou en conservateur, <strong>à l’ombre</strong> et à l’abri du soleil, le sac fermé jusqu’à l’utilisation. Servez-la avec une pelle propre, jamais à mains nues.</p>
+            <p><strong>Ne recongelez jamais une glace qui a commencé à fondre.</strong> Pour les poissons et fruits de mer, utilisez des bacs propres et vidangez l’eau de fonte régulièrement.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-08" aria-expanded="true" aria-controls="faq-a-08">
+            <span class="faq__num" aria-hidden="true">08</span>
+            <span class="faq__qtext">Glaçons, glace en grain, glace pilée, barres : quelle différence ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-08" role="region" aria-labelledby="faq-q-08">
+          <div class="faq__answer">
+            <ul class="faq__list">
+            <li><strong>Glace cubique</strong> (glaçons)&nbsp;: denses et cristallins, à fonte lente, pour vos boissons, cocktails et restaurants. Pack de 5 kg&nbsp;: <span class="price-inline" data-price="glacons-5kg">750 F</span>.</li>
+            <li><strong>Glace en grain</strong>&nbsp;: de petits grains moelleux qui absorbent la boisson et se croquent, pour smoothies, sodas et jus. Pack de 5 kg&nbsp;: <span class="price-inline" data-price="grain-5kg">750 F</span>.</li>
+            <li><strong>Glace pilée</strong>&nbsp;: des fragments légers pour un refroidissement rapide, idéale en cocktails et sur les présentoirs de fruits de mer. Sac de 50 kg&nbsp;: <span class="price-inline" data-price="pilee-50kg">3 000 F</span>.</li>
+            <li><strong>Ice Cup</strong>&nbsp;: des glaçons creux en gobelet à couvercle, prêts à l’emploi. L’unité&nbsp;: <span class="price-inline" data-price="gobelet">250 F</span>.</li>
+            <li><strong>Barres de glace</strong>&nbsp;: un grand format à fonte lente et homogène, pour conserver et transporter vos produits. Barre de 5 kg&nbsp;: <span class="price-inline" data-price="barre-5kg">350 F</span>&nbsp;; barre de 10 kg&nbsp;: <span class="price-inline" data-price="barre-10kg">650 F</span>.</li>
+            </ul>
+            <p><a href="guide.html">Tout comprendre dans notre guide des glaces</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-09" aria-expanded="true" aria-controls="faq-a-09">
+            <span class="faq__num" aria-hidden="true">09</span>
+            <span class="faq__qtext">Vendez-vous de la glace carbonique ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-09" role="region" aria-labelledby="faq-q-09">
+          <div class="faq__answer">
+            <p>Oui. La <strong>carboglace</strong> (glace carbonique ou glace sèche) est disponible au kilo, à <span class="price-inline" data-price="carboglace-kg">7 500 F</span> le kg, et s’ajoute à votre devis comme les autres articles. Elle sert à la conservation, au transport cryogénique et aux effets de fumée de vos événements.</p>
+            <p class="faq__warn"><strong>Précautions&nbsp;:</strong> à −78,5 °C, elle se manipule toujours avec des gants épais ou une pince. Ne la touchez jamais à mains nues et ne l’ingérez jamais. Utilisez-la dans un lieu aéré, conservez-la dans une glacière non hermétique et tenez-la hors de portée des enfants.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq__item" data-faq-item>
+        <h3 class="faq__q">
+          <button type="button" class="faq__btn" id="faq-q-10" aria-expanded="true" aria-controls="faq-a-10">
+            <span class="faq__num" aria-hidden="true">10</span>
+            <span class="faq__qtext">Le devis est-il une facture ?</span>
+            <span class="faq__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+        </h3>
+        <div class="faq__panel" id="faq-a-10" role="region" aria-labelledby="faq-q-10">
+          <div class="faq__answer">
+            <p>Non. <strong>Ce document est un devis et ne constitue pas une facture.</strong> Il récapitule vos articles, vos quantités, les prix unitaires et le total, et sert de base à la confirmation de votre commande par Le Glaceur.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Comment passer commande ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Choisissez librement vos articles et leurs quantités dans « Composez votre commande » ou sur la page devis, puis indiquez vos coordonnées. Votre devis est généré automatiquement en PDF et en Excel. Un clic sur « Envoyer sur WhatsApp » ouvre la discussion avec notre équipe, qui confirme votre commande. Vous préférez nous parler ? Appelez le +225 07 89 85 16 86, 24h/24 et 7j/7."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quelle quantité commander ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "C’est vous qui décidez : packs, sacs, barres, Ice Cups ou kilos de carboglace, article par article, dans les quantités qui vous conviennent. Votre choix génère directement votre devis. Besoin d’un conseil ? Écrivez-nous sur WhatsApp en décrivant votre besoin (événement, commerce, conservation…) : nous vous répondons volontiers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Livrez-vous partout à Abidjan ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, nous livrons partout à Abidjan, 24h/24 et 7j/7. La livraison est offerte dès 20 articles au total (toutes quantités additionnées). En dessous de 20 articles, le devis est établi hors frais de livraison : Le Glaceur vous communique ensuite le tarif."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Puis-je venir chercher ma commande ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bien sûr. Le retrait sur place est gratuit, à Abatta – Carrefour Drogba, Abidjan, 24h/24 et 7j/7. Choisissez simplement « Retrait sur place » dans votre devis. Voir l’itinéraire"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment se fait le paiement ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Il n’y a aucun paiement en ligne sur le site. Le règlement se fait à la livraison ou au retrait de votre commande."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Votre glace est-elle vraiment alimentaire ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, elle est 100 % alimentaire. Elle est fabriquée à partir d’une eau traitée et contrôlée, selon des procédés de fabrication rigoureux, avec un froid maîtrisé en continu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment conserver la glace ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gardez-la en glacière ou en conservateur, à l’ombre et à l’abri du soleil, le sac fermé jusqu’à l’utilisation. Servez-la avec une pelle propre, jamais à mains nues. Ne recongelez jamais une glace qui a commencé à fondre. Pour les poissons et fruits de mer, utilisez des bacs propres et vidangez l’eau de fonte régulièrement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Glaçons, glace en grain, glace pilée, barres : quelle différence ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "• Glace cubique (glaçons) : denses et cristallins, à fonte lente, pour vos boissons, cocktails et restaurants. Pack de 5 kg : 750 F. • Glace en grain : de petits grains moelleux qui absorbent la boisson et se croquent, pour smoothies, sodas et jus. Pack de 5 kg : 750 F. • Glace pilée : des fragments légers pour un refroidissement rapide, idéale en cocktails et sur les présentoirs de fruits de mer. Sac de 50 kg : 3 000 F. • Ice Cup : des glaçons creux en gobelet à couvercle, prêts à l’emploi. L’unité : 250 F. • Barres de glace : un grand format à fonte lente et homogène, pour conserver et transporter vos produits. Barre de 5 kg : 350 F ; barre de 10 kg : 650 F. Tout comprendre dans notre guide des glaces"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vendez-vous de la glace carbonique ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui. La carboglace (glace carbonique ou glace sèche) est disponible au kilo, à 7 500 F le kg, et s’ajoute à votre devis comme les autres articles. Elle sert à la conservation, au transport cryogénique et aux effets de fumée de vos événements. Précautions : à −78,5 °C, elle se manipule toujours avec des gants épais ou une pince. Ne la touchez jamais à mains nues et ne l’ingérez jamais. Utilisez-la dans un lieu aéré, conservez-la dans une glacière non hermétique et tenez-la hors de portée des enfants."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Le devis est-il une facture ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Ce document est un devis et ne constitue pas une facture. Il récapitule vos articles, vos quantités, les prix unitaires et le total, et sert de base à la confirmation de votre commande par Le Glaceur."
+      }
+    }
+  ]
+}
+  </script>
+</section>

@@ -8,7 +8,7 @@
       try { skip = !!sessionStorage.getItem('lg:intro') || location.hash.length > 1 || matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
       if (skip) { s.parentNode.parentNode.removeChild(s.parentNode); return; }
       d.classList.add('preload');
-      setTimeout(function () {
+      window.__lgPreTimer = setTimeout(function () {
         if (window.__lgPreloaderDone) return;
         window.__lgPreloaderDone = true;
         d.classList.add('preloader-done');

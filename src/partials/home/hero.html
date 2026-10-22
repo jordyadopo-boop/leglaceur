@@ -1,68 +1,78 @@
 <!-- Hero de l'accueil (agent hero). Module : src/js/modules/hero.js · scène WebGL : src/js/hero/ · styles : src/styles/modules/hero.css -->
-<section class="hero section--dark" id="accueil" data-module="hero" data-intro="pending" aria-labelledby="hero-title">
-  <!-- Décor : scène WebGL (chargée à la demande), repli image, givre des angles. Tout est décoratif. -->
+<section class="hero" id="accueil" data-module="hero" data-header-tone="light" data-intro="pending" aria-labelledby="hero-title">
+  <!-- Décor : tout est décoratif (aria-hidden). Ordre des plans : lumière givrée → mot géant (CSS) → scène WebGL
+       (chargée à la demande ; elle remplace le mot et les glaçons CSS quand elle est prête) → givre des angles. -->
   <div class="hero__stage" aria-hidden="true">
-    <div class="hero__backdrop"></div>
-    <div class="hero__fallback" data-hero-fallback>
-      <noscript><!-- @img slot="glacons" alt="" sizes="(min-width: 900px) 46vw, 100vw" class="hero__fallback-img" --></noscript>
-      <template data-hero-fallback-tpl><!-- @img slot="glacons" alt="" sizes="(min-width: 900px) 46vw, 100vw" class="hero__fallback-img" eager --></template>
+    <div class="hero__backdrop">
+      <span class="hero__orb hero__orb--a"></span>
+      <span class="hero__orb hero__orb--b"></span>
+      <span class="hero__orb hero__orb--c"></span>
+      <span class="hero__caustics"></span>
     </div>
+    <p class="hero__word" data-hero-static><span>GLACEUR</span></p>
     <canvas class="hero__canvas" data-hero-canvas width="1" height="1"></canvas>
-    <div class="hero__frost hero__frost--tr" data-hero-frost></div>
-    <div class="hero__frost hero__frost--bl" data-hero-frost></div>
-    <div class="hero__frost hero__frost--br" data-hero-frost></div>
-    <div class="hero__scrim"></div>
+    <div class="hero__frost hero__frost--tl"></div>
+    <div class="hero__frost hero__frost--br"></div>
+    <div class="hero__veil"></div>
   </div>
 
   <div class="hero__inner container">
     <div class="hero__content" data-hero-content>
-      <p class="eyebrow hero__eyebrow hero__reveal" data-hero-eyebrow>Glace alimentaire · Abidjan</p>
+      <p class="eyebrow hero__eyebrow" data-hero-anim>Glace alimentaire · Abidjan</p>
 
       <h1 class="hero__title" id="hero-title" data-hero-title>
-        <span class="hero__title-a">La fraîcheur</span>
-        <span class="hero__title-b ice-text">sous toutes ses formes</span>
+        <span class="hero__title-a" data-hero-line>La fraîcheur</span>
+        <span class="hero__title-b ice-text" data-hero-line data-hero-ice>sous toutes ses formes</span>
       </h1>
 
-      <p class="hero__lead lead hero__reveal" data-hero-lead>
+      <p class="hero__lead lead" data-hero-anim>
         Glaçons, gobelets, barres de glace, glace pilée et glace carbonique, fabriqués avec une eau traitée et contrôlée.
         Livrés partout à Abidjan, 24h/24 et 7j/7.
       </p>
 
-      <ul class="hero__ctas hero__reveal" role="list" data-hero-ctas>
+      <ul class="hero__ctas" role="list" data-hero-anim>
         <li>
           <a class="btn btn--lg hero__cta" href="#commande" data-module="fx-magnetic">
-            <svg class="hero__cta-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4.4 7.2 12 11.3l7.6-4.1M12 11.3v9.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4.4 7.2 12 11.3l7.6-4.1M12 11.3v9.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
             <span>Composer ma commande</span>
           </a>
         </li>
         <li>
-          <a class="btn btn--lg btn--wa hero__cta hero__cta--wa" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20je%20souhaite%20passer%20une%20commande%20de%20glace." target="_blank" rel="noopener" data-hero-wa data-wa-text="Bonjour Le Glaceur, je souhaite passer une commande de glace." data-module="fx-magnetic">
+          <a class="btn btn--lg btn--wa hero__cta" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20je%20souhaite%20passer%20une%20commande%20de%20glace." target="_blank" rel="noopener" data-hero-wa data-module="fx-magnetic">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.89 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41Z"/></svg>
             <span>Commander sur WhatsApp</span>
           </a>
         </li>
       </ul>
 
-      <div class="hero__trust hero__reveal" data-hero-trust>
-        <ul class="hero__values" role="list" aria-label="Nos engagements">
-          <li data-hero-value="purete">Pureté</li>
-          <li data-hero-value="hygiene">Hygiène</li>
-          <li data-hero-value="qualite">Qualité</li>
+      <div class="hero__trust" data-hero-anim>
+        <ul class="hero__values" role="list" aria-label="Nos engagements" data-hero-values>
+          <li>Pureté</li>
+          <li>Hygiène</li>
+          <li>Qualité</li>
         </ul>
         <p class="hero__free" data-hero-free>
-          <svg class="hero__free-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.6" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
-          <span data-hero-free-label>Livraison offerte dès 20&nbsp;articles</span>
+          <span class="hero__free-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.6" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+          </span>
+          <span class="hero__free-text" data-hero-free-label>Livraison offerte dès 20&nbsp;articles</span>
         </p>
       </div>
     </div>
 
-    <p class="hero__meta hero__reveal" aria-hidden="true">
-      <span>Abatta – Carrefour Drogba</span>
-      <span>24h/24 · 7j/7</span>
-    </p>
+    <!-- Zone libre où flottent les glaçons (mesurée par hero.js pour placer la scène). -->
+    <div class="hero__visual" data-hero-zone aria-hidden="true">
+      <div class="hero__cubes" data-hero-static>
+        <span class="hero__cube hero__cube--1"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="hero__cube hero__cube--2"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="hero__cube hero__cube--3"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="hero__cube hero__cube--4"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      </div>
+      <p class="hero__hint" data-hero-hint>Touchez un glaçon</p>
+    </div>
   </div>
 
-  <a class="hero__scroll hero__reveal" href="#produits" data-hero-scroll>
+  <a class="hero__scroll" href="#produits" data-hero-scroll>
     <span class="hero__scroll-track" aria-hidden="true"><span class="hero__scroll-drop"></span></span>
     <span class="hero__scroll-label">Découvrir<span class="sr-only"> nos produits</span></span>
   </a>

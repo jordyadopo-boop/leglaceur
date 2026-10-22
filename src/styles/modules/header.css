@@ -1,7 +1,8 @@
 /* ==========================================================================
    En-tête « vitre givrée » (agent chrome) — .site-header
    Plan :
-   1. Barre fixe transparente au sommet du hero sombre de l'accueil (texte clair, logo blanc, voile marine léger).
+   1. Barre fixe transparente au sommet du hero de l'accueil : ton détecté sous la barre (hero clair → texte marine ;
+      section sombre → texte clair, logo blanc, voile marine léger).
    2. Au défilement, une capsule de verre dépoli se pose (bureau) / une plaque de glace suspendue (mobile) :
       flou + grain + liseré de givre qui gagne depuis le centre, reflet qui passe de temps en temps.
    3. Ton adaptatif : verre « fumé » marine au-dessus des sections sombres, verre clair ailleurs (data-tone).
@@ -663,6 +664,7 @@ html:not(.js) .site-header .site-header__fringe { opacity: 0.85; clip-path: none
   text-decoration: none;
   white-space: nowrap;
 }
+.site-header__menu-contact { margin-top: 0.4rem; }
 .site-header__menu-address { margin-top: -0.6rem; }
 
 @media (min-width: 560px) {

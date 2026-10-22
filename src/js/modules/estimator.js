@@ -186,7 +186,9 @@ export default function init(root) {
 
     // Bandeau mobile
     tickerTotal.textContent = `${money(t.subtotal)}${NBSP}F`;
-    tickerCount.textContent = free ? `${articles(t.count)} · livraison offerte` : articles(t.count);
+    tickerCount.textContent = !t.count ? DELIVERY.freeLabel
+      : free ? `${articles(t.count)} · livraison offerte`
+        : `${articles(t.count)} · plus que ${goal - t.count}`;
     tickerFill.style.setProperty('--p', p);
 
     // Actions
@@ -351,7 +353,7 @@ function kgText(t) {
 
 function waMessage(s, t) {
   if (!t.count) return 'Bonjour Le Glaceur, je souhaite passer une commande de glace.';
-  const lines = t.lines.map((l) => `• ${l.qty} × ${l.name} (${l.label.toLowerCase()}) : ${fcfaPlain(l.total)}`);
+  const lines = t.lines.map((l) => `• ${l.qty} × ${l.name}${l.label.includes(l.name) ? '' : ` (${lowerFirst(l.label)})`} : ${fcfaPlain(l.total)}`);
   const kg = t.totalKg ? `, environ ${plainNumber(t.totalKg)} kg` : '';
   let delivery;
   if (s.delivery.mode === 'retrait') delivery = `Retrait sur place à ${BRAND.address.street}.`;

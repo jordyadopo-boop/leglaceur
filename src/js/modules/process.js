@@ -186,7 +186,6 @@ function setupTrack(root, steps, sticky) {
   });
   // Les étapes suivent la timeline elle-même (le scrub lissé continue après le dernier événement de défilement) :
   // lecture à chaque image, uniquement tant que la scène est active.
-  root._tl = tl;
   const sync = () => {
     const p = tl.time();
     let idx = 0;

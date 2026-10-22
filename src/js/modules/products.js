@@ -174,10 +174,44 @@ function syncTicks(root) {
 function watchImages(root) {
   root.querySelectorAll('[data-media] img').forEach((img) => {
     const media = img.closest('[data-media]');
-    const fail = () => media.classList.add('is-missing');
+    const fail = () => {
+      media.classList.add('is-missing');
+      const tex = nuggetTexture();
+      if (tex) Object.assign(media.style, { backgroundImage: `url(${tex})`, backgroundSize: 'cover', backgroundPosition: 'center' });
+    };
     if (img.complete && img.naturalWidth === 0 && img.currentSrc) fail();
     else img.addEventListener('error', fail, { once: true });
   });
+}
+
+/** Texture « grains de glace » peinte une fois (canvas → data URL), partagée par tous les visuels absents. */
+let nuggetUrl;
+function nuggetTexture() {
+  if (nuggetUrl !== undefined) return nuggetUrl;
+  try {
+    const W = 640, H = 640;
+    const c = Object.assign(document.createElement('canvas'), { width: W, height: H });
+    const g = c.getContext('2d');
+    const bg = g.createRadialGradient(W * 0.35, H * 0.25, 20, W * 0.5, H * 0.55, W * 0.85);
+    bg.addColorStop(0, '#4d9bff'); bg.addColorStop(0.45, '#1563d6'); bg.addColorStop(1, '#0a1f44');
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let k = 0; k < 520; k++) {
+      const y = H * 0.18 + rnd() * H * 0.9;
+      const x = rnd() * W;
+      const r = (7 + rnd() * 9) * (0.6 + (y / H) * 0.6);
+      g.save();
+      g.translate(x, y); g.rotate(rnd() * Math.PI); g.scale(1, 0.72 + rnd() * 0.3);
+      const gr = g.createRadialGradient(-r * 0.3, -r * 0.35, r * 0.1, 0, 0, r);
+      gr.addColorStop(0, 'rgba(255,255,255,0.98)'); gr.addColorStop(0.45, 'rgba(227,243,255,0.85)');
+      gr.addColorStop(0.85, 'rgba(142,207,255,0.55)'); gr.addColorStop(1, 'rgba(21,99,214,0)');
+      g.fillStyle = gr; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
+      g.restore();
+    }
+    nuggetUrl = c.toDataURL('image/webp', 0.82);
+  } catch { nuggetUrl = null; }
+  return nuggetUrl;
 }
 
 /* ==========================================================================
@@ -270,14 +304,16 @@ function wireQuote(root) {
     const v = SKUS[sku];
     if (!v || !v.product.available) return;
     if (add) {
+      const rect = add.getBoundingClientRect();
       addQty(sku, 1);
-      flyToQuote(add, 1);
-      if (!HAS_SHATTER) burst(add);
+      flyToQuote(rect, 1);
+      if (!HAS_SHATTER) burst(cta);
       toast(`Ajouté à votre devis${NNBSP}: ${v.product.name}, ${perLabel(v)}`);
     } else {
       const d = Number(step.dataset.step) || 0;
+      const rect = step.getBoundingClientRect();
       addQty(sku, d);
-      if (d > 0) flyToQuote(step, 0.6);
+      if (d > 0) flyToQuote(rect, 0.6);
     }
   });
   // Saisie libre de la quantité
@@ -340,9 +376,8 @@ function quoteTarget() {
   return { x: innerWidth - 40, y: 36 };
 }
 
-function flyToQuote(from, scale = 1) {
-  if (reducedMotion || document.hidden) return;
-  const r = from.getBoundingClientRect();
+function flyToQuote(r, scale = 1) {
+  if (reducedMotion || document.hidden || !r.width) return;
   const sx = r.left + r.width / 2;
   const sy = r.top + r.height / 2;
   const { x: ex, y: ey } = quoteTarget();
@@ -533,17 +568,17 @@ function setupPinned(root) {
     anticipatePin: 1,
     invalidateOnRefresh: true,
     onRefresh: computePoints,
-    onUpdate(self) {
-      const p = tween.progress();
-      h.progress(p);
-      let best = 0;
-      points.forEach((q, k) => { if (Math.abs(q - p) < Math.abs(points[best] - p)) best = k; });
-      h.active(best);
-      shards.forEach((s) => gsap.set(s, { x: -p * innerWidth * Number(s.dataset.depth || 0.3), rotation: p * 40 * Number(s.dataset.depth || 0.3) }));
-      if (mark) gsap.set(mark, { xPercent: -p * 38 });
-      void self;
-    },
   });
+  const onProgress = () => {
+    const p = tween.progress();
+    h.progress(p);
+    let best = 0;
+    points.forEach((q, k) => { if (Math.abs(q - p) < Math.abs(points[best] - p)) best = k; });
+    h.active(best);
+    shards.forEach((s) => gsap.set(s, { x: -p * innerWidth * Number(s.dataset.depth || 0.3), rotation: p * 40 * Number(s.dataset.depth || 0.3) }));
+    if (mark) gsap.set(mark, { xPercent: -p * 38 });
+  };
+  tween.eventCallback('onUpdate', onProgress);
   computePoints();
   h.active(0);
   h.progress(0);

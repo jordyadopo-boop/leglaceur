@@ -1,0 +1,89 @@
+<!-- Scène finale « Besoin de fraîcheur ? » (agent convert-b). Module : src/js/modules/cta.js · Styles : src/styles/modules/convert-b.css
+     La vitre givrée (fx-frost-wipe) recouvre UNIQUEMENT la photo : le message, les boutons et les coordonnées sont posés à côté
+     ou au-dessus, toujours lisibles et cliquables sans essuyer. Coordonnées revérifiées contre config.js (BRAND) au chargement. -->
+<section class="cta" id="contact" data-module="cta" aria-labelledby="contact-title">
+  <div class="cta__bg" aria-hidden="true"><span class="cta__glow cta__glow--a"></span><span class="cta__glow cta__glow--b"></span></div>
+  <div class="container">
+    <div class="cta__stage">
+      <div class="cta__window" data-module="fx-frost-wipe" data-wipe-hint="Essuyez la vitre">
+        <div class="cta__photo" data-cta-photo>
+          <!-- @img slot="texture-glace" alt="" sizes="(min-width: 1100px) 760px, (min-width: 700px) 70vw, 100vw" class="cta__img" -->
+        </div>
+        <p class="cta__etch" aria-hidden="true"><span>La fraîcheur</span> <span>sous toutes</span> <span>ses formes</span></p>
+        <span class="cta__shine" aria-hidden="true"></span>
+        <span class="cta__fog" aria-hidden="true"></span>
+        <svg class="cta__rime" data-cta-rime viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <g class="cta__rime-tl">
+            <path d="M0 22 C40 26 70 18 104 30 M18 0 C24 34 16 62 30 96 M0 64 C26 58 44 70 62 58 M54 0 C58 20 72 32 70 52 M30 40 L52 30 M40 12 L58 20 M10 82 L26 70 M82 26 L92 8"/>
+          </g>
+          <g class="cta__rime-br">
+            <path d="M400 270 C362 266 330 276 294 262 M382 300 C374 266 384 236 368 204 M400 228 C372 236 354 222 334 236 M344 300 C340 278 326 266 330 246 M368 254 L346 266 M358 286 L340 278 M390 214 L372 228 M316 268 L304 290"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="cta__card frost ice-edge">
+        <p class="eyebrow">Contact &amp; commande</p>
+        <h2 class="cta__title" id="contact-title">Besoin de <span class="ice-text">fraîcheur</span>&#8239;?</h2>
+        <p class="cta__lead">Choisissez vos articles et vos quantités, recevez votre devis en PDF et en Excel, puis envoyez-le-nous sur WhatsApp. Nous livrons partout à Abidjan, 24h/24 et 7j/7.</p>
+        <ul class="cta__perks" aria-label="Nos engagements">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2"/><circle cx="6.6" cy="17.4" r="1.9"/><circle cx="16.8" cy="17.4" r="1.9"/></svg><span data-cta-free>Livraison offerte dès 20&nbsp;articles</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/></svg><span>Retrait gratuit à Abatta</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 2.8h8.2L19 7.6v13.6H6z"/><path d="M14 2.8v5h5M9 12.5h7M9 16.2h5"/></svg><span>Aucun paiement en ligne</span></li>
+        </ul>
+        <div class="cta__actions">
+          <a class="btn btn--lg cta__primary" href="#commande" data-cta-primary data-module="fx-magnetic">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 2.8h8.2L19 7.6v13.6H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 2.8v5h5M9 12.5h7M9 16.2h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span data-cta-primary-label>Composer ma commande</span>
+          </a>
+          <a class="btn btn--wa btn--lg" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20je%20souhaite%20passer%20une%20commande." target="_blank" rel="noopener" data-cta-wa data-wa-text="Bonjour Le Glaceur, je souhaite passer une commande.">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8a9.2 9.2 0 0 0-7.9 13.9L2.9 21l4.5-1.2A9.2 9.2 0 1 0 12 2.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.9 7.6c.3 0 .6 0 .8.5l.9 2.1c.1.2 0 .5-.1.7l-.7.8c-.1.2-.1.4 0 .6.8 1.4 1.9 2.4 3.3 3.1.2.1.4.1.6-.1l.9-1c.2-.2.4-.2.6-.1l2.1 1c.2.1.4.3.3.6-.1.8-.5 1.5-1.2 1.9-.8.5-1.9.6-3.2 0a10.3 10.3 0 0 1-5.4-5.1c-.6-1.4-.5-2.5 0-3.3.5-.7 1.1-1.1 1.4-1.1Z" fill="currentColor"/></svg>
+            <span>WhatsApp</span><span class="sr-only"> (nouvel onglet)</span>
+          </a>
+          <a class="btn btn--glass btn--lg" href="tel:+2250789851686" data-cta-call>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 3.5h3l1.5 4-2 1.3a11 11 0 0 0 6.1 6.1l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span>Appeler</span>
+          </a>
+        </div>
+        <p class="cta__cart" data-cta-cart hidden aria-live="polite"></p>
+      </div>
+    </div>
+
+    <ul class="cta__coords" aria-label="Coordonnées de Le Glaceur">
+      <li class="cta__coord frost">
+        <span class="cta__coord-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.6 3.5h3l1.5 4-2 1.3a11 11 0 0 0 6.1 6.1l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg></span>
+        <div class="cta__coord-body">
+          <h3 class="cta__coord-k">Téléphone</h3>
+          <ul class="cta__phones" data-cta-phones>
+            <li><a href="tel:+2250789851686">+225&nbsp;07&nbsp;89&nbsp;85&nbsp;16&nbsp;86</a> <span>Service client &amp; WhatsApp</span></li>
+            <li><a href="tel:+2250566043169">+225&nbsp;05&nbsp;66&nbsp;04&nbsp;31&nbsp;69</a> <span>Service client</span></li>
+            <li><a href="tel:+2252724467566">+225&nbsp;27&nbsp;24&nbsp;46&nbsp;75&nbsp;66</a> <span>Ligne fixe</span></li>
+          </ul>
+        </div>
+      </li>
+      <li class="cta__coord frost">
+        <span class="cta__coord-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg></span>
+        <div class="cta__coord-body">
+          <h3 class="cta__coord-k">E-mail</h3>
+          <p><a class="cta__mail" href="mailto:sdlsitgroup@gmail.com" data-cta-email>sdlsitgroup@gmail.com</a></p>
+        </div>
+      </li>
+      <li class="cta__coord frost">
+        <span class="cta__coord-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/></svg></span>
+        <div class="cta__coord-body">
+          <h3 class="cta__coord-k">Adresse</h3>
+          <p data-cta-address>Abatta – Carrefour Drogba, Abidjan</p>
+          <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Abatta%20Carrefour%20Drogba%2C%20Abidjan" target="_blank" rel="noopener" data-cta-maps>Itinéraire <span aria-hidden="true">→</span><span class="sr-only"> (Google Maps, nouvel onglet)</span></a>
+        </div>
+      </li>
+      <li class="cta__coord frost">
+        <span class="cta__coord-ico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.2 2.2"/></svg></span>
+        <div class="cta__coord-body">
+          <h3 class="cta__coord-k">Horaires</h3>
+          <p class="cta__hours" data-cta-hours>24h/24 · 7j/7</p>
+          <p class="cta__coord-note">Commandes, livraisons et retraits, tous les jours.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
