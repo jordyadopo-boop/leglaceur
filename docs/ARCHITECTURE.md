@@ -15,9 +15,12 @@
 > 5. **Agent convert-b** : pas de question FAQ sur le nombre d'invités ; à la place « Quelle quantité commander ? » →
 >    vous choisissez librement vos quantités par article ; besoin d'un conseil ? écrivez-nous sur WhatsApp.
 > 6. **E-mail officiel** : `BRAND.email` = sdlsitgroup@gmail.com — à afficher dans le pied de page, la section contact, les mentions légales, le PDF et l'Excel du devis (lien `mailto:`).
-> 7. **TOUS LES PRODUITS SONT DISPONIBLES, y compris la GLACE CARBONIQUE** (7 500 F le kg, commandable et ajoutable au devis, quantité en kg).
->    Ne l'affiche PAS en « Bientôt disponible » (le badge `.badge--soon` reste seulement pour de futurs produits avec `available: false`).
->    Garde pour elle l'univers brume/fumée (fx-fog) et la mention de sécurité (ne jamais ingérer ni toucher à mains nues).
+> 7. **CATALOGUE À JOUR (22/10, liste du client) — 6 produits, 7 variantes, TOUS DISPONIBLES, dans cet ordre :**
+>    Glace cubique (pack de 5 kg, 750 F) · **Glace en grain** (NOUVEAU, pack de 5 kg, 750 F, créneau image `grain`) ·
+>    Glace pilée (sac de 50 kg, 3 000 F) · **Carboglace** (le kg, 7 500 F, univers brume fx-fog + mention de sécurité) ·
+>    **Ice Cup** (nouveau nom du gobelet, 250 F) · Barres de glace (5 kg 350 F / 10 kg 650 F).
+>    Noms, prix, descriptions : toujours lus depuis `PRODUCTS` de `config.js` (ne rien coder en dur ; toute liste de produits se génère
+>    depuis `PRODUCTS`/`SKUS` ou est vérifiée contre eux au chargement). Le badge `.badge--soon` reste pour de futurs produits `available: false`.
 > 8. **LIVRAISON : AUCUN TARIF AFFICHÉ.** Quantité totale (somme de toutes les quantités) **≥ 20 → livraison OFFERTE** ;
 >    **< 20 → devis « hors frais de livraison »**, le tarif est communiqué ensuite par Le Glaceur. Retrait sur place gratuit.
 >    Il n'y a PLUS de zones ni de grille de prix (`DELIVERY.zones` n'existe plus) : on demande seulement la commune
@@ -111,7 +114,7 @@ Plusieurs modules sur un même élément : `data-module="fx-tilt fx-droplets"`.
 
 ## Médias
 Créneaux d'images (`public/img/<slot>-<w>.avif|webp`, agent photos) :
-`glacons`, `gobelet`, `barres`, `pilee`, `carboglace`, `sac-glaceur`, `usage-cocktail`, `usage-whisky`, `usage-poisson`, `usage-event`,
+`glacons`, `grain`, `gobelet`, `barres`, `pilee`, `carboglace`, `sac-glaceur`, `usage-cocktail`, `usage-whisky`, `usage-poisson`, `usage-event`,
 `usage-jus`, `usage-restaurant`, `eau-pure`, `texture-glace`, `abidjan`.
 Logo (agent brand) : partiels `src/partials/brand/logo-full.html` (logo horizontal, SVG inline, `currentColor`-friendly ou couleurs marque),
 `src/partials/brand/logo-mark.html` (symbole G seul), `src/partials/brand/logo-full-white.html`, `src/partials/brand/sdlsit.html` ;

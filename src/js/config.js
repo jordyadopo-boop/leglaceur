@@ -47,8 +47,8 @@ export const mapsEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent
 export const PRODUCTS = [
   {
     id: 'glacons',
-    name: 'Glaçons alimentaires',
-    alias: 'Glace cubique',
+    name: 'Glace cubique',
+    alias: 'Glaçons alimentaires',
     tagline: 'Fraîcheur longue durée',
     available: true,
     img: 'glacons',
@@ -56,36 +56,20 @@ export const PRODUCTS = [
       'Des glaçons denses, cristallins et 100 % alimentaires. Leur fonte lente permet un refroidissement efficace sans trop diluer vos boissons.',
     uses: ['Boissons', 'Cocktails', 'Jus', 'Restaurants', 'Événements', 'Usage domestique'],
     howto: 'À utiliser directement dans vos boissons.',
-    variants: [{ sku: 'glacons-5kg', label: 'Paquet de 5 kg', unit: 'paquet', units: 'paquets', kg: 5, price: 750 }],
+    variants: [{ sku: 'glacons-5kg', label: 'Pack de 5 kg', unit: 'pack', units: 'packs', kg: 5, price: 750 }],
   },
   {
-    id: 'gobelet',
-    name: 'Gobelet de glaçons',
-    alias: 'Gobelet de glace alimentaire',
-    tagline: "Pratique et prêt à l'emploi",
+    id: 'grain',
+    name: 'Glace en grain',
+    alias: 'Nugget ice',
+    tagline: 'Douce, croquante, gourmande',
     available: true,
-    img: 'gobelet',
+    img: 'grain',
     description:
-      'Des glaçons creux, légers et rafraîchissants, conditionnés en gobelets pratiques pour une consommation immédiate.',
-    uses: ['Sodas', 'Jus de fruits', 'Fast-food', 'Ventes à emporter', 'Événements'],
-    howto: "Prêt à l'emploi. Verser directement dans la boisson.",
-    variants: [{ sku: 'gobelet', label: '1 gobelet', unit: 'gobelet', units: 'gobelets', kg: null, price: 250 }],
-  },
-  {
-    id: 'barres',
-    name: 'Barres de glace',
-    alias: 'Pains de glace',
-    tagline: 'Fraîcheur et conservation',
-    available: true,
-    img: 'barres',
-    description:
-      'Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.',
-    uses: ['Conservation des produits alimentaires', 'Transport de marchandises', 'Pêche', 'Marchés', 'Événements', 'Usage professionnel'],
-    howto: 'À placer dans des glacières, conservateurs ou zones de stockage.',
-    variants: [
-      { sku: 'barre-5kg', label: 'Barre de 5 kg', unit: 'barre', units: 'barres', kg: 5, price: 350 },
-      { sku: 'barre-10kg', label: 'Barre de 10 kg', unit: 'barre', units: 'barres', kg: 10, price: 650 },
-    ],
+      'De petits grains de glace compactés, à la texture moelleuse. Ils absorbent le sirop et le jus de la boisson et se croquent avec plaisir.',
+    uses: ['Smoothies', "Cocktails d'été", 'Sodas', 'Jus de fruits', 'Fontaines à boissons', 'Événements'],
+    howto: 'À verser directement dans vos boissons et préparations glacées.',
+    variants: [{ sku: 'grain-5kg', label: 'Pack de 5 kg', unit: 'pack', units: 'packs', kg: 5, price: 750 }],
   },
   {
     id: 'pilee',
@@ -102,8 +86,8 @@ export const PRODUCTS = [
   },
   {
     id: 'carboglace',
-    name: 'Glace carbonique',
-    alias: 'Carboglace · glace sèche',
+    name: 'Carboglace',
+    alias: 'Glace carbonique · glace sèche',
     tagline: 'Froid extrême · effet fumée',
     // Disponible (confirmé par le client le 22/10/2026). Passer à false pour afficher « Bientôt disponible ».
     available: true,
@@ -113,6 +97,35 @@ export const PRODUCTS = [
     uses: ['Conservation', 'Transport cryogénique', 'Événementiel', 'Mixologie spectaculaire'],
     howto: 'Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.',
     variants: [{ sku: 'carboglace-kg', label: 'Le kilo', unit: 'kg', units: 'kg', kg: 1, price: 7500 }],
+  },
+  {
+    id: 'gobelet',
+    name: 'Ice Cup',
+    alias: 'Gobelet de glaçons',
+    tagline: "Pratique et prêt à l'emploi",
+    available: true,
+    img: 'gobelet',
+    description:
+      'Des glaçons creux, légers et rafraîchissants, conditionnés en gobelet à couvercle pour une consommation immédiate.',
+    uses: ['Sodas', 'Jus de fruits', 'Fast-food', 'Ventes à emporter', 'Événements'],
+    howto: "Prêt à l'emploi. Verser directement dans la boisson.",
+    variants: [{ sku: 'gobelet', label: '1 Ice Cup', unit: 'Ice Cup', units: 'Ice Cups', kg: null, price: 250 }],
+  },
+  {
+    id: 'barres',
+    name: 'Barres de glace',
+    alias: 'Pains de glace',
+    tagline: 'Fraîcheur et conservation',
+    available: true,
+    img: 'barres',
+    description:
+      'Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.',
+    uses: ['Conservation des produits alimentaires', 'Transport de marchandises', 'Pêche', 'Marchés', 'Événements', 'Usage professionnel'],
+    howto: 'À placer dans des glacières, conservateurs ou zones de stockage.',
+    variants: [
+      { sku: 'barre-5kg', label: 'Barre de 5 kg', unit: 'barre', units: 'barres', kg: 5, price: 350 },
+      { sku: 'barre-10kg', label: 'Barre de 10 kg', unit: 'barre', units: 'barres', kg: 10, price: 650 },
+    ],
   },
 ];
 

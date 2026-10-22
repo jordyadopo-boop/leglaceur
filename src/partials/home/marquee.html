@@ -1,0 +1,54 @@
+<!-- Bandeau défilant (agent products) : deux rubans de glace croisés qui défilent en sens inverse.
+     Module : src/js/modules/marquee.js · Styles : src/styles/modules/marquee.css
+     Textes = config.js (SECTORS, BRAND.values, DELIVERY.freeLabel, BRAND.hours). Les copies créées par le JS sont aria-hidden. -->
+<section class="marquee" data-module="marquee" aria-label="Nos secteurs et nos engagements">
+  <svg class="marquee__defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mq-crystal-ice" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#bfe4ff"/>
+        <stop offset=".5" stop-color="#4d9bff"/>
+        <stop offset="1" stop-color="#1563d6"/>
+      </linearGradient>
+      <!-- Cristal de glace à six branches (facettes en losange au centre) -->
+      <symbol id="mq-crystal" viewBox="-50 -50 100 100">
+        <g class="mq-crystal__arms" fill="none" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--mq-arm, #4d9bff); stroke-width: var(--mq-arm-w, 5)">
+          <path d="M0-44V44M-38.1-22 38.1 22M-38.1 22 38.1-22"/>
+          <path d="M0-30l-9-9M0-30l9-9M0 30l-9 9M0 30l9 9M-26-15l-12.3 3.3M-26-15l-3.3-12.3M26 15l12.3-3.3M26 15l3.3 12.3M-26 15l-3.3 12.3M-26 15l-12.3-3.3M26-15l3.3-12.3M26-15l12.3 3.3"/>
+        </g>
+        <path class="mq-crystal__core" d="M0-14 12.1-7v14L0 14-12.1 7v-14Z" style="fill: var(--mq-core, #1563d6)"/>
+        <path class="mq-crystal__glint" d="M0-14 12.1-7 0 0-12.1-7Z" style="fill: var(--mq-glint, #fff); opacity: .75"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="marquee__stage">
+    <!-- Ruban 1 : glace claire, secteurs servis -->
+    <div class="marquee__band marquee__band--ice" data-marquee-row data-speed="70" data-dir="-1">
+      <div class="marquee__track">
+        <ul class="marquee__group" aria-label="Secteurs servis">
+          <li class="marquee__item"><span class="marquee__word">Restaurants</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Bars &amp; lounges</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Événements</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Poissonneries</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Ménages</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Usages professionnels</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+        </ul>
+      </div>
+      <span class="marquee__icicles" aria-hidden="true"></span>
+      <span class="marquee__drips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <!-- Ruban 2 : nuit polaire, engagements (sens inverse) -->
+    <div class="marquee__band marquee__band--night" data-marquee-row data-speed="46" data-dir="1">
+      <div class="marquee__track">
+        <ul class="marquee__group" aria-label="Nos engagements">
+          <li class="marquee__item"><span class="marquee__word">Pureté</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word marquee__word--outline">Hygiène</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">Qualité</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word marquee__word--outline">Livraison offerte dès 20&nbsp;articles</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+          <li class="marquee__item"><span class="marquee__word">24h/24 · 7j/7</span><svg class="marquee__crystal" viewBox="-50 -50 100 100" aria-hidden="true" focusable="false"><use href="#mq-crystal"/></svg></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,495 @@
+<!-- Devis · configurateur (agent quote-ui). Styles : src/styles/modules/quote.css · Logique : src/js/modules/quote-builder.js + src/js/quote/ui-*.js
+     Les prix et libellés ci-dessous sont identiques à src/js/config.js et sont revérifiés par le module au chargement (data-price). -->
+<svg class="quote-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="q-i-cube" viewBox="0 0 24 24"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7z"/><path d="M4 7l8 4.2L20 7M12 11.2v10"/></symbol>
+  <symbol id="q-i-truck" viewBox="0 0 24 24"><path d="M2.5 6.5h11v9.5h-11zM13.5 9.5h4l3.5 3.6V16h-7.5"/><circle cx="6.5" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/></symbol>
+  <symbol id="q-i-store" viewBox="0 0 24 24"><path d="M3.5 9.5 5 4h14l1.5 5.5M3.5 9.5c0 1.5 1.2 2.6 2.7 2.6s2.8-1.1 2.8-2.6c0 1.5 1.3 2.6 3 2.6s3-1.1 3-2.6c0 1.5 1.2 2.6 2.8 2.6s2.7-1.1 2.7-2.6M5 12v8h14v-8M10 20v-4.5h4V20"/></symbol>
+  <symbol id="q-i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="q-i-route" viewBox="0 0 24 24"><path d="m3.5 11 17-7.5-7.5 17-2-7.5z"/></symbol>
+  <symbol id="q-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="q-i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="q-i-nocard" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M4 3.5l16 17"/></symbol>
+  <symbol id="q-i-doc" viewBox="0 0 24 24"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5M12 11.5v6M9.5 15l2.5 2.5 2.5-2.5"/></symbol>
+  <symbol id="q-i-xls" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M4 9h16M4 14.5h16M10 3.5v17"/></symbol>
+  <symbol id="q-i-share" viewBox="0 0 24 24"><path d="M12 15V3.5M8 7l4-3.5L16 7"/><path d="M8 10.5H6.5A1.5 1.5 0 0 0 5 12v7.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V12a1.5 1.5 0 0 0-1.5-1.5H16"/></symbol>
+  <symbol id="q-i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.3-5.4"/><path d="M4.5 3.5v4h4"/></symbol>
+  <symbol id="q-i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="q-i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="q-i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="q-i-down" viewBox="0 0 24 24"><path d="M12 4.5v15M6 13.5l6 6 6-6"/></symbol>
+  <symbol id="q-i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+  <symbol id="q-i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></symbol>
+  <symbol id="q-i-warn" viewBox="0 0 24 24"><path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5M12 17.3v.2"/></symbol>
+  <symbol id="q-i-snow" viewBox="0 0 24 24"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5M9.5 4 12 6.5 14.5 4M9.5 20l2.5-2.5 2.5 2.5M4.4 10.6l3.4-.9-.9-3.4M19.6 13.4l-3.4.9.9 3.4M4.4 13.4l3.4.9-.9 3.4M19.6 10.6l-3.4-.9.9-3.4"/></symbol>
+  <symbol id="q-i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.8-3.9 3.8-6 7.5-6s6.7 2.1 7.5 6"/></symbol>
+  <symbol id="q-i-wa" viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89a11.82 11.82 0 0 0-3.48-8.41z"/></symbol>
+  <symbol id="q-i-crystal" viewBox="0 0 20 20"><path d="M10 0l2.6 7.4L20 10l-7.4 2.6L10 20l-2.6-7.4L0 10l7.4-2.6z"/></symbol>
+</svg>
+
+<section class="quote" id="devis" data-module="quote-builder" aria-label="Configurateur de devis">
+  <div class="quote__decor" aria-hidden="true">
+    <span class="quote__floe quote__floe--a"></span>
+    <span class="quote__floe quote__floe--b"></span>
+    <span class="quote__floe quote__floe--c"></span>
+  </div>
+
+  <div class="container quote__layout">
+    <form class="quote__form" id="quote-form" novalidate aria-describedby="q-required-note">
+      <noscript>
+        <p class="quote-noscript">Le calcul automatique du devis nécessite JavaScript. Vous pouvez aussi nous écrire directement sur WhatsApp au <a href="https://wa.me/2250789851686">+225&nbsp;07&nbsp;89&nbsp;85&nbsp;16&nbsp;86</a>.</p>
+      </noscript>
+
+      <!-- ===================== Étape 1 : les glaces ===================== -->
+      <section class="quote-step" id="devis-glaces" aria-labelledby="q-step1-title" data-step="1">
+        <header class="quote-step__head">
+          <span class="quote-step__num" aria-hidden="true">01</span>
+          <div class="quote-step__heading">
+            <p class="quote-step__kicker">Étape 1 sur 3</p>
+            <h2 class="quote-step__title" id="q-step1-title">Vos glaces</h2>
+            <p class="quote-step__hint">Choisissez librement la quantité de chaque article&nbsp;: votre devis se calcule en direct.</p>
+          </div>
+        </header>
+
+        <!-- Jauge « livraison offerte » : 20 glaçons qui se remplissent -->
+        <div class="quote-gauge" data-gauge>
+          <div class="quote-gauge__top">
+            <p class="quote-gauge__label" id="q-gauge-label">
+              <svg class="icon quote-gauge__truck" aria-hidden="true"><use href="#q-i-truck"/></svg>
+              <span data-gauge-text>Livraison offerte dès 20&nbsp;articles</span>
+            </p>
+            <p class="quote-gauge__count" aria-hidden="true"><b data-gauge-count>0</b><span>/<span data-gauge-goal>20</span></span></p>
+          </div>
+          <div class="quote-gauge__track" role="progressbar" aria-labelledby="q-gauge-label" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" data-gauge-track>
+            <span class="quote-gauge__cells" data-gauge-cells></span>
+          </div>
+        </div>
+
+        <p class="quote-error quote-error--items" id="q-err-items" data-error-items hidden>
+          <svg class="icon" aria-hidden="true"><use href="#q-i-warn"/></svg>
+          <span>Ajoutez au moins un article à votre devis.</span>
+        </p>
+
+        <ul class="quote-items" role="list" data-items>
+          <li class="quote-item" data-sku="glacons-5kg">
+            <div class="quote-item__media">
+              <!-- @img slot="glacons" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img" -->
+              <span class="quote-item__tag" data-tag>5&nbsp;kg</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-glacons-5kg" data-name>Glaçons alimentaires</h3>
+              <p class="quote-item__format" data-format>Paquet de 5&nbsp;kg</p>
+              <p class="quote-item__price"><span data-price="glacons-5kg">750&nbsp;F</span> <span class="quote-item__per" data-per>/ paquet</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer un paquet de glaçons" aria-controls="q-qty-glacons-5kg"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-glacons-5kg" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de glaçons alimentaires, paquets de 5 kg">
+                <button type="button" data-step="1" aria-label="Ajouter un paquet de glaçons" aria-controls="q-qty-glacons-5kg"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+          </li>
+
+          <li class="quote-item" data-sku="gobelet">
+            <div class="quote-item__media">
+              <!-- @img slot="gobelet" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img" -->
+              <span class="quote-item__tag" data-tag>1&nbsp;u.</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-gobelet" data-name>Gobelet de glaçons</h3>
+              <p class="quote-item__format" data-format>1 gobelet</p>
+              <p class="quote-item__price"><span data-price="gobelet">250&nbsp;F</span> <span class="quote-item__per" data-per>/ gobelet</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer un gobelet" aria-controls="q-qty-gobelet"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-gobelet" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de gobelets de glaçons">
+                <button type="button" data-step="1" aria-label="Ajouter un gobelet" aria-controls="q-qty-gobelet"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+          </li>
+
+          <li class="quote-item" data-sku="barre-5kg">
+            <div class="quote-item__media">
+              <!-- @img slot="barres" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img" -->
+              <span class="quote-item__tag" data-tag>5&nbsp;kg</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-barre-5kg" data-name>Barres de glace</h3>
+              <p class="quote-item__format" data-format>Barre de 5&nbsp;kg</p>
+              <p class="quote-item__price"><span data-price="barre-5kg">350&nbsp;F</span> <span class="quote-item__per" data-per>/ barre</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer une barre de 5 kg" aria-controls="q-qty-barre-5kg"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-barre-5kg" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de barres de glace de 5 kg">
+                <button type="button" data-step="1" aria-label="Ajouter une barre de 5 kg" aria-controls="q-qty-barre-5kg"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+          </li>
+
+          <li class="quote-item" data-sku="barre-10kg">
+            <div class="quote-item__media">
+              <!-- @img slot="barres" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img quote-item__img--alt" -->
+              <span class="quote-item__tag" data-tag>10&nbsp;kg</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-barre-10kg" data-name>Barres de glace</h3>
+              <p class="quote-item__format" data-format>Barre de 10&nbsp;kg</p>
+              <p class="quote-item__price"><span data-price="barre-10kg">650&nbsp;F</span> <span class="quote-item__per" data-per>/ barre</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer une barre de 10 kg" aria-controls="q-qty-barre-10kg"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-barre-10kg" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de barres de glace de 10 kg">
+                <button type="button" data-step="1" aria-label="Ajouter une barre de 10 kg" aria-controls="q-qty-barre-10kg"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+          </li>
+
+          <li class="quote-item" data-sku="pilee-50kg">
+            <div class="quote-item__media">
+              <!-- @img slot="pilee" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img" -->
+              <span class="quote-item__tag" data-tag>50&nbsp;kg</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-pilee-50kg" data-name>Glace pilée</h3>
+              <p class="quote-item__format" data-format>Sac de 50&nbsp;kg</p>
+              <p class="quote-item__price"><span data-price="pilee-50kg">3&nbsp;000&nbsp;F</span> <span class="quote-item__per" data-per>/ sac</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer un sac de glace pilée" aria-controls="q-qty-pilee-50kg"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-pilee-50kg" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de sacs de glace pilée de 50 kg">
+                <button type="button" data-step="1" aria-label="Ajouter un sac de glace pilée" aria-controls="q-qty-pilee-50kg"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+          </li>
+
+          <li class="quote-item quote-item--carbo" data-sku="carboglace-kg">
+            <div class="quote-item__media">
+              <!-- @img slot="carboglace" alt="" sizes="(min-width: 64rem) 104px, 84px" class="quote-item__img" -->
+              <span class="quote-item__fog" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="quote-item__tag" data-tag>1&nbsp;kg</span>
+            </div>
+            <div class="quote-item__info">
+              <h3 class="quote-item__name" id="q-name-carboglace-kg" data-name>Glace carbonique</h3>
+              <p class="quote-item__format" data-format>Le kilo</p>
+              <p class="quote-item__price"><span data-price="carboglace-kg">7&nbsp;500&nbsp;F</span> <span class="quote-item__per" data-per>/ kg</span></p>
+            </div>
+            <div class="quote-item__qty">
+              <div class="stepper quote-stepper">
+                <button type="button" data-step="-1" aria-label="Retirer un kilo de glace carbonique" aria-controls="q-qty-carboglace-kg"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
+                <input type="number" id="q-qty-carboglace-kg" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité de glace carbonique, en kilos">
+                <button type="button" data-step="1" aria-label="Ajouter un kilo de glace carbonique" aria-controls="q-qty-carboglace-kg"><svg class="icon" aria-hidden="true"><use href="#q-i-plus"/></svg></button>
+              </div>
+            </div>
+            <p class="quote-item__total"><span class="sr-only">Montant&nbsp;: </span><span data-line-total>0&nbsp;F</span></p>
+            <p class="quote-item__safety" data-safety>
+              <svg class="icon" aria-hidden="true"><use href="#q-i-warn"/></svg>
+              <span>Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.</span>
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===================== Étape 2 : livraison ou retrait ===================== -->
+      <section class="quote-step" id="devis-livraison" aria-labelledby="q-step2-title" data-step="2">
+        <header class="quote-step__head">
+          <span class="quote-step__num" aria-hidden="true">02</span>
+          <div class="quote-step__heading">
+            <p class="quote-step__kicker">Étape 2 sur 3</p>
+            <h2 class="quote-step__title" id="q-step2-title">Livraison ou retrait</h2>
+            <p class="quote-step__hint">Livraison partout à Abidjan, 24h/24 · 7j/7, ou retrait gratuit à Abatta.</p>
+          </div>
+        </header>
+
+        <fieldset class="quote-seg" data-mode-group data-mode="livraison">
+          <legend class="sr-only">Mode de réception de la commande</legend>
+          <label class="quote-seg__opt">
+            <input type="radio" name="mode" value="livraison" checked>
+            <span class="quote-seg__box">
+              <svg class="icon" aria-hidden="true"><use href="#q-i-truck"/></svg>
+              <span class="quote-seg__txt"><b>Livraison</b><small data-seg-sub>Offerte dès 20 articles</small></span>
+            </span>
+          </label>
+          <label class="quote-seg__opt">
+            <input type="radio" name="mode" value="retrait">
+            <span class="quote-seg__box">
+              <svg class="icon" aria-hidden="true"><use href="#q-i-store"/></svg>
+              <span class="quote-seg__txt"><b>Retrait sur place</b><small>Gratuit · Abatta</small></span>
+            </span>
+          </label>
+          <span class="quote-seg__thumb" aria-hidden="true"></span>
+        </fieldset>
+
+        <div class="quote-panels" data-panels>
+          <div class="quote-panel" data-panel="livraison">
+            <div class="quote-note" data-delivery-note aria-live="polite">
+              <svg class="icon quote-note__icon" aria-hidden="true"><use href="#q-i-truck"/></svg>
+              <p><strong data-delivery-note-title>Livraison offerte dès 20&nbsp;articles</strong> <span data-delivery-note-text>En dessous de 20 articles, le devis est établi hors frais de livraison&nbsp;: Le Glaceur vous communique le tarif.</span></p>
+            </div>
+            <div class="quote-grid">
+              <div class="field">
+                <label for="q-commune">Commune</label>
+                <select class="select" id="q-commune" name="commune" autocomplete="address-level2" data-commune>
+                  <option value="">Choisissez votre commune</option>
+                  <option>Abobo</option><option>Adjamé</option><option>Anyama</option><option>Attécoubé</option><option>Bingerville</option><option>Cocody</option><option>Koumassi</option><option>Marcory</option><option>Plateau</option><option>Port-Bouët</option><option>Songon</option><option>Treichville</option><option>Yopougon</option><option>Grand-Bassam</option><option>Autre localité</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="q-address">Adresse ou quartier</label>
+                <input class="input" id="q-address" name="address" type="text" autocomplete="street-address" placeholder="Quartier, rue, point de repère" maxlength="160" data-address>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-panel" data-panel="retrait" hidden>
+            <div class="quote-pickup">
+              <div class="quote-pickup__map" data-map>
+                <svg class="quote-pickup__plan" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+                  <defs>
+                    <radialGradient id="q-map-glow" cx="50%" cy="46%" r="60%"><stop offset="0" stop-color="#e3f3ff"/><stop offset="1" stop-color="#bfe4ff"/></radialGradient>
+                  </defs>
+                  <rect width="400" height="240" fill="url(#q-map-glow)"/>
+                  <path d="M-10 182C60 160 120 196 196 170S330 120 410 138V250H-10Z" fill="#8ecfff" opacity=".45"/>
+                  <g fill="none" stroke="#fff" stroke-linecap="round">
+                    <path d="M-10 92C80 100 140 80 200 110S320 150 410 120" stroke-width="10"/>
+                    <path d="M200 -10C190 60 214 120 200 250" stroke-width="10"/>
+                    <path d="M40 -10 120 250M300 -10 340 250M-10 40 410 60" stroke-width="5" opacity=".8"/>
+                    <path d="M-10 150 410 200M150 -10 60 250M260 -10 250 250" stroke-width="3" opacity=".6"/>
+                  </g>
+                  <g fill="none" stroke="#4d9bff" stroke-linecap="round" opacity=".35">
+                    <path d="M-10 92C80 100 140 80 200 110S320 150 410 120" stroke-width="1.5"/>
+                    <path d="M200 -10C190 60 214 120 200 250" stroke-width="1.5"/>
+                  </g>
+                </svg>
+                <span class="quote-pickup__pin" aria-hidden="true">
+                  <span class="quote-pickup__pulse"></span>
+                  <svg class="icon"><use href="#q-i-pin"/></svg>
+                </span>
+                <button type="button" class="btn btn--glass btn--sm quote-pickup__load" data-map-load>
+                  <svg class="icon" aria-hidden="true"><use href="#q-i-pin"/></svg>
+                  <span>Afficher la carte</span>
+                </button>
+              </div>
+              <div class="quote-pickup__info">
+                <p class="quote-pickup__kicker"><svg class="icon" aria-hidden="true"><use href="#q-i-check"/></svg> Retrait sur place · gratuit</p>
+                <p class="quote-pickup__addr"><strong data-pickup-street>Abatta – Carrefour Drogba</strong><span data-pickup-city>Abidjan, Côte d’Ivoire</span></p>
+                <p class="quote-pickup__hours"><svg class="icon" aria-hidden="true"><use href="#q-i-clock"/></svg> <span data-pickup-hours>24h/24 · 7j/7</span></p>
+                <a class="btn btn--sm quote-pickup__route" href="https://www.google.com/maps/search/?api=1&amp;query=Abatta%20Carrefour%20Drogba%2C%20Abidjan" target="_blank" rel="noopener" data-maps-link>
+                  <svg class="icon" aria-hidden="true"><use href="#q-i-route"/></svg>
+                  <span>Itinéraire</span><span class="sr-only"> (s’ouvre dans un nouvel onglet)</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote-grid quote-when">
+          <div class="field">
+            <label for="q-date" data-date-label>Date de livraison souhaitée</label>
+            <input class="input" id="q-date" name="date" type="date" data-date>
+          </div>
+          <fieldset class="field quote-slots">
+            <legend class="label" data-slot-legend>Créneau</legend>
+            <div class="quote-chips" data-slots>
+              <label class="quote-chip"><input type="radio" name="slot" value="Dès que possible" checked><span>Dès que possible</span></label>
+              <label class="quote-chip"><input type="radio" name="slot" value="Matin"><span>Matin</span></label>
+              <label class="quote-chip"><input type="radio" name="slot" value="Après-midi"><span>Après-midi</span></label>
+              <label class="quote-chip"><input type="radio" name="slot" value="Soir"><span>Soir</span></label>
+              <label class="quote-chip"><input type="radio" name="slot" value="Nuit"><span>Nuit</span></label>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+
+      <!-- ===================== Étape 3 : coordonnées ===================== -->
+      <section class="quote-step" id="devis-coordonnees" aria-labelledby="q-step3-title" data-step="3">
+        <header class="quote-step__head">
+          <span class="quote-step__num" aria-hidden="true">03</span>
+          <div class="quote-step__heading">
+            <p class="quote-step__kicker">Étape 3 sur 3</p>
+            <h2 class="quote-step__title" id="q-step3-title">Vos coordonnées</h2>
+            <p class="quote-step__hint" id="q-required-note">Elles s’impriment automatiquement sur votre devis PDF, Excel et dans le message WhatsApp. Les champs marqués d’un astérisque (<span aria-hidden="true">*</span><span class="sr-only">étoile</span>) sont obligatoires.</p>
+          </div>
+        </header>
+
+        <div class="quote-grid">
+          <div class="field" data-field="name">
+            <label for="q-name">Nom et prénom <span class="quote-req" aria-hidden="true">*</span></label>
+            <input class="input" id="q-name" name="name" type="text" autocomplete="name" required aria-required="true" maxlength="80" aria-describedby="q-name-err" data-client="name">
+            <p class="field-error" id="q-name-err" data-error-for="name" hidden></p>
+          </div>
+          <div class="field" data-field="phone">
+            <label for="q-phone">Numéro WhatsApp <span class="quote-req" aria-hidden="true">*</span></label>
+            <div class="quote-phone">
+              <span class="quote-phone__icon" aria-hidden="true"><svg class="icon icon--fill"><use href="#q-i-wa"/></svg></span>
+              <input class="input" id="q-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-required="true" maxlength="22" placeholder="07 00 00 00 00" aria-describedby="q-phone-hint q-phone-err" data-client="phone">
+            </div>
+            <p class="field-hint" id="q-phone-hint">Pour recevoir la confirmation de votre commande. 10&nbsp;chiffres, +225 accepté.</p>
+            <p class="field-error" id="q-phone-err" data-error-for="phone" hidden></p>
+          </div>
+          <div class="field" data-field="company">
+            <label for="q-company">Structure / entreprise <span class="quote-opt">(facultatif)</span></label>
+            <input class="input" id="q-company" name="company" type="text" autocomplete="organization" maxlength="80" data-client="company">
+          </div>
+          <div class="field" data-field="email">
+            <label for="q-email">E-mail <span class="quote-opt">(facultatif)</span></label>
+            <input class="input" id="q-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" aria-describedby="q-email-err" data-client="email">
+            <p class="field-error" id="q-email-err" data-error-for="email" hidden></p>
+          </div>
+          <fieldset class="field quote-grid__full">
+            <legend class="label">Vous commandez pour</legend>
+            <div class="quote-chips" data-types>
+              <label class="quote-chip"><input type="radio" name="type" value="particulier" checked><span>Particulier</span></label>
+              <label class="quote-chip"><input type="radio" name="type" value="professionnel"><span>Professionnel</span></label>
+              <label class="quote-chip"><input type="radio" name="type" value="evenement"><span>Événement</span></label>
+            </div>
+          </fieldset>
+          <div class="field quote-grid__full">
+            <label for="q-note">Précisions <span class="quote-opt">(facultatif)</span></label>
+            <textarea class="textarea" id="q-note" name="note" rows="3" maxlength="600" placeholder="Heure précise, accès, besoins particuliers…" data-client="note"></textarea>
+          </div>
+        </div>
+
+        <div class="quote-finish">
+          <button type="submit" class="btn btn--lg quote-finish__btn" data-finish>
+            <span>Vérifier et envoyer mon devis</span>
+            <svg class="icon" aria-hidden="true"><use href="#q-i-down"/></svg>
+          </button>
+          <p class="quote-finish__note"><svg class="icon" aria-hidden="true"><use href="#q-i-nocard"/></svg> Aucun paiement en ligne&nbsp;: le règlement se fait à la livraison ou au retrait.</p>
+        </div>
+      </section>
+    </form>
+
+    <!-- ===================== Récapitulatif (collant sur bureau, tiroir sur mobile) ===================== -->
+    <aside class="quote-summary" id="quote-summary" aria-labelledby="q-sum-title" data-summary>
+      <div class="quote-summary__sheet">
+        <span class="quote-summary__grip" aria-hidden="true"></span>
+        <header class="quote-summary__head">
+          <div>
+            <p class="quote-summary__kicker">Récapitulatif</p>
+            <h2 class="quote-summary__title" id="q-sum-title">Votre devis</h2>
+          </div>
+          <button type="button" class="quote-summary__close" data-drawer-close aria-label="Fermer le récapitulatif">
+            <svg class="icon" aria-hidden="true"><use href="#q-i-close"/></svg>
+          </button>
+          <p class="quote-summary__number">
+            <span class="quote-summary__number-label">Devis n°&nbsp;</span><span data-number>attribué au premier article</span>
+          </p>
+        </header>
+
+        <div class="quote-summary__body" data-summary-body>
+          <div class="quote-summary__empty" data-empty>
+            <svg class="quote-summary__empty-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+              <path d="M32 8 54 20v24L32 56 10 44V20z" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 5"/>
+              <path d="M10 20l22 12 22-12M32 32v24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 5"/>
+            </svg>
+            <p><strong>Votre devis est vide.</strong> Choisissez vos quantités à l’étape&nbsp;1&nbsp;: chaque article s’affiche ici avec son montant.</p>
+          </div>
+
+          <ul class="quote-summary__lines" role="list" data-lines></ul>
+
+          <dl class="quote-summary__totals">
+            <div class="quote-summary__row"><dt>Sous-total</dt><dd data-subtotal>0&nbsp;F</dd></div>
+            <div class="quote-summary__row quote-summary__row--delivery" data-delivery-row><dt data-delivery-label>Livraison</dt><dd data-delivery>Hors frais de livraison</dd></div>
+            <div class="quote-summary__row quote-summary__row--total">
+              <dt data-total-label>Total</dt>
+              <dd><span class="quote-summary__total" data-total>0&nbsp;F&nbsp;CFA</span></dd>
+            </div>
+          </dl>
+          <p class="quote-summary__meta"><span data-count>0 article</span><span class="quote-summary__dot" aria-hidden="true">·</span><span data-weight>0&nbsp;kg</span></p>
+          <p class="quote-summary__fee-note" data-fee-note hidden>Tarif de livraison communiqué par Le Glaceur.</p>
+
+          <div class="quote-summary__mini" data-mini>
+            <span class="quote-summary__mini-track"><span class="quote-summary__mini-fill" data-mini-fill></span></span>
+            <span class="quote-summary__mini-text" data-mini-text>Livraison offerte dès 20&nbsp;articles</span>
+          </div>
+        </div>
+
+        <div class="quote-summary__actions" data-actions>
+          <div class="quote-alert" data-alert role="alert" hidden></div>
+
+          <div class="quote-success" data-success hidden tabindex="-1">
+            <svg class="quote-success__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <circle cx="24" cy="24" r="21" data-success-ring/>
+              <path d="m14 24.5 7 7L34.5 17" data-success-check/>
+            </svg>
+            <div>
+              <p class="quote-success__title" data-success-title>Votre devis est prêt&nbsp;!</p>
+              <p class="quote-success__text" data-success-text></p>
+              <p class="quote-success__links">
+                <a class="quote-success__link" href="https://wa.me/2250789851686" target="_blank" rel="noopener" data-success-wa>Rouvrir WhatsApp<span class="sr-only"> (s’ouvre dans un nouvel onglet)</span></a>
+                <button type="button" class="quote-success__link" data-action="success-close">Fermer</button>
+              </p>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn--wa btn--lg btn--block quote-action quote-action--wa" data-action="whatsapp">
+            <svg class="icon icon--fill" aria-hidden="true"><use href="#q-i-wa"/></svg>
+            <span data-label>Envoyer sur WhatsApp</span>
+          </button>
+          <p class="quote-summary__tip" data-wa-tip>Votre devis PDF se télécharge en même temps&nbsp;: joignez-le à votre message.</p>
+
+          <button type="button" class="btn btn--glass-dark btn--block quote-action" data-action="share" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#q-i-share"/></svg>
+            <span data-label>Partager le PDF</span>
+          </button>
+
+          <div class="quote-summary__dl">
+            <button type="button" class="btn btn--glass-dark btn--sm quote-action" data-action="pdf">
+              <svg class="icon" aria-hidden="true"><use href="#q-i-doc"/></svg>
+              <span data-label>Télécharger le PDF</span>
+            </button>
+            <button type="button" class="btn btn--glass-dark btn--sm quote-action" data-action="xlsx">
+              <svg class="icon" aria-hidden="true"><use href="#q-i-xls"/></svg>
+              <span data-label>Télécharger Excel</span>
+            </button>
+          </div>
+
+          <div class="quote-reset" data-reset>
+            <button type="button" class="quote-reset__btn" data-action="reset" aria-expanded="false" aria-controls="q-reset-confirm">
+              <svg class="icon" aria-hidden="true"><use href="#q-i-reset"/></svg>
+              <span>Recommencer</span>
+            </button>
+            <div class="quote-reset__confirm" id="q-reset-confirm" hidden>
+              <p>Effacer toutes les quantités et vos coordonnées&nbsp;?</p>
+              <div class="quote-reset__btns">
+                <button type="button" class="btn btn--sm quote-reset__yes" data-action="reset-yes">Oui, tout effacer</button>
+                <button type="button" class="btn btn--sm btn--glass-dark" data-action="reset-no">Annuler</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="quote-summary__legal">
+          <p data-legal-payment>Aucun paiement en ligne&nbsp;: le règlement se fait à la livraison ou au retrait.</p>
+          <p data-legal-disclaimer>Ce document est un devis et ne constitue pas une facture.</p>
+        </footer>
+      </div>
+      <p class="sr-only" aria-live="polite" aria-atomic="true" data-live></p>
+    </aside>
+  </div>
+
+  <!-- Barre basse (mobile et tablette) -->
+  <div class="quote-mobilebar" data-mobilebar hidden>
+    <button type="button" class="quote-mobilebar__sum" data-drawer-open aria-controls="quote-summary" aria-expanded="false">
+      <span class="quote-mobilebar__label"><span data-mb-label>Total</span> · <span data-mb-count>0 article</span></span>
+      <span class="quote-mobilebar__total" data-mb-total>0&nbsp;F</span>
+      <span class="quote-mobilebar__progress" aria-hidden="true"><span data-mb-fill></span></span>
+      <svg class="icon quote-mobilebar__chev" aria-hidden="true"><use href="#q-i-up"/></svg>
+      <span class="sr-only">Voir le récapitulatif du devis</span>
+    </button>
+    <button type="button" class="btn btn--wa quote-mobilebar__wa" data-action="whatsapp">
+      <svg class="icon icon--fill" aria-hidden="true"><use href="#q-i-wa"/></svg>
+      <span data-label>Envoyer</span>
+      <span class="sr-only"> le devis sur WhatsApp</span>
+    </button>
+  </div>
+  <div class="quote-scrim" data-scrim hidden></div>
+</section>

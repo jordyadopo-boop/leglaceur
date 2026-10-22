@@ -1,0 +1,93 @@
+<!-- En-tête commun (agent chrome). Styles : src/styles/modules/header.css · Comportement : src/js/modules/header.js
+     Liens « index.html#x » : transformés en « #x » sur l'accueil par le module. Le badge [data-quote-badge] suit le quote-store. -->
+<header class="site-header" data-module="header" data-tone="light">
+  <div class="site-header__bar">
+    <div class="site-header__glass" aria-hidden="true"><span class="site-header__glint"></span><span class="site-header__fringe"></span></div>
+    <div class="container site-header__inner">
+      <a class="site-header__brand" href="index.html" aria-label="Le Glaceur, accueil">
+        <!-- @include brand/logo-full.html -->
+      </a>
+
+      <nav class="site-header__nav" aria-label="Navigation principale">
+        <ul class="site-header__list" role="list">
+          <li><a class="site-header__link" href="index.html#produits" data-nav="produits"><span class="site-header__roll"><span data-text="Produits">Produits</span></span></a></li>
+          <li><a class="site-header__link" href="index.html#commande" data-nav="commande"><span class="site-header__roll"><span data-text="Commander">Commander</span></span></a></li>
+          <li><a class="site-header__link" href="index.html#qualite" data-nav="qualite"><span class="site-header__roll"><span data-text="Qualité">Qualité</span></span></a></li>
+          <li><a class="site-header__link" href="index.html#livraison" data-nav="livraison"><span class="site-header__roll"><span data-text="Livraison">Livraison</span></span></a></li>
+          <li><a class="site-header__link" href="guide.html" data-nav="guide"><span class="site-header__roll"><span data-text="Guide">Guide</span></span></a></li>
+          <li><a class="site-header__link" href="index.html#contact" data-nav="contact"><span class="site-header__roll"><span data-text="Contact">Contact</span></span></a></li>
+        </ul>
+        <span class="site-header__pill" aria-hidden="true"></span>
+      </nav>
+
+      <div class="site-header__actions">
+        <a class="site-header__call" href="tel:+2250789851686" data-header-call aria-label="Appeler Le Glaceur au +225 07 89 85 16 86">
+          <span class="site-header__call-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21.4 16.6v2.9a1.9 1.9 0 0 1-2.1 1.9 18.9 18.9 0 0 1-8.2-2.9 18.6 18.6 0 0 1-5.7-5.7 18.9 18.9 0 0 1-2.9-8.3A1.9 1.9 0 0 1 4.4 2.5h2.9a1.9 1.9 0 0 1 1.9 1.6c.1.9.4 1.8.7 2.7a1.9 1.9 0 0 1-.4 2L8.2 10a15.3 15.3 0 0 0 5.7 5.7l1.2-1.2a1.9 1.9 0 0 1 2-.4c.9.3 1.8.6 2.7.7a1.9 1.9 0 0 1 1.6 1.8z"/></svg>
+          </span>
+          <span class="site-header__call-text" aria-hidden="true"><small>24h/24 · 7j/7</small><span data-header-call-number>07 89 85 16 86</span></span>
+        </a>
+
+        <a class="site-header__quote" href="devis.html" data-header-quote>
+          <span class="site-header__quote-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6a1 1 0 0 1 1 1v1.5H8V4a1 1 0 0 1 1-1z"/><path d="M16 5h1.6A2.4 2.4 0 0 1 20 7.4v11.2a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 18.6V7.4A2.4 2.4 0 0 1 6.4 5H8"/><path d="M8.5 11.5h7M8.5 15.5h4.5"/></svg>
+          </span>
+          <span class="site-header__quote-label">Mon devis</span>
+          <span class="site-header__badge" data-quote-badge data-count="0" aria-hidden="true"><span class="site-header__badge-num">0</span></span>
+          <span class="sr-only" data-quote-sr>, aucun article pour l’instant</span>
+        </a>
+
+        <button class="site-header__burger" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Ouvrir le menu" hidden>
+          <span class="site-header__burger-box" aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
+        <a class="site-header__nojs-menu" href="#plan-du-site">Menu</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-header__menu" id="site-menu" role="dialog" aria-modal="true" aria-label="Menu principal" hidden data-lenis-prevent>
+    <div class="site-header__menu-bg" aria-hidden="true">
+      <span class="site-header__menu-orb site-header__menu-orb--a"></span>
+      <span class="site-header__menu-orb site-header__menu-orb--b"></span>
+      <svg class="site-header__menu-crystal" viewBox="0 0 200 200" focusable="false">
+        <g fill="none" stroke="currentColor" stroke-linecap="round">
+          <path d="M100 8v184M20.3 54l159.4 92M20.3 146l159.4-92" stroke-width="1.4"/>
+          <path d="M100 30l-12-12M100 30l12-12M100 170l-12 12M100 170l12 12M39.4 65l-4.4-16.4M39.4 65l-16.4 4.4M160.6 135l4.4 16.4M160.6 135l16.4-4.4M39.4 135l-16.4-4.4M39.4 135l-4.4 16.4M160.6 65l16.4 4.4M160.6 65l4.4-16.4" stroke-width="1.2"/>
+          <path d="M100 58l-8-8M100 58l8-8M100 142l-8 8M100 142l8 8M63.6 79l-11-3M63.6 79l-3-11M136.4 121l11 3M136.4 121l3 11M63.6 121l-3 11M63.6 121l-11 3M136.4 79l3-11M136.4 79l11-3" stroke-width="1"/>
+          <path d="M100 84l13.9 8v16L100 116l-13.9-8V92z" stroke-width="1.2"/>
+        </g>
+      </svg>
+    </div>
+    <div class="site-header__menu-inner container">
+      <nav class="site-header__menu-nav" aria-label="Navigation principale (mobile)">
+        <ol class="site-header__menu-list" role="list">
+          <li><a class="site-header__menu-link" href="index.html#produits" data-nav="produits"><span class="site-header__menu-num" aria-hidden="true">01</span><span class="site-header__menu-text">Produits</span></a></li>
+          <li><a class="site-header__menu-link" href="index.html#commande" data-nav="commande"><span class="site-header__menu-num" aria-hidden="true">02</span><span class="site-header__menu-text">Commander</span></a></li>
+          <li><a class="site-header__menu-link" href="index.html#qualite" data-nav="qualite"><span class="site-header__menu-num" aria-hidden="true">03</span><span class="site-header__menu-text">Qualité</span></a></li>
+          <li><a class="site-header__menu-link" href="index.html#livraison" data-nav="livraison"><span class="site-header__menu-num" aria-hidden="true">04</span><span class="site-header__menu-text">Livraison</span></a></li>
+          <li><a class="site-header__menu-link" href="guide.html" data-nav="guide"><span class="site-header__menu-num" aria-hidden="true">05</span><span class="site-header__menu-text">Guide des glaces</span></a></li>
+          <li><a class="site-header__menu-link" href="index.html#contact" data-nav="contact"><span class="site-header__menu-num" aria-hidden="true">06</span><span class="site-header__menu-text">Contact</span></a></li>
+        </ol>
+      </nav>
+
+      <div class="site-header__menu-cta">
+        <p class="site-header__menu-perk"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3.2v2.8h-7"/><circle cx="6.5" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/></svg>Livraison offerte dès 20&nbsp;articles</p>
+        <a class="btn btn--lg btn--block site-header__menu-quote" href="devis.html">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6a1 1 0 0 1 1 1v1.5H8V4a1 1 0 0 1 1-1z"/><path d="M16 5h1.6A2.4 2.4 0 0 1 20 7.4v11.2a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 18.6V7.4A2.4 2.4 0 0 1 6.4 5H8"/><path d="M8.5 11.5h7M8.5 15.5h4.5"/></svg>
+          <span>Mon devis</span>
+          <span class="site-header__menu-count" data-quote-count hidden></span>
+        </a>
+        <a class="btn btn--lg btn--block btn--wa site-header__menu-wa" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20je%20souhaite%20passer%20une%20commande." target="_blank" rel="noopener" data-wa-text="Bonjour Le Glaceur, je souhaite passer une commande.">
+          <svg class="icon site-header__wa-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.6a12.4 12.4 0 0 0-10.7 18.7L3.6 28.4l6.3-1.7A12.4 12.4 0 1 0 16 3.6z" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"/><path d="M11.9 9.7c.4 0 .7.1.9.6l1.2 2.8c.1.3.1.6-.1.9l-.9 1.1c-.2.2-.2.5-.1.8a10.1 10.1 0 0 0 4.2 3.9c.3.1.6.1.8-.1l1.1-1.3c.2-.3.5-.3.8-.2l2.7 1.3c.3.1.5.4.5.7 0 .9-.4 2-1.4 2.6-1 .6-2.4.8-4.2.1a13.4 13.4 0 0 1-6.9-6.5c-.8-1.8-.7-3.3-.1-4.3.6-1 1.4-1.4 1.8-1.4z" fill="currentColor" stroke="none"/></svg>
+          <span>Commander sur WhatsApp</span>
+        </a>
+        <p class="site-header__menu-contact">
+          <a href="tel:+2250789851686" data-header-call>+225 07 89 85 16 86</a>
+          <span aria-hidden="true">·</span>
+          <span>24h/24 · 7j/7</span>
+        </p>
+        <p class="site-header__menu-address">Abatta – Carrefour Drogba, Abidjan</p>
+      </div>
+    </div>
+  </div>
+</header>
