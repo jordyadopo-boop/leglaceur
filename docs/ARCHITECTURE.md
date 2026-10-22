@@ -1,5 +1,41 @@
 # Le Glaceur — contrat d'architecture
 
+> ## ⚠️ CONSIGNES CLIENT PRIORITAIRES (22/10, elles REMPLACENT toute consigne contraire de ta mission)
+> 1. **PAS D'ESTIMATEUR « nombre d'invités → nombre de sacs », nulle part sur le site.** Le client veut que le visiteur
+>    choisisse **librement** la quantité de chaque article (paquets, sacs, barres, gobelets). C'est ce choix qui génère le devis.
+>    `ESTIMATOR` et `estimateBags` ont été retirés de `config.js` : ne les recrée pas, n'affiche aucune règle d'invités.
+> 2. **Agent convert-a** : la section `home/estimator.html` devient **« Composez votre commande »** (garde le fichier,
+>    `id="commande"`, classe `.order-express`, module `estimator.js`) : tous les articles disponibles (une ligne par variante,
+>    miniature, prix unitaire, sélecteur de quantité libre `.stepper` relié à `core/quote-store`), total qui s'anime en direct,
+>    poids total, bouton « Générer mon devis » (devis.html, le panier est déjà rempli) + « Envoyer sur WhatsApp ».
+>    Scénographie glace spectaculaire (section sombre, le total « gèle », un cristal saute à chaque +1, les glaçons s'empilent
+>    visuellement selon la quantité totale) : c'est cette section qui doit donner envie de commander.
+> 3. **Agent quote-ui** : pas d'estimateur d'invités dans la page devis ; seulement le choix libre des quantités par article.
+> 4. **Agent chrome** : dans la navigation, remplace « Estimer » par **« Commander »** → `index.html#commande`.
+> 5. **Agent convert-b** : pas de question FAQ sur le nombre d'invités ; à la place « Quelle quantité commander ? » →
+>    vous choisissez librement vos quantités par article ; besoin d'un conseil ? écrivez-nous sur WhatsApp.
+> 6. **E-mail officiel** : `BRAND.email` = sdlsitgroup@gmail.com — à afficher dans le pied de page, la section contact, les mentions légales, le PDF et l'Excel du devis (lien `mailto:`).
+> 7. **TOUS LES PRODUITS SONT DISPONIBLES, y compris la GLACE CARBONIQUE** (7 500 F le kg, commandable et ajoutable au devis, quantité en kg).
+>    Ne l'affiche PAS en « Bientôt disponible » (le badge `.badge--soon` reste seulement pour de futurs produits avec `available: false`).
+>    Garde pour elle l'univers brume/fumée (fx-fog) et la mention de sécurité (ne jamais ingérer ni toucher à mains nues).
+> 8. **LIVRAISON : AUCUN TARIF AFFICHÉ.** Quantité totale (somme de toutes les quantités) **≥ 20 → livraison OFFERTE** ;
+>    **< 20 → devis « hors frais de livraison »**, le tarif est communiqué ensuite par Le Glaceur. Retrait sur place gratuit.
+>    Il n'y a PLUS de zones ni de grille de prix (`DELIVERY.zones` n'existe plus) : on demande seulement la commune
+>    (`DELIVERY.communes`, liste de choix) + l'adresse/quartier, la date et le créneau. Calcul déjà fait par `computeTotals()` :
+>    `freeDelivery`, `freeEligible`, `excludesDelivery`, `remainingForFree`, `deliveryFee` (0 ou null), `total` = sous-total.
+>    Textes : `DELIVERY.freeLabel`, `DELIVERY.paidLabel`, `DELIVERY.paidNote`, `QUOTE.deliveryNote`.
+>    À mettre en valeur partout où l'on choisit des quantités (argument commercial fort) : jauge « Plus que N articles pour
+>    la livraison offerte » qui se remplit, puis célébration givrée « Livraison offerte ! » ; récapitulatif du devis ; section
+>    livraison ; produits ; FAQ. **PDF** : ligne transport « Offerte (20 articles et plus) » ou « Hors frais de livraison — tarif
+>    communiqué par Le Glaceur » ; libellé du total « TOTAL » ou « TOTAL (hors frais de livraison) ». **Excel** : cellule transport
+>    = FORMULE `IF(SUM(quantités)>=20,"Offerte","Hors frais de livraison")` et libellé du total en formule, pour suivre les
+>    quantités modifiées par le client ; le total n'inclut jamais de frais de livraison.
+>    **Agent convert-a, section livraison** : garde le schéma radial depuis Abatta avec les COMMUNES desservies (directions
+>    approximatives, sans anneaux de prix ni tableau de tarifs) ; message central « Livraison offerte dès 20 articles,
+>    partout à Abidjan, 24h/24 et 7j/7 » ; en dessous de 20 articles : « devis hors frais de livraison, tarif communiqué par
+>    Le Glaceur » ; carte « Retrait sur place » gratuite à Abatta – Carrefour Drogba.
+> 9. **Logos** : utilise les logos officiels visibles sur les affiches (Le Glaceur et SDLSIT Group), recréés fidèlement par l'agent brand.
+
 Site vitrine + devis en ligne de **Le Glaceur** (glace alimentaire, Abidjan, marque de SDLSIT Group).
 Site statique (Vite multi-pages, JS natif, GSAP, Three.js, Lenis) déployé sur GitHub Pages.
 Langue : **français** (Côte d'Ivoire). Monnaie : **F CFA**.
@@ -49,7 +85,7 @@ Import des outils d'animation : `import { gsap, ScrollTrigger, SplitText, Flip, 
 (ne jamais réenregistrer les plugins ni créer une seconde instance Lenis).
 
 Autres utilitaires : `core/format.js` (`fcfa`, `fcfaShort`, `fcfaPlain`, `plainNumber`, `dateFr`), `core/whatsapp.js` (`waLink(text)`, `telLink`),
-`core/toast.js` (`toast(msg)`), `core/quote-store.js` (panier du devis), `config.js` (**toutes** les données : produits, prix, contacts, zones, estimateur, contenu du guide).
+`core/toast.js` (`toast(msg)`), `core/quote-store.js` (panier du devis), `config.js` (**toutes** les données : produits, prix, contacts, e-mail, règle de livraison, communes, contenu du guide).
 **Aucun prix, numéro ou texte commercial en dur dans le JS** : lisez `config.js`. Dans le HTML statique, les prix doivent correspondre exactement à `config.js`
 (et de préférence être remplis/vérifiés par le module au chargement via `data-price="sku"`).
 
@@ -83,13 +119,18 @@ fichiers `public/brand/logo-full.svg`, `logo-mark.svg`, `logo-quote.png` (pour l
 
 ## Devis (rubrique prioritaire)
 Exigences du client (notes vocales) :
-1. Le visiteur choisit **lui-même** les quantités (paquets, sacs, barres, gobelets). Un estimateur « nombre d'invités → paquets de glaçons »
-   propose une quantité (`estimateBags()` dans `config.js`, règle du client : 30 → 5, 100 → 20, 400 → 40, 1 000 → 100) que le visiteur peut modifier.
+1. Le visiteur choisit **lui-même** les quantités (paquets, sacs, barres, gobelets). **Aucun estimateur par nombre d'invités** (voir consignes prioritaires).
 2. **Aucun paiement en ligne.** Le calcul est automatique (sous-total, frais de transport, total).
-3. **Transport** : livraison par zone (tarifs indicatifs **négociables**) **ou retrait sur place** à Abatta – Carrefour Drogba (adresse + itinéraire).
+3. **Transport** : livraison (offerte dès 20 articles ; sinon devis hors frais de livraison, aucun tarif affiché) **ou retrait sur place** à Abatta – Carrefour Drogba (adresse + itinéraire).
 4. Le devis se télécharge en **PDF** et en **Excel** ; dans l'Excel, **les prix unitaires sont verrouillés**, seules les quantités (et les infos client/dates) sont modifiables, les totaux sont des formules.
 5. Bouton **Envoyer sur WhatsApp** (message prérempli vers `BRAND.whatsapp`), présent sur le site **et** cliquable dans le PDF. Cela ouvre la discussion avec le client.
 6. Mention : « Ce document est un devis et ne constitue pas une facture » (pas une FNE).
+7. **Coordonnées du client (consigne client du 22/10, prioritaire)** — elles figurent AUTOMATIQUEMENT sur le devis PDF, l'Excel et le message WhatsApp :
+   - **Nom de la personne qui commande** — obligatoire (`client.name`, libellé « Nom et prénom »).
+   - **Numéro WhatsApp** — obligatoire (`client.phone`, libellé « Numéro WhatsApp », aide « pour recevoir la confirmation de votre commande » ; validation numéro ivoirien à 10 chiffres, +225 accepté).
+   - **Nom de la structure** — facultatif (`client.company`, libellé « Structure / entreprise (facultatif) »).
+   - **Adresse e-mail** — facultative (`client.email`, libellé « E-mail (facultatif) »).
+   Sur le PDF et l'Excel, le bloc « Client » affiche, dans cet ordre : Nom, Structure (si renseignée), WhatsApp, E-mail (si renseigné). Dans l'Excel, ces cellules restent modifiables.
 
 Interface documents (`src/js/quote/documents.js`, agent quote-docs) :
 ```js
@@ -99,8 +140,8 @@ export function whatsappMessage(q)  // → string (texte du message WhatsApp)
 export function quoteFileName(q, ext) // → 'Devis-Le-Glaceur-GLC-261022-AB12.pdf'
 ```
 `q` = `toQuoteData()` de `core/quote-store.js` :
-`{ number, date, validUntil, client:{name,phone,email,company,type,note}, delivery:{mode,zoneId,zoneName,label,fee,address,date,slot}, lines:[{sku,name,label,unit,units,qty,price,total,kg}], subtotal, deliveryFee, total, totalKg, count, guests }`
-(`fee`/`deliveryFee` = `null` → « sur devis »). jsPDF ne sait pas afficher U+202F : utilisez `fcfaPlain`/`plainNumber`.
+`{ number, date, validUntil, client:{name,phone,email,company,type,note}, delivery:{mode,commune,label,fee,free,excludesDelivery,freeFrom,address,date,slot}, lines:[{sku,name,label,unit,units,qty,price,total,kg}], subtotal, deliveryFee, total, totalKg, count }`
+(`fee`/`deliveryFee` = `null` → « hors frais de livraison », `0` → offerte ou retrait). jsPDF ne sait pas afficher U+202F : utilisez `fcfaPlain`/`plainNumber`.
 
 Panier (`core/quote-store.js`) : `getState()`, `setQty(sku,q)`, `addQty(sku,d)`, `update(patch)`, `reset()`, `ensureNumber()`, `computeTotals()`, `toQuoteData()` ;
 événement `window` `quote:change`. Persisté en `localStorage`, partagé entre pages (le bouton « Ajouter au devis » de l'accueil remplit le même panier).

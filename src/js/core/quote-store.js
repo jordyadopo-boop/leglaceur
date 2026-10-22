@@ -6,9 +6,9 @@ import { SKUS, DELIVERY, QUOTE } from '../config.js';
 
 const empty = () => ({
   lines: {}, // { sku: qty }
-  delivery: { mode: 'livraison', zone: 'z1', address: '', date: '', slot: '' },
+  delivery: { mode: 'livraison', commune: '', address: '', date: '', slot: '' },
+  // name* = personne qui commande, phone* = numéro WhatsApp du client, company/email facultatifs.
   client: { name: '', phone: '', email: '', company: '', type: 'particulier', note: '' },
-  guests: null,
   number: null,
   createdAt: null,
 });
@@ -82,15 +82,17 @@ export function computeTotals(s = state) {
   const subtotal = lines.reduce((a, l) => a + l.total, 0);
   const totalKg = lines.reduce((a, l) => a + (l.kg ? l.kg * l.qty : 0), 0);
   const count = lines.reduce((a, l) => a + l.qty, 0);
-  let deliveryFee = 0;
-  let deliveryLabel = DELIVERY.pickup.label;
-  if (s.delivery.mode === 'livraison') {
-    const z = DELIVERY.zones.find((z) => z.id === s.delivery.zone) || DELIVERY.zones[0];
-    deliveryFee = z.price; // null → sur devis
-    deliveryLabel = `Livraison · ${z.name}`;
-  }
-  const total = subtotal + (deliveryFee || 0);
-  return { lines, subtotal, totalKg, count, deliveryFee, deliveryLabel, total };
+  // Règle client : livraison offerte dès DELIVERY.freeFrom articles ; en dessous, devis hors frais de livraison
+  // (tarif communiqué ensuite par Le Glaceur, jamais chiffré ici). Retrait sur place gratuit.
+  const freeEligible = count >= DELIVERY.freeFrom;
+  const remainingForFree = Math.max(0, DELIVERY.freeFrom - count);
+  const delivering = s.delivery.mode === 'livraison';
+  const freeDelivery = delivering && freeEligible;
+  const excludesDelivery = delivering && !freeEligible;
+  const deliveryFee = excludesDelivery ? null : 0; // null = hors frais de livraison
+  const deliveryLabel = !delivering ? DELIVERY.pickup.label : freeDelivery ? 'Livraison offerte' : `Livraison · ${DELIVERY.paidLabel.toLowerCase()}`;
+  const total = subtotal;
+  return { lines, subtotal, totalKg, count, deliveryFee, deliveryLabel, freeDelivery, freeEligible, excludesDelivery, remainingForFree, total };
 }
 
 // Synchronisation entre onglets.
@@ -109,7 +111,6 @@ export function toQuoteData(s = state) {
   const t = computeTotals(s);
   const created = s.createdAt ? new Date(s.createdAt) : new Date();
   const valid = new Date(created.getTime() + QUOTE.validityDays * 86400000);
-  const zone = DELIVERY.zones.find((z) => z.id === s.delivery.zone) || DELIVERY.zones[0];
   return {
     number: s.number || ensureNumber(),
     date: created.toISOString(),
@@ -117,10 +118,12 @@ export function toQuoteData(s = state) {
     client: { ...s.client },
     delivery: {
       mode: s.delivery.mode, // 'livraison' | 'retrait'
-      zoneId: s.delivery.mode === 'livraison' ? zone.id : null,
-      zoneName: s.delivery.mode === 'livraison' ? zone.name : null,
+      commune: s.delivery.mode === 'livraison' ? s.delivery.commune : null,
       label: t.deliveryLabel,
-      fee: t.deliveryFee, // null = sur devis
+      fee: t.deliveryFee, // 0 (offerte / retrait) ou null (hors frais de livraison)
+      free: t.freeDelivery, // livraison offerte (≥ DELIVERY.freeFrom articles)
+      excludesDelivery: t.excludesDelivery, // devis hors frais de livraison
+      freeFrom: DELIVERY.freeFrom,
       address: s.delivery.address,
       date: s.delivery.date,
       slot: s.delivery.slot,
@@ -131,6 +134,5 @@ export function toQuoteData(s = state) {
     total: t.total,
     totalKg: t.totalKg,
     count: t.count,
-    guests: s.guests,
   };
 }

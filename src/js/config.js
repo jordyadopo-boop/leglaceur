@@ -28,9 +28,9 @@ export const BRAND = {
     { label: 'Service client', display: '+225 05 66 04 31 69', tel: '+2250566043169' },
     { label: 'Ligne fixe', display: '+225 27 24 46 75 66', tel: '+2252724467566' },
   ],
-  // À VALIDER : numéro WhatsApp qui reçoit les devis (présent sur les deux affiches).
+  // Numéro WhatsApp qui reçoit les devis (confirmé par le client le 22/10/2026).
   whatsapp: '2250789851686',
-  email: null, // À VALIDER : aucune adresse e-mail fournie pour l'instant.
+  email: 'sdlsitgroup@gmail.com', // confirmée par le client le 22/10/2026
   hours: '24h/24 · 7j/7',
   deliveryClaim: 'Livraison partout à Abidjan',
   // Optionnel : URL (ex. Google Apps Script) qui reçoit chaque devis en JSON pour constituer un fichier clients.
@@ -105,8 +105,8 @@ export const PRODUCTS = [
     name: 'Glace carbonique',
     alias: 'Carboglace · glace sèche',
     tagline: 'Froid extrême · effet fumée',
-    // À VALIDER : produit hors affiche principale → « Bientôt disponible » par défaut.
-    available: false,
+    // Disponible (confirmé par le client le 22/10/2026). Passer à false pour afficher « Bientôt disponible ».
+    available: true,
     img: 'carboglace',
     description:
       'Du dioxyde de carbone solide à -78,5 °C. Elle passe directement de l’état solide à l’état gazeux et crée une brume blanche spectaculaire.',
@@ -139,56 +139,25 @@ export const PILLARS = [
 ];
 
 /**
- * Livraison. À VALIDER : grille indicative proposée en attendant les tarifs du client.
- * price: null → « sur devis », non additionné au total.
+ * Livraison (règle client du 22/10/2026) :
+ *  - 20 articles ou plus au total → livraison OFFERTE ;
+ *  - moins de 20 articles → devis « hors frais de livraison » : le tarif est communiqué ensuite par Le Glaceur.
+ *    AUCUN prix de livraison n'est affiché sur le site ni dans les devis.
+ *  - Retrait sur place à Abatta : gratuit.
  */
 export const DELIVERY = {
-  note: 'Tarifs indicatifs, négociables selon la distance et le volume commandé.',
-  validated: false,
+  freeFrom: 20,
+  freeLabel: 'Livraison offerte dès 20 articles',
+  paidLabel: 'Hors frais de livraison',
+  paidNote: 'En dessous de 20 articles, le devis est établi hors frais de livraison : Le Glaceur vous communique le tarif.',
   pickup: {
     id: 'retrait',
     label: 'Retrait sur place',
-    price: 0,
-    text: 'Venez récupérer votre commande à Abatta – Carrefour Drogba.',
+    text: 'Venez récupérer votre commande à Abatta – Carrefour Drogba, 24h/24 et 7j/7.',
   },
-  zones: [
-    { id: 'z1', name: 'Zone 1 · Proximité', price: 1000, areas: ['Abatta', 'Riviera', 'Faya', 'Palmeraie', 'Angré', 'Bingerville'] },
-    { id: 'z2', name: 'Zone 2 · Centre', price: 2000, areas: ['Cocody', 'II Plateaux', 'Plateau', 'Adjamé', 'Treichville', 'Marcory', 'Koumassi', 'Abobo'] },
-    { id: 'z3', name: 'Zone 3 · Étendue', price: 3000, areas: ['Yopougon', 'Attécoubé', 'Port-Bouët', 'Anyama'] },
-    { id: 'z4', name: 'Zone 4 · Hors Abidjan', price: null, areas: ['Songon', 'Grand-Bassam', 'Dabou', 'Autre localité'] },
-  ],
+  // Communes desservies (liste de choix pour l'adresse de livraison ; pas de tarification par zone).
+  communes: ['Abobo', 'Adjamé', 'Anyama', 'Attécoubé', 'Bingerville', 'Cocody', 'Koumassi', 'Marcory', 'Plateau', 'Port-Bouët', 'Songon', 'Treichville', 'Yopougon', 'Grand-Bassam', 'Autre localité'],
 };
-
-/**
- * Estimation pour un événement (règle donnée par le client) : nombre d'invités → paquets de glaçons de 5 kg.
- * Interpolation linéaire entre les points de référence. Le client garde la main sur la quantité finale.
- */
-export const ESTIMATOR = {
-  sku: 'glacons-5kg',
-  anchors: [
-    [0, 0],
-    [30, 5],
-    [100, 20],
-    [400, 40],
-    [1000, 100],
-  ],
-  beyondPerGuest: 0.1, // au-delà de 1 000 invités
-  min: 10,
-  max: 3000,
-};
-
-export function estimateBags(guests) {
-  const n = Math.max(0, Number(guests) || 0);
-  const a = ESTIMATOR.anchors;
-  const last = a[a.length - 1];
-  if (n >= last[0]) return Math.ceil(last[1] + (n - last[0]) * ESTIMATOR.beyondPerGuest);
-  for (let i = 1; i < a.length; i++) {
-    const [x0, y0] = a[i - 1];
-    const [x1, y1] = a[i];
-    if (n <= x1) return Math.max(n > 0 ? 1 : 0, Math.ceil(y0 + ((n - x0) * (y1 - y0)) / (x1 - x0)));
-  }
-  return 0;
-}
 
 export const QUOTE = {
   prefix: 'GLC',
@@ -196,7 +165,7 @@ export const QUOTE = {
   currency: 'FCFA',
   disclaimer: 'Ce document est un devis et ne constitue pas une facture.',
   payment: 'Aucun paiement en ligne : le règlement se fait à la livraison ou au retrait.',
-  deliveryNote: 'Frais de livraison indicatifs, négociables selon la distance.',
+  deliveryNote: 'Livraison offerte dès 20 articles. En dessous, devis hors frais de livraison : le tarif vous est communiqué par Le Glaceur.',
   storageKey: 'leglaceur:devis:v1',
 };
 
