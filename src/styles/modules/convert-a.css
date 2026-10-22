@@ -47,7 +47,7 @@
 .oe-shard--3 { width: clamp(60px, 8vw, 120px); aspect-ratio: 0.8; bottom: 6%; right: 38%; transform: rotate(40deg); opacity: 0.5; filter: blur(5px); }
 .oe-shard--4 { width: clamp(36px, 4vw, 60px); aspect-ratio: 1; top: 16%; left: 42%; transform: rotate(12deg); opacity: 0.55; filter: blur(3px); }
 .order-express__watermark {
-  position: absolute; left: 50%; top: clamp(1rem, 3vw, 2.5rem); transform: translateX(-50%);
+  position: absolute; left: 0; right: 0; top: clamp(1rem, 3vw, 2.5rem); text-align: center;
   font-family: var(--font-display); font-weight: 800; text-transform: uppercase; white-space: nowrap;
   font-size: clamp(5rem, 19vw, 19rem); line-height: 0.8; letter-spacing: -0.02em;
   color: transparent; -webkit-text-stroke: 1.5px rgba(21, 99, 214, 0.09);
@@ -68,6 +68,9 @@
   box-shadow: inset 0 1px 0 #fff, 0 10px 24px -18px rgba(10, 31, 68, 0.45);
   font-size: var(--fs-small); font-weight: 600; color: var(--ink-800);
 }
+@media (max-width: 559px) {
+  .oe-perk { min-height: 36px; padding: 0.35rem 0.75rem 0.35rem 0.6rem; font-size: 0.86rem; }
+}
 .oe-perk svg { width: 1.15rem; height: 1.15rem; color: var(--blue-600); flex: none; }
 .oe-perk--hot { background: var(--grad-btn); color: #fff; border-color: transparent; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 26px -14px rgba(21, 99, 214, 0.75); }
 .oe-perk--hot svg { color: #fff; }
@@ -87,8 +90,8 @@
   position: relative; isolation: isolate;
   display: grid; align-items: center; gap: 0.75rem 1rem;
   grid-template-columns: 64px minmax(0, 1fr);
-  grid-template-areas: 'thumb info' 'qty qty';
-  padding: 0.85rem;
+  grid-template-areas: 'thumb info' 'qty qty' 'more more';
+  padding: 0.85rem 0.85rem 0.15rem;
   border-radius: var(--oe-radius);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(243, 250, 255, 0.82));
   border: 1px solid rgba(255, 255, 255, 0.95);
@@ -174,19 +177,25 @@
 }
 .oe-item.is-active .oe-item__line { color: var(--ink-900); }
 
-/* Fiche produit dépliable */
-.oe-more { margin: 0.35rem 0.85rem 0; }
+/* Fiche produit dépliable (dernière rangée de la dalle) */
+.oe-more { grid-area: more; margin: -0.35rem -0.85rem 0; border-top: 1px solid rgba(21, 99, 214, 0.08); }
 .oe-more__toggle {
-  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; padding: 0 0.25rem;
-  list-style: none; cursor: pointer; color: var(--blue-600); font-weight: 600; font-size: 0.92rem;
-  border-radius: var(--r-sm);
+  display: flex; align-items: center; gap: 0.45rem; min-height: 44px; padding: 0 0.85rem;
+  list-style: none; cursor: pointer; color: var(--blue-600); font-weight: 600; font-size: 0.9rem;
+  border-radius: 0 0 var(--oe-radius) var(--oe-radius);
 }
+.oe-more__toggle::after {
+  content: ''; width: 0.5rem; height: 0.5rem; margin-left: auto; margin-right: 0.3rem;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--dur) var(--ease-out);
+}
+.oe-more[open] .oe-more__toggle::after { transform: rotate(-135deg) translateY(-2px); }
 .oe-more__toggle::-webkit-details-marker { display: none; }
 .oe-more__toggle svg { width: 1.1rem; height: 1.1rem; flex: none; }
-.oe-more__toggle:hover { color: var(--blue-700); text-decoration: underline; text-underline-offset: 0.2em; }
+.oe-more__toggle:hover { color: var(--blue-700); background: rgba(227, 243, 255, 0.5); }
 .oe-more[open] .oe-more__toggle { color: var(--ink-900); }
 .oe-more__body {
-  margin: 0.1rem 0 0.6rem; padding: 1rem 1.1rem; border-radius: 16px;
+  margin: 0 0.85rem 0.85rem; padding: 1rem 1.1rem; border-radius: 16px;
   background: rgba(255, 255, 255, 0.78); border: 1px solid var(--line);
   display: grid; gap: 0.75rem; font-size: var(--fs-small); color: var(--text-muted);
 }
@@ -198,7 +207,9 @@
 .oe-more__safety dt { color: #8a5300; }
 
 @media (min-width: 560px) {
-  .oe-item__card { grid-template-columns: 76px minmax(0, 1fr) auto; grid-template-areas: 'thumb info qty'; padding: 0.9rem 1.1rem 0.9rem 0.9rem; }
+  .oe-item__card { grid-template-columns: 76px minmax(0, 1fr) auto; grid-template-areas: 'thumb info qty' 'more more more'; padding: 0.9rem 1.1rem 0.15rem 0.9rem; }
+  .oe-more { margin: -0.3rem -1.1rem 0 -0.9rem; }
+  .oe-more__toggle { padding-inline: 0.9rem 1.1rem; }
   .oe-thumb { width: 76px; border-radius: 18px; }
   .oe-item__qty { flex-direction: column; align-items: flex-end; gap: 0.3rem; padding-top: 0; border-top: 0; }
   .oe-item__line { font-size: 1.02rem; }
@@ -224,23 +235,23 @@
 .oe-ticker__bar { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: var(--ice-100); overflow: hidden; }
 .oe-ticker__fill { display: block; height: 100%; width: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--ice-300), var(--blue-600)); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); transition: transform 0.6s var(--ease-out); }
 .order-express.is-free .oe-ticker__fill { background: linear-gradient(90deg, #6fd39a, var(--ok)); }
-@media (min-width: 1024px) { .oe-ticker { display: none; } }
+@media (min-width: 1024px) and (min-height: 760px) { .oe-ticker { display: none; } }
 html:not(.js) .oe-ticker { display: none; }
 
 /* --- Panneau « bac à glace » --- */
 .order-express__panel {
-  padding: clamp(1rem, 2.4vw, 1.6rem);
+  padding: clamp(0.9rem, 2vw, 1.4rem);
   border-radius: var(--r-xl);
-  display: grid; gap: 1.1rem;
+  display: grid; gap: 0.9rem;
   background: linear-gradient(150deg, rgba(255, 255, 255, 0.92), rgba(227, 243, 255, 0.78));
 }
-@media (min-width: 1024px) {
-  .order-express__panel { position: sticky; top: calc(var(--header-h) + 20px); }
+@media (min-width: 1024px) and (min-height: 760px) {
+  .order-express__panel { position: sticky; top: calc(var(--header-h) + 16px); }
 }
 
 .oe-bin {
   position: relative; overflow: hidden;
-  aspect-ratio: 5 / 3.6;
+  aspect-ratio: 5 / 3.9;
   border-radius: 26px 26px 34px 34px;
   background:
     radial-gradient(80% 55% at 50% 105%, rgba(77, 155, 255, 0.28), transparent 70%),
@@ -283,6 +294,17 @@ html:not(.js) .oe-bin { display: none; }
 }
 .order-express.is-free .oe-bin__goal { border-top-color: rgba(31, 143, 90, 0.55); border-top-style: solid; }
 .order-express.is-free .oe-bin__goal span { background: linear-gradient(135deg, #e7fff1, #c8f2da); color: #0d5b35; border-color: rgba(31, 143, 90, 0.35); }
+.oe-bin__clear {
+  position: absolute; top: 0.45rem; right: 0.45rem; z-index: 5;
+  display: inline-flex; align-items: center; gap: 0.35rem; min-height: 44px; padding: 0 0.9rem;
+  border: 0; border-radius: var(--r-pill); background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px var(--line-strong), 0 8px 18px -12px rgba(10, 31, 68, 0.5);
+  color: var(--text-muted); font-weight: 600; font-size: 0.86rem;
+  transition: color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.oe-bin__clear svg { width: 1rem; height: 1rem; }
+.oe-bin__clear:hover { color: var(--danger); box-shadow: inset 0 0 0 1px rgba(201, 54, 54, 0.4), 0 8px 18px -12px rgba(10, 31, 68, 0.5); }
 .oe-bin__more {
   position: absolute; top: 0.7rem; left: 0.7rem; z-index: 4;
   padding: 0.25rem 0.65rem; border-radius: var(--r-pill); background: var(--ink-900); color: #fff;
@@ -295,7 +317,7 @@ html:not(.js) .oe-bin { display: none; }
 .oe-sum__total { display: flex; justify-content: center; align-items: baseline; gap: 0.4rem; margin-inline: auto; max-width: none; }
 .oe-sum__amount {
   position: relative; font-family: var(--font-display); font-weight: 800; line-height: 0.95;
-  font-size: clamp(3rem, 6vw, 4.4rem); letter-spacing: -0.015em; font-variant-numeric: tabular-nums;
+  font-size: clamp(3rem, 5.4vw, 4.1rem); letter-spacing: -0.015em; font-variant-numeric: tabular-nums;
   background: var(--grad-text-ice); background-size: 250% 100%; background-position: 100% 0;
   -webkit-background-clip: text; background-clip: text; color: transparent;
   transition: background-position 1.2s var(--ease-out), filter 0.6s var(--ease-out);
@@ -306,7 +328,7 @@ html:not(.js) .oe-bin { display: none; }
 .oe-sum__dot { color: var(--ice-300); }
 
 /* Jauge-tube */
-.oe-gauge { position: relative; display: grid; gap: 0.5rem; padding: 0.9rem 1rem 1rem; border-radius: 20px; background: rgba(255, 255, 255, 0.75); border: 1px solid var(--line); }
+.oe-gauge { position: relative; display: grid; gap: 0.45rem; padding: 0.8rem 1rem 0.85rem; border-radius: 20px; background: rgba(255, 255, 255, 0.75); border: 1px solid var(--line); }
 .oe-gauge__tube {
   position: relative; height: 16px; border-radius: 16px; overflow: hidden;
   background: linear-gradient(180deg, #eaf5ff, #ffffff);
@@ -324,7 +346,7 @@ html:not(.js) .oe-bin { display: none; }
 .oe-gauge__ticks i { width: 1px; background: rgba(255, 255, 255, 0.9); box-shadow: 0 0 0 0.5px rgba(21, 99, 214, 0.15); }
 .oe-gauge__text { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink-900); line-height: 1.2; }
 .oe-gauge__text b { color: var(--blue-600); font-weight: 800; font-size: 1.15em; }
-.oe-gauge__note { font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; }
+.oe-gauge__note { font-size: 0.86rem; color: var(--text-muted); line-height: 1.45; }
 .oe-gauge__burst { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
 .oe-gauge__spark {
   position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px;
@@ -341,13 +363,8 @@ html:not(.js) .oe-bin { display: none; }
 .order-express.is-free .oe-gauge__text { color: #0d5b35; }
 
 /* Actions */
-.oe-actions { display: grid; gap: 0.7rem; }
+.oe-actions { display: grid; gap: 0.6rem; }
 .oe-actions .btn { white-space: normal; text-align: center; }
-.oe-actions__clear {
-  justify-self: center; min-height: 44px; padding: 0 1rem; border: 0; background: none; border-radius: var(--r-pill);
-  color: var(--text-muted); font-size: 0.92rem; font-weight: 600; text-decoration: underline; text-underline-offset: 0.25em; text-decoration-color: var(--line-strong);
-}
-.oe-actions__clear:hover { color: var(--danger); }
 
 /* Cristal qui saute vers le bac */
 .oe-flyer { position: fixed; left: 0; top: 0; z-index: var(--z-fab); width: 18px; height: 18px; margin: -9px 0 0 -9px; pointer-events: none; will-change: transform; }
@@ -489,9 +506,7 @@ html:not(.js) .oe-bin { display: none; }
 /* Schéma sur petit écran : libellés plus grands, seuls les plus utiles restent visibles. */
 @media (max-width: 640px) {
   .dmap__label { font-size: 30px; stroke-width: 7px; }
-  .dmap__node .dmap__label { opacity: 0; }
-  .dmap__node.is-active .dmap__label, .dmap__node.is-chosen .dmap__label { opacity: 1; }
-  .dmap__hub-tag { transform: translate(0px, -46px) scale(1.45); }
+  .dmap__hub-tag { transform: translate(0px, -50px) scale(1.75); }
   .dmap__water-label { font-size: 22px; }
   .dmap__compass { transform: translate(770px, 56px) scale(1.3); }
   .dmap__legend { position: static; margin-top: 0.4rem; }
@@ -499,7 +514,6 @@ html:not(.js) .oe-bin { display: none; }
   .dmap__gem { stroke-width: 3; }
   .dmap__node .dmap__halo { transform: scale(1.3); }
   .dmap__node.is-active .dmap__halo { transform: scale(2); }
-  html:not(.js) .dmap__node .dmap__label { opacity: 1; font-size: 22px; }
 }
 
 /* =========================================================================

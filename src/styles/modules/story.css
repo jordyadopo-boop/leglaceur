@@ -52,7 +52,8 @@
 
 /* --- Trois valeurs --- */
 .quality__values { list-style: none; display: grid; gap: clamp(1rem, 2vw, 1.5rem); grid-template-columns: 1fr; counter-reset: qv; }
-@media (min-width: 720px) { .quality__values { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 960px) { .quality__values { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 600px) and (max-width: 959.98px) { .qv__card { min-height: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1.5rem; align-items: start; } .qv__icon { grid-row: span 3; margin: 0; } .qv__label { margin-top: 0; } }
 .qv { display: flex; perspective: 1200px; }
 .qv__card {
   position: relative; overflow: hidden; flex: 1;
@@ -108,8 +109,8 @@
 .qs__bubble { fill: rgba(255, 255, 255, 0.85); }
 .qs__cube { transform-box: fill-box; transform-origin: 50% 100%; }
 .qs__drip { fill: var(--blue-400); opacity: 0.85; }
-.qs__heat path { fill: none; stroke: #ff9f5a; stroke-width: 2.4; stroke-linecap: round; opacity: 0.55; stroke-dasharray: 6 9; animation: story-heat 2.6s linear infinite; }
-.qs__heat path:nth-child(2n) { animation-duration: 3.2s; opacity: 0.4; }
+.qs__heat path { fill: none; stroke: #ff9248; stroke-width: 3; stroke-linecap: round; opacity: 0.75; stroke-dasharray: 10 8; animation: story-heat 2.6s linear infinite; }
+.qs__heat path:nth-child(n+3) { animation-duration: 3.2s; opacity: 0.45; }
 @keyframes story-heat { to { stroke-dashoffset: -60; } }
 .quality.is-offscreen .qs__heat path { animation-play-state: paused; }
 .qs__tag {
@@ -263,7 +264,7 @@
 .ps__fact-temp { padding: 0.15rem 0.55rem; border-radius: var(--r-pill); background: var(--grad-btn); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.04em; }
 
 /* État « allumé » (piloté par process.js ; sans JS toutes les étapes sont allumées) */
-.process.is-scrolly .ps:not(.is-on) .ps__card { opacity: 0.45; border-color: rgba(191, 228, 255, 0.1); }
+.process.is-scrolly .ps:not(.is-on) .ps__card { opacity: 0.6; border-color: rgba(191, 228, 255, 0.1); }
 .process.is-scrolly .ps:not(.is-on) .ps__dot { background: var(--ink-900); box-shadow: none; }
 .ps.is-on .ps__dot { background: var(--pr-ice); box-shadow: 0 0 0 6px rgba(142, 207, 255, 0.2), 0 0 22px rgba(142, 207, 255, 0.9); }
 .ps.is-current .ps__card { border-color: rgba(142, 207, 255, 0.55); box-shadow: inset 0 1px 0 rgba(191, 228, 255, 0.35), 0 0 0 1px rgba(142, 207, 255, 0.25), 0 30px 60px -30px rgba(77, 155, 255, 0.55); }

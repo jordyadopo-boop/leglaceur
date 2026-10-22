@@ -82,6 +82,7 @@ export default function init(root) {
   const binWrap = $('[data-bin]');
   const binMore = $('[data-bin-more]');
   const freeLabel = $('[data-free-label]');
+  const goalLabel = $('[data-goal-label]');
   if (freeLabel) freeLabel.textContent = DELIVERY.freeLabel;
   const notes = { paid: DELIVERY.paidNote, free: gaugeNote.dataset.noteFree || '' };
 
@@ -180,6 +181,7 @@ export default function init(root) {
     setGaugeText(t.count);
     const free = t.count >= goal;
     root.classList.toggle('is-free', free);
+    if (goalLabel) goalLabel.textContent = free ? `Livraison offerte${NNBSP}!` : `${goal}${NBSP}articles · livraison offerte`;
     gaugeNote.textContent = nbsp(free ? notes.free : notes.paid);
 
     // Bandeau mobile
@@ -413,7 +415,7 @@ function intro(root) {
   gsap.from(panel, { opacity: 0, y: 40, scale: 0.97, filter: 'blur(8px)', duration: 1.2, scrollTrigger: st(panel, 'top 90%'), clearProps: 'transform,filter' });
   const wm = root.querySelector('.order-express__watermark');
   if (wm) {
-    gsap.fromTo(wm, { xPercent: -46 }, { xPercent: -54, ease: 'none', scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true } });
+    gsap.fromTo(wm, { xPercent: 6 }, { xPercent: -6, ease: 'none', scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true } });
   }
   root.querySelectorAll('.oe-shard').forEach((el, i) => {
     gsap.to(el, { yPercent: (i % 2 ? -1 : 1) * (40 + i * 15), rotation: `+=${(i % 2 ? -1 : 1) * 14}`, ease: 'none', scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true } });
@@ -427,7 +429,7 @@ function intro(root) {
    et seulement si le bac est à l'écran et l'onglet visible.
    =========================================================================== */
 const COLS = 5;
-const ROWS = 8;
+const ROWS = 6;
 const MAX = COLS * ROWS;
 
 function createBin(wrap, canvas, { skus, goal, onLayout }) {
@@ -460,7 +462,7 @@ function createBin(wrap, canvas, { skus, goal, onLayout }) {
     dpr = Math.min(devicePixelRatio || 1, dprCap);
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
-    cell = Math.min((W * 0.86) / (COLS + 0.5), (H * 0.9) / (ROWS * 0.78 + 0.3));
+    cell = Math.min((W * 0.88) / (COLS + 0.5), (H * 0.94) / (ROWS * 0.78 + 0.3));
     rowH = cell * 0.78;
     floorY = H - Math.max(10, cell * 0.16);
     baseX = (W - (COLS + 0.5) * cell) / 2;

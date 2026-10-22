@@ -72,7 +72,7 @@ function wireAdd(root) {
     if (!v) return;
     addQty(sku, 1);
     const qty = getState().lines[sku] || 0;
-    toast(`Ajouté au devis${NNBSP}: ${v.product.name}, ${v.label.toLowerCase()} — ${plural(qty, v.unit, v.units)} au total`);
+    toast(`Devis${NNBSP}: ${v.product.name}, ${v.label.toLowerCase()} — ${plural(qty, v.unit, v.units)}`);
     flyToBadge(btn);
     if (!reducedMotion) gsap.fromTo(btn, { scale: 0.85 }, { scale: 1, duration: 0.6, ease: 'elastic.out(1.2, 0.4)', clearProps: 'transform' });
   });

@@ -71,9 +71,9 @@ function nodeFractions(path, nodes) {
 }
 
 /** Transformation du voyageur, posée sur une timeline normalisée (0 → 1) aux temps des étapes. */
-function addTransformation(tl, trav, t) {
-  const q = (s) => trav.querySelector(s);
-  const qa = (s) => trav.querySelectorAll(s);
+function addTransformation(tl, host, t) {
+  const q = (s) => host.querySelector(s);
+  const qa = (s) => host.querySelectorAll(s);
   const body = q('.pt__body');
   const cube = q('.pt__cube');
   const frost = qa('.pt__frost path');
@@ -169,7 +169,7 @@ function setupTrack(root, steps, sticky) {
       .to(n.querySelector('.process__node-halo'), { scale: 1, opacity: 0.6, duration: 0.06 }, t[i] + 0.04);
   });
   tl.to(zero, { opacity: 1, scale: 1, duration: 0.05, ease: 'back.out(2.2)' }, t[1] - 0.09);
-  addTransformation(tl, trav, t);
+  addTransformation(tl, slot, t);
   tl.to(glass, { drawSVG: '100%', duration: 0.08, ease: 'power2.out' }, t[4] - 0.1)
     .to(water, { scaleY: 1, duration: 0.06, ease: 'power2.out' }, t[4] - 0.02)
     .to(trav, { scale: 0.62, y: 2, duration: 0.05, ease: 'power2.in' }, t[4] - 0.03);
@@ -231,11 +231,12 @@ function setupRail(root, steps) {
   // Positions des points de chaque étape le long du rail (fractions 0 → 1).
   let t = [0, 0.25, 0.5, 0.75, 1];
   const measure = () => {
-    const fr = fill.getBoundingClientRect();
-    const len = Math.max(1, fr.height);
+    // offsetHeight / offsetTop : mesures sans la transformation scaleY du remplissage.
+    const len = Math.max(1, fill.offsetHeight);
+    const flowTop = flow.getBoundingClientRect().top;
     t = steps.map((s) => {
       const d = s.querySelector('.ps__dot').getBoundingClientRect();
-      return Math.min(1, Math.max(0, (d.top + d.height / 2 - fr.top) / len));
+      return Math.min(1, Math.max(0, (d.top + d.height / 2 - flowTop - fill.offsetTop) / len));
     });
     return len;
   };
@@ -245,14 +246,14 @@ function setupRail(root, steps) {
   const build = () => {
     tl?.kill();
     gsap.set([box, trav], { clearProps: 'transform' });
-    trav.querySelector('.pt__body').setAttribute('d', DROP);
-    trav.querySelector('.pt__stop-a').style.stopColor = '#8ecfff';
-    trav.querySelector('.pt__stop-b').style.stopColor = '#1563d6';
+    box.querySelector('.pt__body').setAttribute('d', DROP);
+    box.querySelector('.pt__stop-a').style.stopColor = '#8ecfff';
+    box.querySelector('.pt__stop-b').style.stopColor = '#1563d6';
     tl = gsap.timeline({ defaults: { ease: 'none' }, paused: true });
     tl.set({}, {}, 1)
       .fromTo(fill, { scaleY: 0 }, { scaleY: 1, duration: 1 }, 0)
       .fromTo(box, { y: 0 }, { y: () => len, duration: 1 }, 0);
-    addTransformation(tl, trav, t);
+    addTransformation(tl, box, t);
   };
   build();
 

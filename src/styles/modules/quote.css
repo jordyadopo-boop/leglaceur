@@ -471,8 +471,8 @@
 .quote-pickup__pin .icon { width: 44px; height: 44px; fill: var(--blue-600); stroke: #fff; stroke-width: 1.4; filter: drop-shadow(0 8px 10px rgba(10, 31, 68, 0.35)); }
 .quote-pickup__pulse { position: absolute; left: 50%; bottom: -4px; width: 46px; height: 16px; margin-left: -23px; border-radius: 50%; background: rgba(21, 99, 214, 0.35); animation: q-pulse 2.2s ease-out infinite; }
 @keyframes q-pulse { 0% { transform: scale(0.4); opacity: 0.9; } 100% { transform: scale(2.2); opacity: 0; } }
-.quote-pickup__load { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; min-height: 44px; }
-.quote-pickup__load:hover { transform: translateX(-50%) translateY(-2px); }
+.quote-pickup__map .quote-pickup__load { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; min-height: 44px; }
+.quote-pickup__map .quote-pickup__load:hover { transform: translateX(-50%) translateY(-2px); }
 .quote-pickup__iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; opacity: 0; transition: opacity 0.6s; }
 .quote-pickup__map.is-ready .quote-pickup__iframe { opacity: 1; }
 .quote-pickup__map.is-loaded .quote-pickup__load { display: none; }
@@ -688,7 +688,7 @@ html.quote-lock { overflow: hidden; }
   border-radius: var(--r-lg); background: linear-gradient(165deg, #ffffff, #f0f8ff);
   box-shadow: inset 0 1px 0 #fff, 0 0 0 1px rgba(21, 99, 214, 0.15), 0 50px 100px -40px rgba(4, 14, 36, 0.7);
 }
-@media (min-width: 48rem) { .quote-info__sheet { grid-template-columns: 0.85fr 1.15fr; } }
+@media (min-width: 48rem) { .quote-info__sheet { grid-template-columns: 0.85fr 1.15fr; background: #fff; } }
 .quote-info__media { position: relative; min-height: 200px; overflow: hidden; background: linear-gradient(160deg, var(--ice-200), var(--blue-400)); }
 .quote-info__media.is-fallback {
   background:
