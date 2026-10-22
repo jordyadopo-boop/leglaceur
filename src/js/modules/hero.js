@@ -9,7 +9,7 @@
  * 4. Défilement : les glaçons s'écartent et la scène se dissout ; pause hors écran / onglet caché.
  * Tout le texte est du HTML visible sans JS ; mouvement réduit : rendu statique, aucune animation.
  */
-import { gsap, ScrollTrigger, SplitText, reducedMotion, finePointer, isMobile } from '../core/motion.js';
+import { gsap, SplitText, reducedMotion, finePointer, isMobile } from '../core/motion.js';
 import { BRAND, DELIVERY } from '../config.js';
 import { waLink } from '../core/whatsapp.js';
 import { computeTotals } from '../core/quote-store.js';
@@ -116,7 +116,13 @@ function makeSparkles(title, chars, n) {
 const webglOk = () => {
   try {
     const c = document.createElement('canvas');
-    return !!(window.WebGL2RenderingContext && c.getContext('webgl2'));
+    const gl = window.WebGL2RenderingContext && c.getContext('webgl2');
+    if (!gl) return false;
+    // Rendu logiciel (pas de vraie carte graphique) : la scène serait saccadée, on garde la version statique.
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    return !/swiftshader|llvmpipe|software|softpipe/i.test(renderer);
   } catch { return false; }
 };
 
@@ -174,6 +180,26 @@ export default function init(el) {
     if (reducedMotion) return;
     if (hint) gsap.delayedCall(3.2, () => hint.classList.add('is-on'));
     sync();
+    watchFps(s);
+  }
+  /* Garde-fou : si la scène tourne sous ~20 images/s, on repasse en rendu statique. */
+  function watchFps(s) {
+    let n = 0;
+    let t0 = 0;
+    const tick = (t) => {
+      if (disposed || scene !== s) return;
+      if (!t0) t0 = t;
+      n++;
+      if (t - t0 < 2500) { requestAnimationFrame(tick); return; }
+      if (!inView || document.hidden) return;
+      if (n / ((t - t0) / 1000) < 20) {
+        s.dispose();
+        scene = null;
+        el.classList.remove('is-webgl');
+        el.classList.add('is-static');
+      }
+    };
+    requestAnimationFrame(tick);
   }
 
   /* ---------- Mouvement réduit : tout est visible, scène figée (rendue une fois) ---------- */
@@ -219,6 +245,8 @@ export default function init(el) {
     T.measure();
   });
   el.dataset.intro = 'ready';
+  // La police d'affichage peut arriver après le découpage : on réaligne reflets et cristaux.
+  document.fonts?.ready.then(() => { if (!disposed) { T.measure(); sparks.place(); } });
 
   const playIntro = () => {
     if (introPlayed || disposed) return;
@@ -264,7 +292,8 @@ export default function init(el) {
   });
   // (les opacités pilotées ici portent sur des conteneurs : les fondus CSS .is-webgl restent libres)
   const stage = el.querySelector('.hero__stage');
-  scrollTl.to(content, { yPercent: -10, opacity: 0.2, duration: 1 }, 0)
+  // (mobile : les boutons restent pleinement lisibles pendant qu'on fait défiler)
+  scrollTl.to(content, { yPercent: () => (wideMq.matches ? -10 : -3), opacity: () => (wideMq.matches ? 0.2 : 1), duration: 1 }, 0)
     .to(stage, { yPercent: () => (wideMq.matches ? 16 : 6), duration: 1 }, 0)
     .to(stage, { opacity: 0, scale: 1.04, duration: 0.45 }, 0.55)
     .to(zoneEl, { opacity: 0, duration: 0.45 }, 0.5)
@@ -362,5 +391,4 @@ export default function init(el) {
     scene?.dispose();
     scene = null;
   };
-  ScrollTrigger.refresh();
 }

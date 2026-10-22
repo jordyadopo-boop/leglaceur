@@ -42,7 +42,8 @@ export default function init(el) {
   let level = 0;
   let hold = 0;
   let lastY = window.scrollY;
-  const MAX = 0.92;
+  let vel = 0;
+  const MAX = 0.82;
 
   const onFrost = (e) => {
     const d = e.detail ?? {};
@@ -51,7 +52,7 @@ export default function init(el) {
   };
   window.addEventListener('fx:frost', onFrost);
   // Arrivée sur la page : l'écran est encore givré, puis il dégèle.
-  window.addEventListener('app:ready', () => setTimeout(() => onFrost({ detail: { level: 0.62, hold: 0.35 } }), 250), { once: true });
+  window.addEventListener('app:ready', () => setTimeout(() => onFrost({ detail: { level: 0.5, hold: 0.15 } }), 250), { once: true });
 
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
@@ -91,12 +92,16 @@ export default function init(el) {
     const y = window.scrollY;
     const dy = y - lastY;
     lastY = y;
-    const v = Math.abs(dy) / Math.max(dt * 60, 0.25); // px par image à 60 i/s
-    const target = clamp((v - 7) / 42) ** 0.8 * MAX;
+    // Saut instantané (ancre, touche Fin, rechargement) : ce n'est pas un défilement rapide.
+    const jump = Math.abs(dy) > innerHeight * 0.6;
+    const raw = jump ? 0 : Math.abs(dy) / Math.max(dt * 60, 0.25); // px par image à 60 i/s
+    vel = damp(vel, raw, raw > vel ? 14 : 6, dt);
+    const v = vel;
+    const target = clamp((v - 9) / 55) ** 0.85 * MAX;
     if (hold > 0) hold -= dt;
     else if (target > level) level = damp(level, target, 4.2, dt);
     else level = Math.max(target, level - dt * (0.22 + level * 0.18));
-    dust.update(dt, t, dy);
+    dust.update(dt, t, jump ? 0 : dy);
     veil?.render(level, t);
     // Mesure en temps réel (dt est plafonné par la boucle) : plusieurs images lentes d'affilée
     // pendant que le voile est affiché = le GPU ne suit pas (un à-coup isolé au chargement ne compte pas).

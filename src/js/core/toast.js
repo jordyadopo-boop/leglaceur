@@ -11,6 +11,7 @@ export function toast(message, { duration = 3200 } = {}) {
   const el = document.createElement('div');
   el.className = 'toast';
   el.textContent = message;
+  while (region.children.length >= 2) region.firstElementChild.remove();
   region.append(el);
   el.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.16,1,.3,1)' });
   setTimeout(() => {

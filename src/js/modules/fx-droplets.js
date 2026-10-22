@@ -12,10 +12,10 @@
  * (la condensation reste alors affichée, immobile).
  */
 import { claim, reducedMotion, finePointer, isMobile, lowPower, clamp, numAttr, rng, seedFrom } from '../fx/env.js';
-import { createLayer } from '../fx/layer.js';
+import { createLayer, findImage, imageReady, drawImageAsDisplayed } from '../fx/layer.js';
 import { createTask } from '../fx/loop.js';
 import { watchVisibility } from '../fx/visibility.js';
-import { droplet, brush } from '../fx/sprites.js';
+import { droplet, microDrop, brush, makeCanvas } from '../fx/sprites.js';
 
 let uid = 0;
 
@@ -25,19 +25,74 @@ export default function init(el) {
   const haze = el.dataset.dropletsHaze !== '0';
   const r = rng(seedFrom(`${el.className}${++uid}`));
   const drop = droplet();
+  const micro0 = microDrop();
   const soft = brush();
   const ratioMax = isMobile ? 1.5 : 2;
 
   // Calque 1 : semis statique ; calque 2 : grosses gouttes (petites zones redessinées).
-  const micro = createLayer(el, { className: 'fx-droplets fx-droplets--micro', dpr: Math.min(ratioMax, window.devicePixelRatio || 1), onResize: () => paintMicro() });
+  const micro = createLayer(el, { className: 'fx-droplets fx-droplets--micro', dpr: Math.min(ratioMax, window.devicePixelRatio || 1), onResize: () => prepRefraction().finally(paintMicro) });
   const live = reducedMotion ? null : createLayer(el, { className: 'fx-droplets fx-droplets--live', dpr: Math.min(ratioMax, window.devicePixelRatio || 1), onResize: () => resetLive() });
   const mctx = micro.ctx;
 
-  /** Dessine une goutte (sprite) de rayon `rad` centrée en (x, y), éventuellement étirée. */
+  /*
+   * Réfraction : une goutte est une petite lentille qui montre le décor alentour, inversé.
+   * On prépare une fois l'image du conteneur tournée de 180° (demi-résolution, éclaircie) ;
+   * chaque goutte en affiche, dans son disque, une zone ~4× plus large que son rayon.
+   */
+  let refr = null;
+  const RS = 0.5;
+  const LENS = 4.2;
+  async function prepRefraction() {
+    const img = findImage(el);
+    if (!img || !(await imageReady(img)) || !micro.w) return;
+    const w = Math.max(2, Math.round(micro.w * RS));
+    const h = Math.max(2, Math.round(micro.h * RS));
+    const flat = makeCanvas(w, h);
+    const f = flat.getContext('2d');
+    f.setTransform(RS, 0, 0, RS, 0, 0);
+    drawImageAsDisplayed(f, img, el);
+    const c = makeCanvas(w, h);
+    const g = c.getContext('2d');
+    g.translate(w, h);
+    g.rotate(Math.PI);
+    g.drawImage(flat, 0, 0);
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.fillStyle = 'rgba(235,246,255,0.14)';
+    g.fillRect(0, 0, w, h);
+    refr = c;
+  }
+
+  function lens(ctx, x, y, rad, stretch) {
+    const cy = y - (stretch - 1) * rad * 0.5;
+    const src = rad * LENS * RS;
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(x, cy, rad * 0.93, rad * 0.93 * stretch, 0, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(refr, (micro.w - x) * RS - src / 2, (micro.h - y) * RS - src / 2, src, src, x - rad, cy - rad * stretch, rad * 2, rad * 2 * stretch);
+    ctx.restore();
+  }
+
+  /** Dessine une goutte de rayon `rad` centrée en (x, y), éventuellement étirée (lentille + sprite). */
   function blit(ctx, x, y, rad, stretch = 1) {
+    if (refr && rad >= 2) lens(ctx, x, y, rad, stretch);
     const k = rad / drop.R;
     const s = drop.S * k;
     ctx.drawImage(drop.canvas, x - s / 2, y - (s * stretch) / 2 - (stretch - 1) * rad * 0.5, s, s * stretch);
+  }
+
+  /** Micro-gouttelette (texture de buée), éventuellement ovale et inclinée (gouttes fusionnées). */
+  function blitMicro(ctx, x, y, rad, ax = 1, rot = 0) {
+    const s = (micro0.S * rad) / micro0.R;
+    if (ax === 1) {
+      ctx.drawImage(micro0.canvas, x - s / 2, y - s / 2, s, s);
+      return;
+    }
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.drawImage(micro0.canvas, (-s * ax) / 2, -s / 2, s * ax, s);
+    ctx.restore();
   }
 
   /** Taille en loi de puissance : beaucoup de minuscules, quelques grosses. */
@@ -51,29 +106,44 @@ export default function init(el) {
     mctx.clearRect(0, 0, W, H);
     if (haze) {
       // Buée : plus dense sur les bords (la surface est plus froide là où elle est exposée).
-      const g = mctx.createRadialGradient(W / 2, H * 0.45, Math.min(W, H) * 0.2, W / 2, H / 2, Math.hypot(W, H) * 0.62);
-      g.addColorStop(0, 'rgba(235,246,255,0.03)');
-      g.addColorStop(1, 'rgba(235,246,255,0.26)');
+      const g = mctx.createRadialGradient(W / 2, H * 0.45, Math.min(W, H) * 0.15, W / 2, H / 2, Math.hypot(W, H) * 0.6);
+      g.addColorStop(0, 'rgba(235,246,255,0.06)');
+      g.addColorStop(1, 'rgba(235,246,255,0.34)');
       mctx.fillStyle = g;
       mctx.fillRect(0, 0, W, H);
     }
     const area = W * H;
-    const n = Math.round(clamp((area / (lowPower ? 420 : 300)) * density, 60, isMobile ? 900 : 1600));
+    // 1) Buée : un tapis serré de micro-gouttelettes (zones plus denses, d'autres plus clairsemées).
+    const n = Math.round(clamp((area / (lowPower ? 110 : 70)) * density, 200, isMobile ? 2600 : 4200));
     for (let i = 0; i < n; i++) {
       const x = r() * W;
-      // Un peu plus de gouttes vers le bas (l'eau descend), moins au centre (plus chaud).
-      const y = (1 - (1 - r()) ** 1.25) * H;
-      mctx.globalAlpha = 0.75 + r() * 0.25;
-      blit(mctx, x, y, microSize());
+      const y = (1 - (1 - r()) ** 1.2) * H;
+      // Plus dense sur les bords.
+      const ex = Math.min(x, W - x) / (W / 2);
+      const ey = Math.min(y, H - y) / (H / 2);
+      if (r() < Math.min(ex, ey) * 0.45) continue;
+      mctx.globalAlpha = 0.55 + r() * 0.45;
+      blitMicro(mctx, x, y, 0.7 + 1.6 * r() ** 2);
     }
-    // Quelques gouttes moyennes posées.
-    const m = Math.round(clamp((area / 5200) * density, 6, 70));
+    // 2) Gouttelettes : tailles en loi de puissance, certaines ovales (deux gouttes qui ont fusionné).
+    const m = Math.round(clamp((area / 900) * density, 20, 260));
     for (let i = 0; i < m; i++) {
+      const rad = microSize();
+      mctx.globalAlpha = 0.9;
+      if (rad < 2.2) blitMicro(mctx, r() * W, r() * H, rad * 1.1, r() < 0.3 ? r.range(1.2, 1.7) : 1, r() * Math.PI);
+      else blit(mctx, r() * W, r() * H, rad, r.range(1, 1.15));
+    }
+    // 3) Quelques gouttes moyennes posées.
+    const k = Math.round(clamp((area / 9000) * density, 4, 40));
+    for (let i = 0; i < k; i++) {
       mctx.globalAlpha = 0.95;
-      blit(mctx, r() * W, r() * H, r.range(3.2, 5.6), r.range(1, 1.12));
+      blit(mctx, r() * W, r() * H, r.range(3.4, 5.8), r.range(1, 1.12));
     }
     mctx.globalAlpha = 1;
   }
+
+  // Changement de source (srcset) : on recalcule la réfraction.
+  findImage(el)?.addEventListener('load', () => prepRefraction().finally(paintMicro));
 
   if (reducedMotion) return; // condensation figée
 
@@ -125,7 +195,8 @@ export default function init(el) {
       mctx.drawImage(soft, x - w / 2, y - w / 2, w, w);
     }
     mctx.restore();
-    trail.push({ x: x1, y: y1, w: rad, t: clock });
+    const lastP = trail[trail.length - 1];
+    if (!lastP || Math.abs(lastP.y - y1) + Math.abs(lastP.x - x1) > 10) trail.push({ x: x1, y: y1, w: rad, t: clock, n: 0 });
   }
 
   function release(d) {
@@ -188,7 +259,7 @@ export default function init(el) {
           d.lastBead = 0;
           d.rad = Math.max(2.6, d.rad - 0.12);
           mctx.globalAlpha = 0.95;
-          blit(mctx, px + r.range(-1.5, 1.5), py - d.rad, r.range(0.9, 1.8));
+          blitMicro(mctx, px + r.range(-1.5, 1.5), py - d.rad, r.range(1.2, 2.4));
           mctx.globalAlpha = 1;
         }
         // Absorbe les gouttes rencontrées.
@@ -229,20 +300,21 @@ export default function init(el) {
           trail.splice(i, 1);
           continue;
         }
-        if (age > 2.5 && r() < 0.35) {
+        if (age > 3 && p.n < 4 && r() < 0.12) {
+          p.n++;
           if (haze) {
             // Un voile de buée revient par petites touches.
             const hx = p.x + r.range(-p.w, p.w);
             const hy = p.y + r.range(-8, 8);
             const hr = p.w * 2.4;
             const g = mctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
-            g.addColorStop(0, 'rgba(235,246,255,0.05)');
+            g.addColorStop(0, 'rgba(235,246,255,0.06)');
             g.addColorStop(1, 'rgba(235,246,255,0)');
             mctx.fillStyle = g;
             mctx.fillRect(hx - hr, hy - hr, hr * 2, hr * 2);
           }
           mctx.globalAlpha = 0.85;
-          blit(mctx, p.x + r.range(-p.w, p.w), p.y + r.range(-6, 6), microSize() * 0.8);
+          for (let j = 0; j < 3; j++) blitMicro(mctx, p.x + r.range(-p.w * 1.2, p.w * 1.2), p.y + r.range(-8, 8), 0.7 + 1.4 * r() ** 2);
           mctx.globalAlpha = 1;
         }
       }

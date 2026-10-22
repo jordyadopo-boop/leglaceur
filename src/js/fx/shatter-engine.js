@@ -168,6 +168,14 @@ const task = createTask('shatter', (dt, t) => {
     ctx.lineWidth = 0.9;
     ctx.strokeStyle = p.dark ? 'rgba(255,255,255,0.85)' : `rgba(21,99,214,${0.45 + 0.3 * (1 - glint)})`;
     ctx.stroke();
+    // Facette éclairée (triangle clair entre une arête et le centre de l'éclat).
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(pts[0][0], pts[0][1]);
+    ctx.lineTo(pts[1][0], pts[1][1]);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(255,255,255,${0.2 + 0.65 * glint})`;
+    ctx.fill();
     // Arête lumineuse.
     ctx.beginPath();
     ctx.moveTo(pts[0][0], pts[0][1]);

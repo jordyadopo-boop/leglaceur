@@ -83,7 +83,8 @@
 }
 .hero__frost--tl { left: -22%; top: -24%; }
 .hero__frost--br { right: -26%; bottom: -30%; opacity: 0.4; }
-.hero__veil { position: absolute; inset: auto 0 0; height: 90px; background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff 92%); }
+/* Fondu vers la section suivante (hors du décor, qui glisse au défilement) */
+.hero__veil { position: absolute; z-index: 0; inset: auto 0 0; height: clamp(70px, 12vh, 130px); pointer-events: none; background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85) 60%, #fff 100%); }
 
 /* ---------- 2. Mise en page ---------- */
 .hero__inner {
@@ -116,6 +117,9 @@
   text-wrap: balance;
 }
 @media (min-width: 900px) { .hero__title { font-size: clamp(4rem, 0.9rem + 5.6vw, 7.4rem); } }
+@media (min-width: 900px) {
+  .hero__word { -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 12%, #000 62%); mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 12%, #000 62%); }
+}
 .hero__title-a, .hero__title-b { display: block; }
 .hero__title-b { padding-bottom: 0.06em; }
 .hero__w { white-space: nowrap; }
@@ -205,6 +209,7 @@
   box-shadow: 0 0 0 0 rgba(77, 155, 255, 0.6); animation: hero-ping 2.2s var(--ease-out) infinite;
 }
 .hero.is-webgl .hero__hint.is-on { opacity: 1; transform: none; }
+@media (min-width: 900px) { .hero__hint { bottom: clamp(3.75rem, 9vh, 5.5rem); } }
 @keyframes hero-ping { 0% { box-shadow: 0 0 0 0 rgba(77, 155, 255, 0.55); } 80%, 100% { box-shadow: 0 0 0 14px rgba(77, 155, 255, 0); } }
 
 .hero__scroll {
@@ -228,9 +233,10 @@
 @media (max-width: 899px) { .hero__scroll { display: none; } }
 
 /* ---------- 5. Glaçons en verre CSS (repli) ---------- */
-.hero__cubes { position: absolute; inset: 0; perspective: 1100px; transition: opacity 1s var(--ease-out); }
+.hero__cubes { position: absolute; inset: 0; perspective: 1100px; container-type: inline-size; transition: opacity 1s var(--ease-out); }
+/* tailles en cqw (longueurs) : translateZ n'accepte pas les pourcentages */
 .hero__cube {
-  --s: clamp(70px, 30%, 240px);
+  --s: clamp(70px, 30cqw, 240px);
   position: absolute; left: var(--x); top: var(--y); width: var(--s); aspect-ratio: 1; margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
   transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz));
   animation: hero-float 7s var(--ease-in-out) infinite alternate;
@@ -255,10 +261,10 @@
   background: radial-gradient(closest-side, rgba(255, 255, 255, 0.9) 0 20%, rgba(42, 111, 207, 0.22) 45%, transparent 100%);
   transform: rotateX(80deg) translateZ(calc(var(--s) * -0.6));
 }
-.hero__cube--1 { --x: 50%; --y: 50%; --s: clamp(96px, 34%, 250px); --rx: -24deg; --ry: 38deg; --rz: 6deg; }
-.hero__cube--2 { --x: 84%; --y: 20%; --s: clamp(70px, 24%, 180px); --rx: -30deg; --ry: -28deg; --rz: -8deg; animation-delay: -2s; }
-.hero__cube--3 { --x: 80%; --y: 82%; --s: clamp(70px, 23%, 170px); --rx: 18deg; --ry: 52deg; --rz: -12deg; animation-delay: -4s; }
-.hero__cube--4 { --x: 15%; --y: 26%; --s: clamp(56px, 19%, 140px); --rx: -38deg; --ry: 22deg; --rz: 14deg; animation-delay: -1s; }
+.hero__cube--1 { --x: 50%; --y: 50%; --s: clamp(96px, 34cqw, 250px); --rx: -24deg; --ry: 38deg; --rz: 6deg; }
+.hero__cube--2 { --x: 84%; --y: 20%; --s: clamp(70px, 24cqw, 180px); --rx: -30deg; --ry: -28deg; --rz: -8deg; animation-delay: -2s; }
+.hero__cube--3 { --x: 80%; --y: 82%; --s: clamp(70px, 23cqw, 170px); --rx: 18deg; --ry: 52deg; --rz: -12deg; animation-delay: -4s; }
+.hero__cube--4 { --x: 15%; --y: 26%; --s: clamp(56px, 19cqw, 140px); --rx: -38deg; --ry: 22deg; --rz: 14deg; animation-delay: -1s; }
 @media (max-width: 899px) {
   .hero__cube--1 { --x: 30%; --y: 52%; --s: clamp(90px, 28vw, 170px); }
   .hero__cube--2 { --x: 76%; --y: 36%; --s: clamp(70px, 22vw, 140px); }

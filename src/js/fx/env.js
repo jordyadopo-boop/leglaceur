@@ -75,7 +75,8 @@ export function ensurePositioned(el) {
 export function toneOf(el) {
   const forced = el.closest('[data-fx-tone]')?.dataset.fxTone;
   if (forced === 'dark' || forced === 'light') return forced;
-  return el.closest('.section--dark, .frost--dark, .is-dark') ? 'dark' : 'light';
+  // Conventions du site : .section--dark, .frost--dark, .is-dark et toute variante « --night » / « --dark ».
+  return el.closest('.section--dark, .frost--dark, .is-dark, [class*="--night"], [class*="--dark"]') ? 'dark' : 'light';
 }
 
 /** Lecture d'un nombre dans un attribut data-*, avec mots-clés facultatifs. */

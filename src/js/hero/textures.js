@@ -173,7 +173,7 @@ function paintDetail(N, rand) {
   [[0, 0, N, edge, 0, 0, 0, edge], [0, N - edge, N, edge, 0, N, 0, N - edge], [0, 0, edge, N, 0, 0, edge, 0], [N - edge, 0, edge, N, N, 0, N - edge, 0]]
     .forEach(([x, y, w, h, x0, y0, x1, y1]) => {
       const grd = rg.createLinearGradient(x0, y0, x1, y1);
-      grd.addColorStop(0, 'rgba(255,255,255,0.75)');
+      grd.addColorStop(0, 'rgba(255,255,255,0.42)');
       grd.addColorStop(1, 'rgba(255,255,255,0)');
       rg.fillStyle = grd;
       rg.fillRect(x, y, w, h);

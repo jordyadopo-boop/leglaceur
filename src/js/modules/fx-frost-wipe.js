@@ -97,7 +97,7 @@ export default function init(el) {
     g.fillRect(0, 0, W, H);
 
     // 3) Grain de givre.
-    g.globalAlpha = 0.5;
+    g.globalAlpha = 0.22;
     g.fillStyle = g.createPattern(grain(), 'repeat');
     g.fillRect(0, 0, W, H);
     g.globalAlpha = 1;
@@ -113,17 +113,28 @@ export default function init(el) {
     g.globalAlpha = 1;
 
     // 5) Cristaux en fougère depuis les bords (relief : ombre bleutée + arête blanche).
-    const depth = clamp(Math.min(W, H) * 0.34, 60, 220);
-    const segs = growFrost({ w: W, h: H, depth, seed, spacing: 34, step: 4, maxGen: 2, corner: 1.4, stars: 7, pair: 0.45, edgeReach: [0.2, 0.9] });
+    // Cristaux fins et translucides (trois passes : ombre, corps, arête) ; plus discrets vers le centre.
+    const depth = clamp(Math.min(W, H) * 0.3, 56, 190);
+    const segs = growFrost({ w: W, h: H, depth, seed, spacing: 46, step: 3.2, maxGen: 2, corner: 1.5, stars: 5, pair: 0.5, edgeReach: [0.15, 0.8], wander: 0.05 });
     g.lineCap = 'round';
-    strokeSegments(g, segs, 0, segs.length, [2.2, 1.5, 1], () => 'rgba(15,60,130,0.16)', 0.8, 1);
-    strokeSegments(g, segs, 0, segs.length, [1.7, 1.15, 0.8], (k) => `rgba(255,255,255,${0.9 - k * 0.18})`);
-    strokeSegments(g, segs, 0, segs.length, [0.7, 0.45, 0.3], () => 'rgba(255,255,255,1)', -0.4, -0.4);
+    strokeSegments(g, segs, 0, segs.length, [1.5, 1, 0.7], () => 'rgba(15,60,130,0.12)', 0.7, 0.9);
+    strokeSegments(g, segs, 0, segs.length, [1.05, 0.7, 0.5], (k) => `rgba(255,255,255,${0.78 - k * 0.2})`);
+    strokeSegments(g, segs, 0, segs.length, [0.45, 0.3, 0.22], () => 'rgba(255,255,255,0.95)', -0.3, -0.3);
+    // Givre dense dans les coins (halo laiteux qui « épaissit » la glace).
+    for (const [cx, cy] of [[0, 0], [W, 0], [0, H], [W, H]]) {
+      const cg = g.createRadialGradient(cx, cy, 0, cx, cy, depth * 1.1);
+      cg.addColorStop(0, 'rgba(250,253,255,0.55)');
+      cg.addColorStop(1, 'rgba(250,253,255,0)');
+      g.fillStyle = cg;
+      g.fillRect(cx - depth * 1.1, cy - depth * 1.1, depth * 2.2, depth * 2.2);
+    }
 
     // 6) Coins arrondis du conteneur.
     const rad = radiusOf(el);
     if (rad > 0) {
       g.globalCompositeOperation = 'destination-in';
+      g.globalAlpha = 1;
+      g.fillStyle = '#000';
       g.beginPath();
       if (g.roundRect) g.roundRect(0, 0, W, H, rad);
       else g.rect(0, 0, W, H);

@@ -62,6 +62,7 @@ export const PRODUCTS = [
   },
   {
     id: 'grain',
+    isNew: true,
     name: 'Glace en grain',
     alias: 'Nugget ice',
     tagline: 'Douce, croquante, gourmande',

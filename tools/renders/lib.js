@@ -171,7 +171,7 @@ export const BACKDROP_GLSL = /* glsl */ `
   uniform vec2 uScreen; uniform vec3 cTop, cMid, cHalo; uniform vec2 haloPos; uniform float haloSize, glow, horizon;
   vec3 backdropColor(vec2 s){
     vec3 c = mix(cMid, cTop, smoothstep(horizon - 0.05, 1.05, s.y));
-    c = mix(c * 0.7, c, smoothstep(0.0, horizon, s.y));
+    c = mix(c * 0.85, c, smoothstep(horizon - 0.25, horizon, s.y));
     vec2 d = s - haloPos; d.x *= uScreen.x / uScreen.y;
     float r = length(d) / haloSize;
     c += cHalo * glow * (exp(-r * r * 2.4) * 0.8 + exp(-r * r * 0.45) * 0.3);
@@ -267,12 +267,13 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
           vec2 rip2 = texture2D(tRipple, vWPos.xz * 0.45 + 0.37).xy * 2.0 - 1.0;
           ruv += (rip * 0.7 + rip2 * 0.3) * reflDistort;
           vec3 acc = vec3(0.0); float wsum = 0.0;
-          for (int i = 0; i < 16; i++) {
-            float a = float(i) * 2.39996;
-            float rr = sqrt((float(i) + 0.5) / 16.0);
+          float jit = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) * 6.2831;
+          for (int i = 0; i < 24; i++) {
+            float a = float(i) * 2.39996 + jit;
+            float rr = sqrt((float(i) + 0.5) / 24.0);
             vec2 o = vec2(cos(a), sin(a)) * rr * reflBlur;
             float wgt = 1.0 - rr * 0.6;
-            acc += texture2D(tReflect, ruv + o).rgb * wgt; wsum += wgt;
+            acc += min(texture2D(tReflect, ruv + o).rgb, vec3(1.6)) * wgt; wsum += wgt;
           }
           vec3 refl = acc / wsum;
           vec3 V = normalize(cameraPosition - vWPos);
@@ -545,6 +546,7 @@ export class Studio {
           gl_FragColor = vec4(max(c, 0.0), 1.0);
           #include <tonemapping_fragment>
           #include <colorspace_fragment>
+          gl_FragColor.rgb += (vec3(hash(vUv * res + 1.7), hash(vUv * res + 5.3), hash(vUv * res + 9.1)) - 0.5) * (2.0 / 255.0);
         }`,
     });
     r.setRenderTarget(null);

@@ -19,9 +19,9 @@
       960,
       1600
     ],
-    "alt": "Gobelet transparent rempli de glaçons, avec feuilles de menthe et paille",
-    "credit": "Kunal Lakhotia — Pexels",
-    "source": "https://www.pexels.com/photo/refreshing-cold-drink-with-mint-garnish-28944486/"
+    "alt": "Ice Cup : gobelet transparent à couvercle dôme rempli de glaçons creux, couvert de condensation, sur un sol mouillé bleu nuit",
+    "credit": "Le Glaceur — rendu 3D",
+    "source": "tools/renders"
   },
   "barres": {
     "w": 1600,
@@ -31,9 +31,9 @@
       960,
       1600
     ],
-    "alt": "Pains de glace rectangulaires empilés sur un quai de chargement",
-    "credit": "baolong thai — Pexels",
-    "source": "https://www.pexels.com/photo/man-unloading-ice-blocks-at-a-fish-market-26728029/"
+    "alt": "Barres de glace transparentes, givrées en surface, avec quelques glaçons sur un sol mouillé bleu nuit",
+    "credit": "Le Glaceur — rendu 3D",
+    "source": "tools/renders"
   },
   "pilee": {
     "w": 1280,
@@ -177,5 +177,17 @@
     "alt": "Les tours du Plateau, à Abidjan, vues depuis la lagune Ébrié",
     "credit": "Shane Ryan Herilalaina — Unsplash",
     "source": "https://unsplash.com/photos/distant-cityscape-across-water-under-a-blue-sky-ir5PK5Itae0"
+  },
+  "grain": {
+    "w": 1600,
+    "h": 2000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Glace en grain Le Glaceur",
+    "credit": "Le Glaceur — rendu 3D",
+    "source": "tools/renders/grain"
   }
 }

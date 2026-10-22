@@ -96,11 +96,11 @@ void main() {
   col = over(vec4(vec3(0.97, 0.99, 1.0) * g, g), col);
 
   // Cristaux en relief.
-  float body = c0 * (0.38 + 0.2 * edge);
-  col = over(vec4(vec3(0.78, 0.89, 1.0) * body, body), col);
-  float sh = shade * 0.42;
-  col = over(vec4(vec3(0.03, 0.14, 0.38) * sh, sh), col);
-  float hi = lit * 0.95;
+  float body = c0 * (0.3 + 0.22 * edge);
+  col = over(vec4(vec3(0.82, 0.92, 1.0) * body, body), col);
+  float sh = shade * 0.24;
+  col = over(vec4(vec3(0.05, 0.2, 0.48) * sh, sh), col);
+  float hi = lit * 0.9;
   col = over(vec4(vec3(1.0) * hi, hi), col);
 
   // Éclats qui scintillent.
@@ -112,7 +112,7 @@ void main() {
 }`;
 
 /** Profondeur maximale du givre (px CSS) selon la taille de l'écran. */
-export const depthFor = (w, h) => clamp(Math.min(w, h) * 0.3, 110, 300);
+export const depthFor = (w, h) => clamp(Math.min(w, h) * 0.2, 90, 200);
 
 /** Carte de temps de gel (niveaux de gris : noir = gèle tout de suite, blanc = jamais). */
 function buildMap(cw, ch, scale, depth) {
@@ -159,6 +159,17 @@ export function createVeil(canvas) {
     gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false, powerPreference: 'low-power' });
   } catch {
     gl = null;
+  }
+  if (gl) {
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const r = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+    if (/swiftshader|llvmpipe|software|softpipe/i.test(r)) {
+      // Rendu logiciel : le voile 2D est bien plus léger. Le canvas a déjà un contexte WebGL : on le remplace.
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      const fresh = canvas.cloneNode(false);
+      canvas.replaceWith(fresh);
+      return createVeil2D(fresh);
+    }
   }
   if (!gl) return createVeil2D(canvas);
 

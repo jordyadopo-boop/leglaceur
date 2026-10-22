@@ -60,7 +60,7 @@ function coreTexture(seed, { w = 1024, h = 256, density = 1 } = {}) {
 function bar({ L, S, seed, frost = 0.45 }) {
   const geo = boxUV(new RoundedBoxGeometry(L, S, S, 6, 0.07), 0.32);
   const maps = iceMaps({ seed, size: 768, frost });
-  const mat = iceMaterial({ maps, thickness: S * 0.9, normalScale: 0.5, attenuationDistance: 6, envMapIntensity: 1.5, frostGlow: 0.05 });
+  const mat = iceMaterial({ maps, thickness: S * 0.9, normalScale: 0.32, attenuationDistance: 6, envMapIntensity: 1.5, frostGlow: 0.05 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.castShadow = true;
   return mesh;
@@ -151,8 +151,8 @@ function floorDrops(seed, area) {
 }
 
 function cube(size, seed) {
-  const maps = iceMaps({ seed, size: 256, frost: 0.3 });
-  const m = new THREE.Mesh(boxUV(new RoundedBoxGeometry(size, size, size, 5, size * 0.12), 0.5), iceMaterial({ maps, thickness: size * 0.8, normalScale: 0.3, envMapIntensity: 1.6 }));
+  const maps = iceMaps({ seed, size: 256, frost: 0.45, melt: 0.6 });
+  const m = new THREE.Mesh(boxUV(new RoundedBoxGeometry(size, size, size, 6, size * 0.16), 0.9), iceMaterial({ maps, thickness: size * 0.9, normalScale: 0.18, envMapIntensity: 1.9, attenuationDistance: 3, frostGlow: 0.16 }));
   m.castShadow = true;
   return m;
 }
@@ -215,7 +215,7 @@ export default async function render({ w, h, variant = 0 }) {
   const defs = [
     { id: 'A', L: 6.0, S: 1.35, seed: 11, pos: [-1.45, 3.0, -1.6], rot: [0, 0.62, Math.PI / 2], frost: 0.62 }, // 10 kg debout
     { id: 'B', L: 6.0, S: 1.35, seed: 23, pos: [0.85, 0.675, -0.75], rot: [0, -0.52, 0], frost: 0.58 }, // 10 kg couchée
-    { id: 'C', L: 4.9, S: 1.1, seed: 37, pos: [-0.25, 0.55, 1.35], rot: [0, -0.28, 0], frost: 0.55 }, // 5 kg devant
+    { id: 'C', L: 4.9, S: 1.1, seed: 37, pos: [-0.25, 0.55, 1.35], rot: [0, -0.23, 0], frost: 0.55 }, // 5 kg devant
   ];
   const camPos = camera.position;
   const items = defs.map((d) => {
@@ -247,16 +247,18 @@ export default async function render({ w, h, variant = 0 }) {
   }
 
   // glaçons au premier plan
-  const c1 = cube(0.55, 101); c1.position.set(2.25, 0.21, 2.55); c1.rotation.set(0, 0.5, 0);
-  const c2 = cube(0.45, 102); c2.position.set(2.85, 0.18, 1.85); c2.rotation.set(0, -0.3, 0);
-  const c3 = cube(0.42, 103); c3.position.set(-1.7, 0.21, 2.95); c3.rotation.set(0, 0.9, 0);
+  const c1 = cube(0.5, 101); c1.position.set(1.95, 0.25, 3.15); c1.rotation.set(0, 0.5, 0);
+  const c2 = cube(0.44, 102); c2.position.set(2.75, 0.22, 2.6); c2.rotation.set(0, -0.35, 0);
+  const c3 = cube(0.46, 103); c3.position.set(-1.55, 0.23, 3.25); c3.rotation.set(0, 0.85, 0);
+  const c4 = cube(0.4, 104); c4.position.set(2.35, 0.2 + 0.0, 2.25); c4.rotation.set(0, 1.2, 0);
+  studio.addLayer([c4], { name: 'glaçon 4' });
   studio.addLayer([c2], { name: 'glaçon 2' });
   studio.addLayer([c1, c3], { name: 'glaçons' });
 
   mark('scène construite');
   floor.userData.uniforms.fadeRadius.value = 14;
   floor.userData.uniforms.poolCenter.value.set(-0.2, -1.6);
-  floor.userData.uniforms.poolRadius.value.set(6.5, 3.8);
+  floor.userData.uniforms.poolRadius.value.set(6.5, 5.2);
   floor.userData.uniforms.poolColor.value.set('#3d6fae').multiplyScalar(V.pool ?? 0.75);
   floor.userData.uniforms.fogFar.value = 42;
   await tick();

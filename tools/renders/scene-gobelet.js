@@ -29,11 +29,7 @@ function cupGeometry() {
   const geo = new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), 160);
   // UV : u autour, v = hauteur
   const p = geo.attributes.position, uv = geo.attributes.uv;
-  for (let i = 0; i < p.count; i++) {
-    const a = Math.atan2(p.getZ(i), p.getX(i));
-    uv.setXY(i, uv.getX(i), p.getY(i) / H);
-    void a;
-  }
+  for (let i = 0; i < p.count; i++) uv.setXY(i, uv.getX(i), p.getY(i) / H);
   uv.needsUpdate = true;
   return geo;
 }
@@ -236,7 +232,7 @@ const VARIANTS = [
 
 export default async function render({ w, h, variant = 0 }) {
   const V = VARIANTS[variant] || VARIANTS[0];
-  const studio = new Studio({ width: w, height: h, exposure: 1.05 });
+  const studio = new Studio({ width: w, height: h, exposure: 1.12 });
   const { scene, renderer } = studio;
   scene.environment = buildEnvironment(renderer);
 

@@ -189,6 +189,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   line-height: 1.2;
+  white-space: nowrap;
   pointer-events: none;
   transform: translate(-50%, -50%);
   transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s var(--ease-out);
@@ -196,6 +197,7 @@
 .fx-wipe-hint svg { width: 1.7em; height: 1.7em; flex: none; color: var(--blue-600); }
 .fx-wipe-hint svg .fx-wipe-hint__hand { animation: fx-wipe-hand 2.4s var(--ease-in-out) infinite; transform-origin: 50% 80%; }
 .fx-wipe-hint.is-gone { opacity: 0; filter: blur(6px); transform: translate(-50%, -50%) scale(0.92); }
+@media (max-width: 420px) { .fx-wipe-hint { font-size: 0.85rem; letter-spacing: 0.08em; } }
 @keyframes fx-wipe-hand {
   0%, 100% { transform: translateX(-3px) rotate(-8deg); }
   50% { transform: translateX(3px) rotate(8deg); }

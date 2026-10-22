@@ -203,3 +203,6 @@ html.preload:not(.preloader-done) .fab { opacity: 0; }
   .fab__bubble { stroke: ButtonText; }
   .fab__phone { fill: ButtonText; }
 }
+
+/* Page devis (mobile) : la barre du récapitulatif occupe le bas de l'écran. */
+html.has-quote-bar .fab { transform: translateY(-84px); }

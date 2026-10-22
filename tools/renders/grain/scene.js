@@ -105,24 +105,32 @@ function pelletGeometry(seed) {
   const n3 = makeNoise3(seed * 13 + 1);
   const radius = 0.37 + r() * 0.09;
   const half = 0.15 + r() * 0.36; // demi-longueur de la partie cylindrique
-  const capFlat = 0.42 + r() * 0.25; // bouts arrondis mais écrasés
+  const capFlat = 0.28 + r() * 0.26; // bouts à peine arrondis : le grain est coupé à la sortie de l'extrudeuse
   const g = new THREE.CapsuleGeometry(radius, half * 2, 8, 28, 10);
   const pos = g.attributes.position;
   const v = new THREE.Vector3();
   // bouts cassés en biais
   const tiltA = new THREE.Vector2(r() - 0.5, r() - 0.5).multiplyScalar(0.7);
   const tiltB = new THREE.Vector2(r() - 0.5, r() - 0.5).multiplyScalar(0.7);
-  const ovalX = 1 + (r() - 0.5) * 0.22, ovalZ = 1 + (r() - 0.5) * 0.22;
+  const ovalX = 1 + (r() - 0.5) * 0.26, ovalZ = 1 + (r() - 0.5) * 0.26;
+  // éclat : une face cassée nette près d'un bout (un grain sur deux)
+  const chips = [];
+  const nChips = r() < 0.55 ? 1 + (r() < 0.3 ? 1 : 0) : 0;
+  for (let c = 0; c < nChips; c++) {
+    const n = new THREE.Vector3((r() - 0.5) * 1.6, r() < 0.5 ? 1 : -1, (r() - 0.5) * 1.6).normalize();
+    chips.push({ n, d: (half + radius * capFlat) * (0.55 + r() * 0.25) * Math.abs(n.y) + radius * 0.35 * Math.hypot(n.x, n.z) });
+  }
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i);
-    if (v.y > half) v.y = half + (v.y - half) * capFlat + (v.x * tiltA.x + v.z * tiltA.y) * 0.35;
-    else if (v.y < -half) v.y = -half + (v.y + half) * capFlat + (v.x * tiltB.x + v.z * tiltB.y) * 0.35;
+    if (v.y > half) v.y = half + (v.y - half) * capFlat + (v.x * tiltA.x + v.z * tiltA.y) * 0.5;
+    else if (v.y < -half) v.y = -half + (v.y + half) * capFlat + (v.x * tiltB.x + v.z * tiltB.y) * 0.5;
     v.x *= ovalX; v.z *= ovalZ;
+    for (const c of chips) { const k = v.dot(c.n) - c.d; if (k > 0) v.addScaledVector(c.n, -k); }
     // bosses : basse fréquence (forme), moyenne (grumeaux), quelques creux
     const len = v.length() || 1;
     const nx = v.x / len, ny = v.y / len, nz = v.z / len;
-    const lo = n3(v.x * 1.6 + 5, v.y * 1.6, v.z * 1.6) * 0.09;
-    const mid = n3(v.x * 4.2, v.y * 4.2 + 11, v.z * 4.2) * 0.045;
+    const lo = n3(v.x * 1.6 + 5, v.y * 1.6, v.z * 1.6) * 0.15;
+    const mid = n3(v.x * 4.2, v.y * 4.2 + 11, v.z * 4.2) * 0.065;
     const pit = Math.min(0, n3(v.x * 6.5 + 3, v.y * 6.5, v.z * 6.5 + 7) + 0.25) * 0.08;
     const d = lo + mid + pit;
     v.x += nx * d; v.y += ny * d * 0.8; v.z += nz * d;
@@ -135,11 +143,11 @@ function pelletGeometry(seed) {
 
 function pelletMaterial(o, trans = 0) {
   const mat = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(o.iceColor ?? '#cfe0f2'),
+    color: new THREE.Color(o.iceColor ?? '#c8d8ea'),
     roughness: o.iceRough ?? 0.34,
     metalness: 0,
     clearcoat: o.coat ?? 1.0,
-    clearcoatRoughness: 0.045,
+    clearcoatRoughness: o.coatR ?? 0.03,
     specularIntensity: 0.9,
     ior: 1.31,
     sheen: 0.25, sheenColor: new THREE.Color('#cfe6ff'), sheenRoughness: 0.5,
@@ -147,16 +155,18 @@ function pelletMaterial(o, trans = 0) {
     transmission: trans,
     thickness: 0.9,
     side: trans > 0 ? THREE.DoubleSide : THREE.FrontSide,
-    attenuationColor: new THREE.Color('#9cc8f0'), attenuationDistance: 1.6,
+    attenuationColor: new THREE.Color(o.att ?? '#8fbdeb'), attenuationDistance: o.attD ?? 1.2,
   });
   const u = {
-    uSss: { value: new THREE.Color(o.sssColor ?? '#7fb6e8') },
-    uSssAmb: { value: o.sssAmb ?? 0.11 },
+    uSss: { value: new THREE.Color(o.sssColor ?? '#a8ccf0') },
+    uSssAmb: { value: o.sssAmb ?? 0.06 },
     uSssBack: { value: o.sssBack ?? 0.35 },
     uBackDir: { value: new THREE.Vector3(0, 0.3, -1).normalize() },
     uPore: { value: o.pore ?? 0.3 },
-    uEdge: { value: o.edge ?? 1.1 },
-    uStri: { value: o.stri ?? 0.22 },
+    uEdge: { value: o.edge ?? 1.6 },
+    uStri: { value: o.stri ?? 0.1 },
+    uBump: { value: o.bump ?? 0.055 },
+    uCloud: { value: o.cloud ?? 0.8 },
     uVar: { value: o.var ?? 1.0 },
   };
   mat.userData.u = u;
@@ -174,7 +184,7 @@ function pelletMaterial(o, trans = 0) {
         vInst = fract(sin(dot(seedOff, vec3(12.9898, 78.233, 37.719))) * 43758.5453);`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
-        varying vec3 vObj; varying vec3 vLoc; varying float vInst; uniform vec3 uSss; uniform float uSssAmb, uSssBack, uPore, uEdge, uStri, uVar; uniform vec3 uBackDir;
+        varying vec3 vObj; varying vec3 vLoc; varying float vInst; uniform vec3 uSss; uniform float uSssAmb, uSssBack, uPore, uEdge, uStri, uVar, uBump, uCloud; uniform vec3 uBackDir;
         ${GLSL_NOISE}`)
       .replace('#include <color_fragment>', `#include <color_fragment>
         // pores (bulles d'air ouvertes) + grain de glace compactée
@@ -183,6 +193,7 @@ function pelletMaterial(o, trans = 0) {
         float pits2 = smoothstep(0.55, 0.9, snoise(vObj * 13.0 + 4.0)) * uPore;
         float fineH = snoise(vObj * 31.0) * 0.5 + snoise(vObj * 70.0) * 0.25;
         float blot = snoise(vObj * 1.8 + 9.0) * 0.5 + 0.5; // zones plus « laiteuses »
+        float cloud = snoise(vObj * 3.4 + 2.0) * 0.6 + snoise(vObj * 8.0) * 0.4; // nuages internes
         float ang = atan(vLoc.x, vLoc.z);
         // stries d'extrusion dans la longueur du grain
         float stri = snoise(vec3(cos(ang) * 3.2, sin(ang) * 3.2, vLoc.y * 0.9 + vInst * 20.0)) * 0.6
@@ -190,9 +201,10 @@ function pelletMaterial(o, trans = 0) {
         float iceH = -pits * 0.55 - pits2 * 0.3 + fineH * 0.08 + snoise(vObj * 2.6) * 0.12 + stri * uStri;
         diffuseColor.rgb *= mix(vec3(1.0), vec3(0.80, 0.88, 0.97), clamp(pits * 0.9 + pits2 * 0.6, 0.0, 1.0));
         diffuseColor.rgb *= 0.93 + 0.07 * blot;
+        diffuseColor.rgb *= mix(vec3(0.8, 0.88, 0.97), vec3(1.06), smoothstep(-0.5, 0.6, cloud) * uCloud + (1.0 - uCloud) * 0.6);
         // chaque grain a sa propre opacité : certains plus laiteux, d'autres plus translucides (gris bleuté)
         diffuseColor.rgb *= mix(vec3(1.0), vec3(0.78, 0.86, 0.96), smoothstep(0.35, 1.0, vInst) * uVar);
-        diffuseColor.rgb *= 1.0 - 0.12 * smoothstep(0.2, 0.7, stri) * uStri * 4.0;
+        diffuseColor.rgb *= 1.0 - 0.06 * smoothstep(0.2, 0.7, stri);
         {
           float ndvC = clamp(dot(normalize(vNormal), normalize(vViewPosition)), 0.0, 1.0);
           // bords plus minces = plus transparents : la glace y paraît plus sombre et plus bleue
@@ -201,7 +213,7 @@ function pelletMaterial(o, trans = 0) {
       .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
         roughnessFactor = clamp(roughnessFactor + pits * 0.3 + pits2 * 0.15 - (1.0 - blot) * 0.12, 0.08, 1.0);`)
       .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
-        normal = g_bump(-vViewPosition, normal, iceH, 0.09);`)
+        normal = g_bump(-vViewPosition, normal, iceH, uBump);`)
       .replace('#include <opaque_fragment>', `
         {
           vec3 Vv = normalize(vViewPosition);
@@ -238,7 +250,8 @@ function layout(variants, seed, o) {
   const spheres = (c, a, h) => [-1, -0.5, 0, 0.5, 1].map((k) => c.clone().addScaledVector(a, k * h));
   const randAxis = () => new THREE.Vector3(r() * 2 - 1, (r() * 2 - 1) * 0.8, r() * 2 - 1).normalize();
   const flatAxis = () => { const a = r() * Math.PI * 2; return new THREE.Vector3(Math.cos(a), (r() - 0.5) * 0.3, Math.sin(a)).normalize(); };
-  const slope = o.slope ?? 0.55; // pente de talus (~29°)
+  const slope = o.slope ?? 0.5; // pente de talus (~27°)
+  const slopeIn = o.slopeIn ?? 0.2; // dans le verre, on secoue : tassement plus dense
   const TIGHT = o.tight ?? 0.88; // légère interpénétration : glace tassée, contacts francs
 
   /** Vrai si le grain (c, a, h, rad) touche quelque chose. */
@@ -300,17 +313,17 @@ function layout(variants, seed, o) {
       let c = drop(x, z, yTop, a, h, rad, zone);
       if (!c) { why.nul++; continue; }
       // roulement : le grain glisse vers le creux voisin le plus bas (sinon, empilement en colonnes)
-      for (let k = 0; k < (o.roll ?? 10); k++) {
+      for (let k = 0; k < (o.roll ?? 12); k++) {
         let best = null;
         for (let m = 0; m < 8; m++) {
           const t = (m / 8) * Math.PI * 2 + r() * 0.6, d = 0.25 + r() * 0.35;
           const cand = drop(c.x + Math.cos(t) * d, c.z + Math.sin(t) * d, c.y + 0.25, a, h, rad, zone);
-          if (cand && cand.y < c.y - slope * d && (!best || cand.y < best.y)) best = cand;
+          if (cand && cand.y < c.y - (zone === 'in' ? slopeIn : slope) * d && (!best || cand.y < best.y)) best = cand;
         }
         if (!best) break;
         c = best;
       }
-      if (c.y > maxH(x, z)) { why.high++; continue; }
+      if (c.y > maxH(c.x, c.z)) { why.high++; continue; } // forme cible évaluée là où le grain s'est arrêté
       const p = { c, a, vi, s, r: rad, h, zone, spin: r() * Math.PI * 2 };
       p.S = spheres(c, a, h);
       P.push(p); insert(p, P.length - 1);
@@ -319,6 +332,18 @@ function layout(variants, seed, o) {
     mark(`  ${zone} : ${made} grains (${tries} essais) ${JSON.stringify(why)}`);
   }
 
+  // 2. coulée : du pied du verre vers l'avant-droite, en tas
+  const pile = o.pile ?? { x: o.px ?? 1.8, z: o.pz ?? 2.6, sx: o.psx ?? 4.4, sz: o.psz ?? 3.3, hgt: o.ph ?? 4.0 };
+  const dir = new THREE.Vector2(pile.x - GLASS.x, pile.z - GLASS.z).normalize();
+  const heap = (x, z) => {
+    const dx = (x - pile.x) / pile.sx, dz = (z - pile.z) / pile.sz;
+    const main = pile.hgt * Math.exp(-(dx * dx + dz * dz) * 1.2);
+    // traînée qui remonte contre le verre (grains tombés du bord)
+    const vx = x - GLASS.x, vz = z - GLASS.z;
+    const along = vx * dir.x + vz * dir.y, across = -vx * dir.y + vz * dir.x;
+    const trail = along > -1 ? (o.trailH ?? 3.0) * Math.exp(-along / 3.2) * Math.exp(-(across * across) / 7) : 0;
+    return Math.max(main, trail) + 0.5;
+  };
   // 1. le verre, rempli à ras bord puis surmonté d'un dôme
   const ri = rIn(GLASS.h);
   const domeH = o.domeH ?? 2.6;
@@ -326,34 +351,25 @@ function layout(variants, seed, o) {
     const rr = Math.sqrt(r()) * (ri - 0.4), t = r() * Math.PI * 2;
     return [GLASS.x + Math.cos(t) * rr, GLASS.z + Math.sin(t) * rr, GLASS.h + 6];
   }, (x, z) => {
-    const d = Math.hypot(x - GLASS.x, z - GLASS.z) / (ri + 0.4);
+    const dd = Math.hypot(x - GLASS.x, z - GLASS.z);
+    if (dd > rOut(GLASS.h) + 0.2) return heap(x, z); // grain tombé du bord : il rejoint la coulée
+    const d = dd / (ri + 0.4);
     return GLASS.h + 0.2 + domeH * Math.max(0, 1 - d * d);
-  }, randAxis, o.nIn ?? 560, 6000);
+  }, randAxis, o.nIn ?? 700, 14000);
 
   // 2. coulée : du pied du verre vers l'avant-droite, en tas
-  const pile = o.pile ?? { x: o.px ?? 1.8, z: o.pz ?? 2.6, sx: o.psx ?? 3.8, sz: o.psz ?? 2.8, hgt: o.ph ?? 3.4 };
-  const dir = new THREE.Vector2(pile.x - GLASS.x, pile.z - GLASS.z).normalize();
-  const heap = (x, z) => {
-    const dx = (x - pile.x) / pile.sx, dz = (z - pile.z) / pile.sz;
-    const main = pile.hgt * Math.exp(-(dx * dx + dz * dz) * 1.5);
-    // traînée qui remonte contre le verre (grains tombés du bord)
-    const vx = x - GLASS.x, vz = z - GLASS.z;
-    const along = vx * dir.x + vz * dir.y, across = -vx * dir.y + vz * dir.x;
-    const trail = along > 0 ? (o.trailH ?? 4.2) * Math.exp(-along / 3.2) * Math.exp(-(across * across) / 7) : 0;
-    return Math.max(main, trail) + 0.5;
-  };
   place('pile', () => {
     const x = pile.x + (r() * 2 - 1) * pile.sx * 1.7 - 1.2;
     const z = pile.z + (r() * 2 - 1) * pile.sz * 1.7 - 0.8;
     return [x, z, 12];
-  }, heap, randAxis, o.nPile ?? 520, 60000, 3.5);
+  }, heap, randAxis, o.nPile ?? 520, 80000, 4.0);
 
   // 3. grains isolés, couchés, vers l'objectif et sur les côtés
   place('scatter', () => {
-    const t = -0.5 + r() * 3.8;
-    const d = 6.0 + Math.pow(r(), 1.3) * 9;
-    return [pile.x * 0.5 + Math.cos(t) * d * 1.2, pile.z + Math.sin(t) * d * 0.7, 3];
-  }, () => 1.3, flatAxis, o.nScatter ?? 34, 2000);
+    const t = 0.15 + r() * 2.85; // vers l'objectif
+    const d = 3.0 + Math.pow(r(), 1.2) * 7.5;
+    return [pile.x * 0.4 + Math.cos(t) * d * 1.1, pile.z + 7.5 + Math.sin(t) * d * 0.5, 3];
+  }, () => 1.3, flatAxis, o.nScatter ?? 16, 2000);
   return P;
 }
 
@@ -399,7 +415,11 @@ function glassMaterial(o) {
     envMapIntensity: o.glassEnv ?? 2.2,
     side: THREE.FrontSide,
   });
-  const u = { uCenter: { value: new THREE.Vector2(GLASS.x, GLASS.z) }, uMist: { value: o.mist ?? 0.3 } };
+    // le flou de transmission de three.js dépend de la taille du rendu (lod = log2(taille) × rugosité) :
+  // on corrige la rugosité pour que la buée garde le même flou relatif en aperçu (800 px) et en final (3200 px).
+  const m0 = o.mist ?? 0.22;
+  const mist = 1 - (1 - m0) * Math.log(800) / Math.log(o.__w ?? 800);
+  const u = { uCenter: { value: new THREE.Vector2(GLASS.x, GLASS.z) }, uMist: { value: mist } };
   mat.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader
@@ -423,32 +443,32 @@ function glassMaterial(o) {
 
 /* ------------------------------------------------------------------ gouttes */
 
-function dropletMaterial() {
+function dropletMaterial(thickness = 0.15, env = 1.6) {
   return new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, metalness: 0, roughness: 0.02, transmission: 1, thickness: 0.15, ior: 1.33,
-    specularIntensity: 1, envMapIntensity: 1.6, clearcoat: 0, attenuationColor: new THREE.Color('#e8f6ff'), attenuationDistance: 3,
+    color: 0xffffff, metalness: 0, roughness: 0.02, transmission: 1, thickness, ior: 1.33,
+    specularIntensity: 1, envMapIntensity: env, clearcoat: 0, attenuationColor: new THREE.Color('#e8f6ff'), attenuationDistance: 3,
   });
 }
 
 function floorDroplets(P, seed, n) {
   const r = rng(seed);
   const geo = new THREE.SphereGeometry(1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2);
-  const mesh = new THREE.InstancedMesh(geo, dropletMaterial(), n);
+  const mesh = new THREE.InstancedMesh(geo, dropletMaterial(0.12, 2.4), n);
   const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3();
   const pile = P.filter((x) => x.zone !== 'in' && x.zone !== 'dome');
   let k = 0;
   while (k < n) {
     let x, z;
-    if (r() < 0.65 && pile.length) {
+    if (r() < 0.45 && pile.length) {
       const b = pile[Math.floor(r() * pile.length)];
-      const a = r() * Math.PI * 2, d = 0.8 + r() * 2.2;
+      const a = r() * Math.PI * 2, d = 1.2 + r() * 3;
       x = b.c.x + Math.cos(a) * d; z = b.c.z + Math.sin(a) * d;
     } else {
-      x = -14 + r() * 30; z = -6 + r() * 20;
+      x = -13 + r() * 28; z = 2 + r() * 16;
     }
-    const rad = 0.06 + Math.pow(r(), 2.5) * 0.5;
+    const rad = 0.07 + Math.pow(r(), 2.2) * 0.55;
     const ox = rad * (1 + r() * 0.5), oz = rad * (1 + r() * 0.5);
-    p.set(x, 0, z); q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), r() * 6.28); s.set(ox, rad * (0.32 + r() * 0.12), oz);
+    p.set(x, 0, z); q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), r() * 6.28); s.set(ox, rad * (0.42 + r() * 0.16), oz);
     m.compose(p, q, s);
     mesh.setMatrixAt(k++, m);
   }
@@ -459,7 +479,7 @@ function floorDroplets(P, seed, n) {
 function glassDroplets(seed, n) {
   const r = rng(seed);
   const geo = new THREE.SphereGeometry(1, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2);
-  const mesh = new THREE.InstancedMesh(geo, dropletMaterial(), n);
+  const mesh = new THREE.InstancedMesh(geo, dropletMaterial(0.01, 2.6), n);
   const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3();
   const up = new THREE.Vector3(0, 1, 0);
   for (let k = 0; k < n; k++) {
@@ -482,7 +502,7 @@ function glassDroplets(seed, n) {
 
 function buildEnvironment(renderer, o) {
   const env = new THREE.Scene();
-  const box = new THREE.Mesh(new THREE.BoxGeometry(200, 120, 200), new THREE.MeshBasicMaterial({ color: 0x06142c, side: THREE.BackSide }));
+  const box = new THREE.Mesh(new THREE.BoxGeometry(200, 120, 200), new THREE.MeshBasicMaterial({ color: new THREE.Color(o.room ?? '#0a1626'), side: THREE.BackSide }));
   box.position.y = 40;
   env.add(box);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ color: 0x020814 }));
@@ -500,6 +520,12 @@ function buildEnvironment(renderer, o) {
   panel(50, 20, '#eef6ff', 1.2 * L, [20, 30, 95], [0, 5, 0]); // débouchage face
   panel(12, 80, '#f4f9ff', 6 * L, [-62, 40, 70], [0, 10, 0]); // bandes avant : reflets verticaux sur le verre
   panel(10, 80, '#cfeaff', 4 * L, [66, 40, 62], [0, 10, 0]);
+  // petites sources très vives : éclats nets sur la glace mouillée et les gouttes
+  const G = o.glint ?? 1;
+  panel(4, 4, '#ffffff', 70 * G, [-45, 75, 45], [0, 0, 0]);
+  panel(3, 3, '#e8f4ff', 50 * G, [35, 85, 25], [0, 0, 0]);
+  panel(3, 5, '#bfe4ff', 45 * G, [10, 60, -70], [0, 0, 0]);
+  panel(2.5, 2.5, '#ffffff', 40 * G, [-15, 40, 90], [0, 0, 0]);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const rt = pmrem.fromScene(env, 0.03);
   pmrem.dispose();
@@ -520,10 +546,10 @@ const WALL_GLSL = /* glsl */ `
 function wallUniforms(o) {
   return {
     cTop: { value: new THREE.Color(o.bgTop ?? '#010612') },
-    cMid: { value: new THREE.Color(o.bgMid ?? '#0a2350') },
-    cHalo: { value: new THREE.Color(o.halo ?? '#2f78d0') },
+    cMid: { value: new THREE.Color(o.bgMid ?? '#0a1c3a') },
+    cHalo: { value: new THREE.Color(o.halo ?? '#4a77b0') },
     haloPos: { value: new THREE.Vector2(0.47, 0.3) },
-    glow: { value: o.glow ?? 0.6 },
+    glow: { value: o.glow ?? 0.5 },
     horizon: { value: 0.0 },
     wallX: { value: 0 }, wallW: { value: 1 },
   };
@@ -543,7 +569,7 @@ function buildBackdrop(wu) {
 }
 
 function buildFloor(o, wu) {
-  const mat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(o.floorColor ?? '#02070f'), roughness: 0.25, metalness: 0, specularIntensity: 0.6, envMapIntensity: 0.25 });
+  const mat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(o.floorColor ?? '#010409'), roughness: 0.25, metalness: 0, specularIntensity: 0.6, envMapIntensity: 0.25 });
   const uniforms = {
     tReflect: { value: null },
     reflMatrix: { value: new THREE.Matrix4() },
@@ -678,7 +704,7 @@ function finish(renderer, rt, camera, w, h, o) {
   const fin = new THREE.ShaderMaterial({
     uniforms: {
       t: { value: dofRT.texture }, tb: { value: small.texture },
-      bloom: { value: o.bloom ?? 0.28 }, vig: { value: o.vig ?? 0.32 }, grain: { value: o.grain ?? 0.01 }, sat: { value: o.sat ?? 1.0 },
+      bloom: { value: o.bloom ?? 0.28 }, vig: { value: o.vig ?? 0.32 }, grain: { value: o.grain ?? 0.01 }, sat: { value: o.sat ?? 0.85 },
       res: { value: new THREE.Vector2(w, h) },
     },
     vertexShader: FS_VS,
@@ -709,7 +735,7 @@ function finish(renderer, rt, camera, w, h, o) {
 /* ------------------------------------------------------------------ scène */
 
 export default async function render({ w, h, variant = 0, opts = {} }) {
-  const o = { ...opts };
+  const o = { ...opts, __w: w };
   for (const k in o) if (typeof o[k] === 'string' && /^[0-9a-f]{6}$/i.test(o[k])) o[k] = '#' + o[k];
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
@@ -718,7 +744,7 @@ export default async function render({ w, h, variant = 0, opts = {} }) {
   renderer.setPixelRatio(1);
   renderer.setSize(w, h, false);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = o.exposure ?? 1.0;
+  renderer.toneMappingExposure = o.exposure ?? 0.84;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -730,8 +756,8 @@ export default async function render({ w, h, variant = 0, opts = {} }) {
 
   // caméra
   const camera = new THREE.PerspectiveCamera(o.fov ?? 24, w / h, 5, 600);
-  const dist = o.dist ?? 60, elev = THREE.MathUtils.degToRad(o.elev ?? 9), azim = THREE.MathUtils.degToRad(o.azim ?? 4);
-  const target = new THREE.Vector3(o.tx ?? -0.4, o.ty ?? 6.2, o.tz ?? 0);
+  const dist = o.dist ?? 64, elev = THREE.MathUtils.degToRad(o.elev ?? 9), azim = THREE.MathUtils.degToRad(o.azim ?? 4);
+  const target = new THREE.Vector3(o.tx ?? -0.4, o.ty ?? 5.4, o.tz ?? 0);
   camera.position.set(target.x + Math.sin(azim) * Math.cos(elev) * dist, target.y + Math.sin(elev) * dist, target.z + Math.cos(azim) * Math.cos(elev) * dist);
   camera.lookAt(target);
   camera.updateMatrixWorld();
@@ -753,12 +779,18 @@ export default async function render({ w, h, variant = 0, opts = {} }) {
   scene.add(floor);
 
   // grains
-  const variants = Array.from({ length: 8 }, (_, i) => pelletGeometry(i + 1 + variant * 31));
-  const P = layout(variants, 11 + variant * 101, o);
+  const variants = Array.from({ length: 12 }, (_, i) => pelletGeometry(i + 1 + variant * 31));
+  // grains isolés : on écarte ceux que le cadre couperait (un grain à moitié hors champ fait accidentel)
+  const P = layout(variants, 11 + variant * 101, o).filter((p) => {
+    if (p.zone !== 'scatter') return true;
+    const v = p.c.clone().project(camera);
+    return Math.abs(v.x) < 0.86 && v.y > -0.9;
+  });
+  mark(`grains isolés gardés : ${P.filter((p) => p.zone === 'scatter').length}`);
   // grains visibles à travers le verre : opaques (la transmission du verre ne voit que les objets opaques) ;
   // tous les autres : transmission partielle, face arrière comprise, pour une vraie translucidité.
-  const pmatO = pelletMaterial(o, 0);
-  const pmatT = pelletMaterial(o, o.iceTrans ?? 0.4);
+  const pmatO = pelletMaterial({ ...o, iceColor: o.iceColorIn ?? '#c4d5e7', edge: o.edgeIn ?? 1.5 }, 0);
+  const pmatT = pelletMaterial(o, o.iceTrans ?? 0.45);
   const inGlass = (p) => p.c.y < GLASS.h + 0.6 && Math.hypot(p.c.x - GLASS.x, p.c.z - GLASS.z) < rOut(Math.min(p.c.y, GLASS.h)) + 0.3;
   const groups = [];
   variants.forEach(() => { groups.push([]); groups.push([]); });
@@ -789,11 +821,11 @@ export default async function render({ w, h, variant = 0, opts = {} }) {
   scene.add(glass);
   const gd = glassDroplets(77 + variant, o.nGlassDrops ?? 700);
   scene.add(gd);
-  const fd = floorDroplets(P, 91 + variant, o.nFloorDrops ?? 260);
+  const fd = floorDroplets(P, 91 + variant, o.nFloorDrops ?? 420);
   scene.add(fd);
 
   // lumières
-  const key = new THREE.SpotLight(new THREE.Color(o.keyColor ?? '#f3f8ff'), o.key ?? 2.6, 0, 0.42, 0.9, 0);
+  const key = new THREE.SpotLight(new THREE.Color(o.keyColor ?? '#f3f8ff'), o.key ?? 3.8, 0, 0.42, 0.9, 0);
   key.position.set(o.kx ?? -38, o.ky ?? 62, o.kz ?? 34);
   key.target.position.set(0, 2, 0);
   key.castShadow = true;
@@ -803,10 +835,16 @@ export default async function render({ w, h, variant = 0, opts = {} }) {
   key.shadow.radius = o.shadowR ?? 6;
   key.shadow.intensity = o.shadowI ?? 0.75;
   scene.add(key, key.target);
-  const rim = new THREE.SpotLight(new THREE.Color(o.rimColor ?? '#9fd4ff'), o.rim ?? 3.2, 0, 0.5, 0.8, 0);
+  const rim = new THREE.SpotLight(new THREE.Color(o.rimColor ?? '#9fd4ff'), o.rim ?? 4.5, 0, 0.5, 0.8, 0);
   rim.position.set(o.rx ?? 30, o.ry ?? 34, o.rz ?? -52);
   rim.target.position.set(-1, 3, 0);
   scene.add(rim, rim.target);
+  // éclats : petites sources ponctuelles qui allument le vernis humide des grains
+  for (const [x, y, z, k] of [[-30, 50, 40, 1], [24, 40, 36, 0.7], [-8, 30, 60, 0.5]]) {
+    const pl = new THREE.PointLight(0xffffff, (o.glintL ?? 2.2) * k, 0, 0);
+    pl.position.set(x, y, z);
+    scene.add(pl);
+  }
   const fill = new THREE.DirectionalLight(new THREE.Color('#cfe2ff'), o.fill ?? 0.45);
   fill.position.set(40, 14, 40);
   scene.add(fill);
