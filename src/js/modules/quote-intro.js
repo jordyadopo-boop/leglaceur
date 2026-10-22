@@ -112,13 +112,17 @@ export default function init(root) {
     tl.from(frostPaths, { drawSVG: '0%', duration: 1.8, ease: 'power2.out', stagger: { each: 0.004, from: 'start' } }, 0);
   }
   tl.from(crumbs, { opacity: 0, y: -10, duration: 0.6 }, 0.05);
-  let split = null;
-  if (title) {
-    split = SplitText.create(title, { type: 'lines,chars', linesClass: 'split-line', mask: 'lines' });
-    tl.from(split.chars, {
-      yPercent: 115, rotate: 7, filter: 'blur(8px)', opacity: 0,
-      duration: 1.05, stagger: { each: 0.022 },
-    }, 0.12);
+  // Les lettres de la 1re ligne « gèlent » une à une ; la ligne en texte glacé (background-clip) se révèle d'un bloc,
+  // car découper un texte à fond découpé casserait son dégradé.
+  const plain = title?.querySelector('.quote-intro__line:not(.ice-text)');
+  const hl = title?.querySelector('.quote-intro__hl');
+  if (plain) {
+    const split = SplitText.create(plain, { type: 'chars' });
+    tl.from(split.chars, { yPercent: 60, rotate: 7, filter: 'blur(8px)', opacity: 0, duration: 1.05, stagger: { each: 0.022 } }, 0.12);
+  }
+  if (hl) {
+    tl.fromTo(hl, { clipPath: 'inset(0 100% 0 0)', filter: 'blur(10px)', x: -20 },
+      { clipPath: 'inset(0 0% 0 0)', filter: 'blur(0px)', x: 0, duration: 1.3, ease: 'power3.out', clearProps: 'clipPath,filter,transform' }, 0.5);
   }
   tl.from(items, { opacity: 0, y: 26, filter: 'blur(6px)', duration: 0.9, stagger: 0.09, clearProps: 'filter' }, 0.45)
     .from(steps, {

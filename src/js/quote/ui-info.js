@@ -12,7 +12,7 @@ import * as store from '../core/quote-store.js';
 import { jump } from './ui-fx.js';
 
 const NBSP = ' ';
-const nbsp = (s) => String(s).replace(/ (:|;|!|\?)/g, `${NBSP}$1`).replace(/(\d) (kg)/g, `$1${NBSP}$2`);
+const nbsp = (s) => String(s).replace(/ (:|;|!|\?)/g, `${NBSP}$1`).replace(/(\d) (kg|°C|%)/g, `$1${NBSP}$2`);
 
 export function initInfo(root, { onAdd } = {}) {
   const dlg = root.querySelector('[data-info-dialog]');

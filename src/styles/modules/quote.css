@@ -35,15 +35,16 @@
   object-fit: cover; object-position: 50% 40%;
   /* La glace sombre devient une vitre givrée claire : fissures et cristaux bleu pâle. */
   filter: grayscale(1) invert(1) contrast(1.35) brightness(1.04);
-  mix-blend-mode: multiply; opacity: 0.32;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 65%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 65%, transparent 100%);
+  mix-blend-mode: multiply; opacity: 0.16;
+  -webkit-mask-image: radial-gradient(90% 80% at 85% 30%, #000 0%, rgba(0, 0, 0, 0.4) 55%, transparent 85%);
+  mask-image: radial-gradient(90% 80% at 85% 30%, #000 0%, rgba(0, 0, 0, 0.4) 55%, transparent 85%);
 }
 .quote-intro__glow { position: absolute; border-radius: 50%; filter: blur(60px); }
 .quote-intro__glow--a { width: 52vw; height: 52vw; max-width: 760px; max-height: 760px; right: -12vw; top: -18vw; background: radial-gradient(circle, rgba(142, 207, 255, 0.55), rgba(142, 207, 255, 0) 70%); }
 .quote-intro__glow--b { width: 40vw; height: 40vw; max-width: 560px; max-height: 560px; left: -14vw; bottom: -16vw; background: radial-gradient(circle, rgba(77, 155, 255, 0.28), rgba(77, 155, 255, 0) 70%); }
 .quote-intro__frost { position: absolute; inset: 0; width: 100%; height: 100%; }
-.quote-intro__frost-p { stroke: #ffffff; stroke-width: 1.1; opacity: 0.95; filter: drop-shadow(0 0 1.5px rgba(77, 155, 255, 0.55)); }
+.quote-intro__frost-p { stroke: #8ecfff; stroke-width: 1.1; opacity: 0.75; }
+.quote-intro__frost { filter: drop-shadow(0 1px 0 #fff); }
 .quote-intro__frost-p--4 { stroke-width: 2.4; }
 .quote-intro__frost-p--3 { stroke-width: 1.7; }
 .quote-intro__frost-p--1 { stroke-width: 0.8; opacity: 0.8; }
@@ -83,6 +84,7 @@
 .quote-intro__crumbs a:hover { color: var(--blue-600); text-decoration: underline; }
 .quote-intro__title { font-size: clamp(2.6rem, 7.2vw, 6rem); color: var(--ink-900); line-height: 0.9; }
 .quote-intro__line { display: block; }
+.quote-intro__hl { display: block; width: fit-content; }
 .quote-intro__hl { padding-bottom: 0.04em; }
 .quote-intro__lead { font-size: var(--fs-lead); color: var(--text-muted); max-width: 54ch; line-height: 1.55; }
 .quote-intro__perks { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; }
@@ -539,7 +541,7 @@
   display: grid; grid-template-columns: auto 1fr auto; gap: 0.7rem; align-items: baseline;
   padding: 0.55rem 0; border-bottom: 1px dashed var(--line-strong); overflow: hidden;
 }
-.quote-summary__qty { font-family: var(--font-display); font-weight: 800; color: var(--blue-600); font-variant-numeric: tabular-nums; min-width: 3ch; display: inline-block; }
+.quote-summary__qty { font-family: var(--font-display); font-weight: 800; color: var(--blue-600); font-variant-numeric: tabular-nums; width: 4.2ch; display: inline-block; white-space: nowrap; }
 .quote-summary__name { display: grid; min-width: 0; font-weight: 600; color: var(--ink-900); line-height: 1.25; }
 .quote-summary__name small { font-weight: 500; color: var(--text-soft); font-size: 0.82rem; }
 .quote-summary__amount { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--ink-900); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -561,7 +563,7 @@
 }
 .quote-summary__row--total::before { /* givre qui borde la bande */
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(60% 120% at 100% 0%, rgba(77, 155, 255, 0.4), transparent 60%), var(--noise); opacity: 0.8;
+  background: radial-gradient(60% 120% at 100% 0%, rgba(77, 155, 255, 0.45), transparent 60%), linear-gradient(115deg, rgba(191, 228, 255, 0.14), transparent 40%);
 }
 .quote-summary__row--total dt { color: var(--ice-300); font-family: var(--font-display); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.88rem; }
 .quote-summary__row--total dd { text-align: left; color: #fff; }

@@ -78,7 +78,7 @@ export async function buildXlsx(q, { logo = null } = {}) {
       orientation: 'portrait',
       fitToPage: true,
       fitToWidth: 1,
-      fitToHeight: 0,
+      fitToHeight: 1, // le devis tient sur une seule page A4
       horizontalCentered: true,
       margins: { left: 0.4, right: 0.4, top: 0.45, bottom: 0.6, header: 0.2, footer: 0.3 },
     },
@@ -87,11 +87,11 @@ export async function buildXlsx(q, { logo = null } = {}) {
     },
   });
   ws.columns = [
-    { key: 'a', width: 34 },
-    { key: 'b', width: 21 },
-    { key: 'c', width: 18 },
+    { key: 'a', width: 32 },
+    { key: 'b', width: 20 },
+    { key: 'c', width: 22 },
     { key: 'd', width: 13 },
-    { key: 'e', width: 25 },
+    { key: 'e', width: 24 },
   ];
 
   const band = (r1, r2, title, sub) => {
@@ -280,7 +280,7 @@ export async function buildXlsx(q, { logo = null } = {}) {
     ? pickupHint
     : count >= freeFrom
       ? `Livraison offerte${NBSP}: votre commande compte ${count} articles.`
-      : `Plus que ${freeFrom - count} article(s) pour la livraison offerte (dès ${freeFrom} articles).`;
+      : `Plus que ${freeFrom - count} article${freeFrom - count > 1 ? 's' : ''} pour la livraison offerte (dès ${freeFrom} articles).`;
 
   const labelCell = (row, text, from = 'A', to = 'D', opts = {}) => {
     ws.mergeCells(`${from}${row}:${to}${row}`);
@@ -351,7 +351,7 @@ export async function buildXlsx(q, { logo = null } = {}) {
   ws.mergeCells(`A${R.hint}:E${R.hint}`);
   const hint = ws.getCell(`A${R.hint}`);
   hint.value = {
-    formula: `IF(${MODE}="${PICKUP}","${pickupHint}",IF(${COUNT}>=${freeFrom},"Livraison offerte${NBSP}: votre commande compte "&${COUNT}&" articles.","Plus que "&(${freeFrom}-${COUNT})&" article(s) pour la livraison offerte (dès ${freeFrom} articles)."))`,
+    formula: `IF(${MODE}="${PICKUP}","${pickupHint}",IF(${COUNT}>=${freeFrom},"Livraison offerte${NBSP}: votre commande compte "&${COUNT}&" articles.","Plus que "&(${freeFrom}-${COUNT})&" article"&IF(${freeFrom}-${COUNT}>1,"s","")&" pour la livraison offerte (dès ${freeFrom} articles)."))`,
     result: hintResult,
   };
   hint.font = f({ size: 10, italic: true, bold: true, color: COL.blue });
@@ -412,7 +412,7 @@ export async function buildXlsx(q, { logo = null } = {}) {
     v.font = f({ size: 10.5, bold: key === 'name', color: COL.ink });
     v.fill = solid(COL.ice100);
     v.border = edit();
-    v.alignment = { vertical: key === 'note' ? 'top' : 'middle', indent: 1, wrapText: key === 'note' || key === 'address' };
+    v.alignment = { horizontal: 'left', vertical: key === 'note' ? 'top' : 'middle', indent: 1, wrapText: key === 'note' || key === 'address' };
     for (const c of 'BCDE') ws.getCell(`${c}${row}`).protection = { locked: false };
     if (key === 'date' && values.date instanceof Date) v.numFmt = 'dd/mm/yyyy';
     if (key === 'mode') {

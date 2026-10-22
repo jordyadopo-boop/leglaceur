@@ -3,7 +3,9 @@
  * livraison (« Offerte » / « Hors frais de livraison » / « Retrait — gratuit »), TOTAL qui « gèle »,
  * nombre d'articles, poids ; mini-jauge ; barre basse mobile ; annonce aria-live (différée).
  */
-import { DELIVERY } from '../config.js';
+import { DELIVERY, SKUS } from '../config.js';
+
+const ORDER = Object.keys(SKUS);
 import { fcfa, fcfaShort } from '../core/format.js';
 import { gsap, reducedMotion } from '../core/motion.js';
 import { tweenNumber, setNumber, freeze, pulse } from './ui-fx.js';
@@ -52,7 +54,8 @@ export function initSummary(root) {
     return li;
   }
 
-  function renderLines(lines, initial) {
+  function renderLines(rawLines, initial) {
+    const lines = [...rawLines].sort((a, b) => ORDER.indexOf(a.sku) - ORDER.indexOf(b.sku));
     const keep = new Set(lines.map((l) => l.sku));
     // Sorties
     for (const [sku, node] of lineNodes) {

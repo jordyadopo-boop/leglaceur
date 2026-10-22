@@ -318,7 +318,7 @@ export async function buildPdf(q, opts = {}) {
 /** Espacements (mm) des deux mises en page. */
 const LAYOUT = {
   roomy: { greet: true, cardLine: 4, cardPad: 1.7, afterCards: 8, cellPad: 2.2, rowH: 10, gap: 5.5, gapCta: 5, gapMentions: 6 },
-  tight: { greet: false, cardLine: 3.8, cardPad: 1.4, afterCards: 6.5, cellPad: 1.6, rowH: 8.8, gap: 4.5, gapCta: 4, gapMentions: 5 },
+  tight: { greet: false, cardLine: 3.8, cardPad: 1.3, afterCards: 6.5, cellPad: 1.5, rowH: 8.6, gap: 4.5, gapCta: 3.5, gapMentions: 4.5 },
 };
 
 function renderPdf(q, { fonts = null, logo = null } = {}, tightMode = false) {
@@ -823,12 +823,12 @@ function renderPdf(q, { fonts = null, logo = null } = {}, tightMode = false) {
   if (note) {
     font('regular', 8.4);
     const nl = wrap(note, CW - 10).slice(0, 6);
-    const nh = 9.5 + nl.length * 3.8;
+    const nh = (tightMode ? 8 : 9.5) + nl.length * 3.8;
     if (y + K.gapCta + nh > LIMIT) y = newPage();
     else y += K.gapCta;
     eyebrow('VOTRE NOTE', M, y + 2);
     font('regular', 8.4, C.muted);
-    nl.forEach((ln, i) => text(ln, M + 6.5, y + 7.6 + i * 3.8));
+    nl.forEach((ln, i) => text(ln, M + 6.5, y + (tightMode ? 6.8 : 7.6) + i * 3.8));
     y += nh;
   }
 
@@ -885,8 +885,11 @@ function renderPdf(q, { fonts = null, logo = null } = {}, tightMode = false) {
     doc.circle(cx, cy, 2.45, 'F');
     fill(C.white);
     [-1.1, 0, 1.1].forEach((d) => doc.circle(cx + d, cy, 0.4, 'F'));
-    font('black', 12.4, C.white);
-    spaced('ENVOYER CE DEVIS SUR WHATSAPP', bx + 14, cy + 1.55, { cs: 0.35 });
+    const label = 'ENVOYER CE DEVIS SUR WHATSAPP';
+    let ls = 12.4;
+    font('black', ls, C.white);
+    while (ls > 8 && width(label) + 0.35 * (label.length - 1) > bw - 14 - 10) font('black', (ls -= 0.4), C.white);
+    spaced(label, bx + 14, cy + ls * 0.125, { cs: 0.35 });
     stroke(C.white, 0.6);
     doc.setLineCap('round');
     doc.line(bx + bw - 7.2, cy - 1.7, bx + bw - 5.5, cy);
