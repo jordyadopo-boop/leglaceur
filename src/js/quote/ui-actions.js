@@ -300,7 +300,7 @@ export function initActions(root, { client, drawer, items }) {
         toast(`Devis PDF téléchargé : ${pdf.name}`);
       } else {
         const docs = await loadDocs();
-        const blob = await (kind === 'png' ? docs.createImage(q) : docs.createXlsx(q));
+        const blob = await (kind === 'png' ? docs.createImage(q, (await pdfFor(q)).blob) : docs.createXlsx(q));
         const name = docs.quoteFileName(q, kind);
         download(blob, name);
         toast(`Devis ${kind === 'png' ? 'en image' : 'Excel'} téléchargé : ${name}`);
