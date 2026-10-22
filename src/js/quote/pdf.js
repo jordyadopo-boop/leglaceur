@@ -51,7 +51,7 @@ const PW = 210;
 const PH = 297;
 const M = 14;
 const CW = PW - 2 * M;
-const LIMIT = 272; // bas de la zone de contenu (le pied de page commence à 278)
+const LIMIT = 274; // bas de la zone de contenu (le filet du pied de page est à 279)
 const CONT_TOP = 31; // haut du contenu sur les pages « suite »
 
 /* ---------- Polices ---------- */
@@ -301,7 +301,28 @@ function paintBand({ hMm, wave, seed, compact = false }) {
 }
 
 /* ---------- Générateur ---------- */
-export async function buildPdf(q, { fonts = null, logo = null } = {}) {
+/**
+ * Deux passes : mise en page aérée, puis, si le devis déborde sur une 2e page alors que la commande est courte,
+ * mise en page resserrée (sans phrase d'accueil, lignes plus compactes) pour tout garder sur une seule page.
+ */
+export async function buildPdf(q, opts = {}) {
+  const roomy = renderPdf(q, opts, false);
+  const n = (q.lines || []).filter((l) => l && l.qty > 0).length;
+  if (roomy.getNumberOfPages() > 1 && n <= 8) {
+    const tight = renderPdf(q, opts, true);
+    if (tight.getNumberOfPages() < roomy.getNumberOfPages()) return tight.output('blob');
+  }
+  return roomy.output('blob');
+}
+
+/** Espacements (mm) des deux mises en page. */
+const LAYOUT = {
+  roomy: { greet: true, cardLine: 4, cardPad: 1.7, afterCards: 8, cellPad: 2.2, rowH: 10, gap: 5.5, gapCta: 5, gapMentions: 6 },
+  tight: { greet: false, cardLine: 3.8, cardPad: 1.4, afterCards: 6.5, cellPad: 1.6, rowH: 8.8, gap: 4.5, gapCta: 4, gapMentions: 5 },
+};
+
+function renderPdf(q, { fonts = null, logo = null } = {}, tightMode = false) {
+  const K = tightMode ? LAYOUT.tight : LAYOUT.roomy;
   const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
   const F = setupFonts(doc, fonts);
   const T = makeT(F.latin1);
@@ -351,7 +372,8 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
   const link = (x, y, w, h, url) => doc.link(x, y, w, h, { url });
 
   /* -- images -- */
-  const fullBand = paintBand({ hMm: 64, wave: [51, 62, 59, 128, 38.5, 46], seed: `${number}-full` });
+  const BAND_H = 58;
+  const fullBand = paintBand({ hMm: BAND_H, wave: [45.5, 62, 52.5, 128, 34, 40.5], seed: `${number}-full` });
   let compactBand = null;
   const logoImg = logo?.dataUrl ? logo : null;
 
@@ -369,22 +391,22 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
   };
 
   /* ---------------- 1. Bandeau ---------------- */
-  doc.addImage(fullBand, 'JPEG', 0, 0, PW, 64, 'lg-band-full', 'NONE');
-  drawLogo(M, 11.5, 70);
+  doc.addImage(fullBand, 'JPEG', 0, 0, PW, BAND_H, 'lg-band-full', 'NONE');
+  drawLogo(M, 9.5, 68);
   font('cond', 7.6, C.ice300);
-  spaced(BRAND.values.map((v) => v.label.toUpperCase()).join('  ·  '), M + 0.6, 41.2, { cs: 0.55 });
+  spaced(BRAND.values.map((v) => v.label.toUpperCase()).join('  ·  '), M + 0.6, 37.6, { cs: 0.55 });
 
   font('black', 46, C.white);
-  spaced('DEVIS', PW - M, 27.5, { cs: 1.2, align: 'right' });
+  spaced('DEVIS', PW - M, 24.5, { cs: 1.2, align: 'right' });
   font('cond', 12.5, C.white);
-  spaced(`N°${NBSP}${number}`, PW - M, 34.6, { cs: 0.35, align: 'right' });
+  spaced(`N°${NBSP}${number}`, PW - M, 31.4, { cs: 0.35, align: 'right' });
   font('regular', 8.4, C.ice200);
-  text(`Établi le ${formatQuoteDate(q.date)}  ·  valable jusqu’au ${formatQuoteDate(q.validUntil)}`, PW - M, 40.2, { align: 'right' });
+  text(`Établi le ${formatQuoteDate(q.date)}  ·  valable jusqu’au ${formatQuoteDate(q.validUntil)}`, PW - M, 37, { align: 'right' });
 
   /* ---------------- 2. Accueil + cartes ---------------- */
-  let y = 72;
+  let y = 61;
   const name = cleanSpaces(q.client?.name || '').trim();
-  {
+  if (K.greet) {
     const parts = name
       ? [['regular', 'Merci '], ['semibold', name], ['regular', ` pour votre demande. Voici le détail de votre devis${NBSP}:`]]
       : [['regular', `Merci pour votre demande. Voici le détail de votre devis${NBSP}:`]];
@@ -401,7 +423,7 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
       x += width(s);
     }
   }
-  y += 6;
+  y = K.greet ? y + 4.6 : 61.5;
 
   const cardW = (CW - 6) / 2;
   const icon = (kind, cx, cy) => {
@@ -450,14 +472,14 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
     font('semibold', 9.4);
     return rows.map(([label, value]) => {
       const ls = wrap(value, valueW).slice(0, 3);
-      return { label, lines: ls, h: Math.max(1, ls.length) * 4.1 + 2.2 };
+      return { label, lines: ls, h: Math.max(1, ls.length) * K.cardLine + K.cardPad };
     });
   };
-  const cardHeader = 14;
+  const cardHeader = 12.4;
   const valueX = 25;
   const cRows = layoutRows(clientRows(q), cardW - valueX - 5);
   const dRows = layoutRows(deliveryRows(q), cardW - valueX - 5);
-  const cardH = cardHeader + Math.max(cRows.reduce((a, r) => a + r.h, 0), dRows.reduce((a, r) => a + r.h, 0)) + 3.5;
+  const cardH = cardHeader + Math.max(cRows.reduce((a, r) => a + r.h, 0), dRows.reduce((a, r) => a + r.h, 0)) + 2.4;
 
   const card = (x, title, kind, rows, pill) => {
     fill(C.ice50);
@@ -468,25 +490,25 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
       fill(C.white);
       doc.roundedRect(x + 0.6, y + 0.6, cardW - 1.2, cardHeader - 2.4, 2.6, 2.6, 'F');
     });
-    icon(kind, x + 8.2, y + 7);
+    icon(kind, x + 8.2, y + 6.2);
     font('black', 11, C.ink);
-    spaced(title, x + 14.4, y + 8.6, { cs: 0.45 });
+    spaced(title, x + 14.4, y + 7.8, { cs: 0.45 });
     if (pill) {
       font('cond', 7.6, pill.color);
       const pw = width(pill.text) + 0.3 * (pill.text.length - 1) + 6;
       fill(pill.bg);
       stroke(pill.line, 0.25);
-      doc.roundedRect(x + cardW - 5 - pw, y + 4, pw, 5.6, 2.8, 2.8, 'FD');
-      spaced(pill.text, x + cardW - 5 - pw / 2, y + 7.75, { cs: 0.3, align: 'center' });
+      doc.roundedRect(x + cardW - 5 - pw, y + 3.4, pw, 5.6, 2.8, 2.8, 'FD');
+      spaced(pill.text, x + cardW - 5 - pw / 2, y + 7.15, { cs: 0.3, align: 'center' });
     }
     stroke(C.ice200, 0.25);
     doc.line(x + 4, y + cardHeader - 1.2, x + cardW - 4, y + cardHeader - 1.2);
-    let ry = y + cardHeader + 3.4;
+    let ry = y + cardHeader + 3.2;
     for (const row of rows) {
       font('regular', 8, C.soft);
       text(row.label, x + 5, ry);
       font('semibold', 9.4, C.ink);
-      row.lines.forEach((ln, i) => text(ln, x + valueX, ry + i * 4.1));
+      row.lines.forEach((ln, i) => text(ln, x + valueX, ry + i * K.cardLine));
       ry += row.h;
     }
   };
@@ -502,7 +524,7 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
   card(M, 'CLIENT', 'client', cRows, null);
   card(M + cardW + 6, pickup ? 'RETRAIT SUR PLACE' : 'LIVRAISON', pickup ? 'pin' : 'truck', dRows, statusPill);
   if (pickup) link(M + cardW + 6, y + cardHeader, cardW, cardH - cardHeader, mapsUrl);
-  y += cardH + 9;
+  y += cardH + K.afterCards;
 
   /* ---------------- 3. Tableau ---------------- */
   const eyebrow = (s, x, yy, color = C.blue) => {
@@ -523,7 +545,7 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
   };
 
   eyebrow(`VOTRE COMMANDE  ·  ${lines.length} ${lines.length > 1 ? 'RÉFÉRENCES' : 'RÉFÉRENCE'}`, M, y);
-  y += 3.5;
+  y += 3;
 
   const head = ['Désignation', 'Format', 'Qté', 'Prix unitaire', 'Montant'];
   const aligns = ['left', 'left', 'center', 'right', 'right'];
@@ -544,14 +566,14 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
       fontStyle: F.regular[1],
       fontSize: 9.4,
       textColor: C.ink,
-      cellPadding: { top: 2.6, bottom: 2.6, left: 3.2, right: 3.2 },
+      cellPadding: { top: K.cellPad, bottom: K.cellPad, left: 3.2, right: 3.2 },
       lineColor: C.ice200,
       lineWidth: { bottom: 0.2 },
       valign: 'middle',
-      minCellHeight: 11.2,
+      minCellHeight: K.rowH,
       overflow: 'ellipsize',
     },
-    headStyles: { fillColor: C.ink, textColor: C.white, minCellHeight: 9, lineWidth: 0 },
+    headStyles: { fillColor: false, textColor: C.white, minCellHeight: 8.6, lineWidth: 0 },
     alternateRowStyles: { fillColor: C.ice50 },
     columnStyles: {
       0: { cellWidth: 'auto' },
@@ -568,6 +590,15 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
         data.cell.text = [''];
       }
     },
+    willDrawCell(data) {
+      // En-tête : un seul aplat marine sur toute la largeur (pas de jointures visibles entre cellules).
+      if (data.section === 'head' && data.column.index === 0) {
+        fill(C.ink);
+        doc.rect(data.cell.x, data.cell.y, CW, data.cell.height, 'F');
+        fill(C.ice300);
+        doc.rect(data.cell.x, data.cell.y + data.cell.height - 0.55, CW, 0.55, 'F');
+      }
+    },
     didDrawCell(data) {
       const { cell } = data;
       const i = data.column.index;
@@ -575,9 +606,7 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
         font('cond', 8.4, C.white);
         const label = head[i].toUpperCase();
         const x = aligns[i] === 'right' ? cell.x + cell.width - 3.2 : aligns[i] === 'center' ? cell.x + cell.width / 2 : cell.x + 3.2;
-        spaced(label, x, cell.y + cell.height / 2 + 1.05, { cs: 0.45, align: aligns[i] });
-        fill(C.ice300);
-        doc.rect(cell.x, cell.y + cell.height - 0.55, cell.width, 0.55, 'F');
+        spaced(label, x, cell.y + cell.height / 2 + 0.9, { cs: 0.45, align: aligns[i] });
       } else if (data.section === 'body' && i === 0) {
         const l = lines[data.row.index];
         const alias = l ? productAlias(l) : '';
@@ -587,9 +616,9 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
         let nm = T(l ? l.name : body[0][0]);
         while (doc.getTextWidth(nm) > maxW && nm.length > 4) nm = `${nm.slice(0, -2)}…`;
         if (alias) {
-          text(nm, cell.x + 3.2, cy - 0.45);
+          text(nm, cell.x + 3.2, cy - (tightMode ? 0.55 : 0.35));
           font('regular', 7.4, C.soft);
-          text(alias, cell.x + 3.2, cy + 3.15);
+          text(alias, cell.x + 3.2, cy + (tightMode ? 2.75 : 3.05));
         } else {
           text(nm, cell.x + 3.2, cy + 1.2);
         }
@@ -611,35 +640,64 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
   /* ---------------- 4. Totaux ---------------- */
   const pending = excludesDelivery(q);
   const transport = transportText(q);
-  const rightX = M + CW - 86;
+  const count = q.count || 0;
   const rightW = 86;
+  const rightX = M + CW - rightW;
+  const lw = CW - rightW - 7;
   font('semibold', 9.2);
   const transportLines = wrap(transport, rightW - 31);
-  const totalsH = 8 + 7.2 + 4.6 * transportLines.length + 4 + (pending ? 21 : 18);
-  const leftH = 46;
-  const blockH = Math.max(totalsH, leftH) + 6;
-  if (y + blockH > LIMIT) y = newPage();
-  else y += 7;
+  const barH = pending ? 19 : 16.5;
+  const totalsH = 4.6 + 6.8 + 4.4 * (transportLines.length - 1) + 4 + 3.2 + barH;
+
+  // État du transport (colonne gauche) : retrait, livraison offerte, ou jauge « plus que N articles ».
+  let stTitle;
+  let stSub;
+  let palette;
+  let gauge = null;
+  if (pickup) {
+    stTitle = `Retrait gratuit à ${BRAND.address.street}`;
+    stSub = `Ouvert ${BRAND.hours.replace(/\s*·\s*/, ' et ')}. Cliquez ici pour l’itinéraire.`;
+    palette = { bg: C.ice50, line: C.ice200, color: C.blue };
+  } else if (free) {
+    stTitle = 'Livraison offerte';
+    stSub = `Votre commande compte ${num(count)}${NBSP}articles${NBSP}: la livraison est offerte dès ${freeFrom(q)}${NBSP}articles.`;
+    palette = { bg: C.okBg, line: C.okLine, color: C.ok };
+    gauge = 1;
+  } else {
+    const n = remainingForFree(q);
+    stTitle = `Plus que ${n}${NBSP}article${n > 1 ? 's' : ''} pour la livraison offerte`;
+    stSub = `Devis établi hors frais de livraison${NBSP}: ${BRAND.name} vous communique le tarif.`;
+    palette = { bg: C.warnBg, line: C.warnLine, color: C.warn };
+    gauge = Math.min(1, count / freeFrom(q));
+  }
+  font('regular', 7.4);
+  const stSubLines = wrap(stSub, lw - 15).slice(0, 3);
+  const statusH = 9.4 + (gauge !== null ? 4 : 0) + stSubLines.length * 3.4 + 0.8;
+  const tileH = 14;
+  const leftH = tileH + 3 + statusH;
+  const blockH = Math.max(totalsH, leftH);
+  if (y + K.gap + blockH > LIMIT) y = newPage();
+  else y += K.gap;
 
   // -- colonne droite : totaux
   {
-    let ty = y + 5;
+    let ty = y + 4.6;
     font('regular', 9.4, C.muted);
     text('Sous-total', rightX + 4, ty);
     font('semibold', 10.4, C.ink);
     text(money(q.subtotal), rightX + rightW - 4, ty, { align: 'right' });
-    ty += 7.2;
+    ty += 6.8;
     font('regular', 9.4, C.muted);
     text('Transport', rightX + 4, ty);
     font('semibold', 9.2, pickup ? C.blue : free ? C.ok : C.warn);
     transportLines.forEach((ln, i) => text(ln, rightX + rightW - 4, ty + i * 4.4, { align: 'right' }));
-    ty += 4.4 * (transportLines.length - 1) + 4.2;
+    ty += 4.4 * (transportLines.length - 1) + 4;
     stroke(C.ice200, 0.3);
     doc.line(rightX + 4, ty, rightX + rightW - 4, ty);
-    ty += 3.4;
+    ty += 3.2;
 
-    // barre TOTAL facettée
-    const bh = pending ? 21 : 18;
+    // barre TOTAL facettée (bloc de glace marine)
+    const bh = barH;
     fill(C.ink);
     doc.roundedRect(rightX, ty, rightW, bh, 3.4, 3.4, 'F');
     withAlpha(0.07, () => {
@@ -656,66 +714,55 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
       doc.line(rightX + 3.4, ty + 0.35, rightX + rightW - 3.4, ty + 0.35);
     });
     font('black', 15, C.white);
-    spaced('TOTAL', rightX + 5.5, ty + (pending ? 9.4 : 11.2), { cs: 0.7 });
+    spaced('TOTAL', rightX + 5.5, ty + (pending ? 8.6 : bh / 2 + 2.2), { cs: 0.7 });
     if (pending) {
       font('regular', 7.6, C.ice300);
-      text(`(${DELIVERY.paidLabel.toLowerCase()})`, rightX + 5.5, ty + 14.6);
+      text(`(${DELIVERY.paidLabel.toLowerCase()})`, rightX + 5.5, ty + 13.8);
     }
     font('black', 21, C.white);
-    text(money(q.total), rightX + rightW - 5.5, ty + bh / 2 + 2.9, { align: 'right' });
+    const tw = money(q.total);
+    let size = 21;
+    const maxTw = rightW - 11 - (pending ? 30 : 24);
+    while (size > 14 && width(tw) > maxTw) {
+      size -= 1;
+      font('black', size, C.white);
+    }
+    text(tw, rightX + rightW - 5.5, ty + bh / 2 + size * 0.135, { align: 'right' });
   }
 
-  // -- colonne gauche : articles, poids, état de la livraison
+  // -- colonne gauche : articles, poids, état du transport
   {
-    const lw = CW - rightW - 7;
     const tileW = (lw - 4) / 2;
     const stat = (x, label, value, sub) => {
       fill(C.white);
       stroke(C.ice200, 0.3);
-      doc.roundedRect(x, y, tileW, 17, 2.6, 2.6, 'FD');
-      font('cond', 7.4, C.soft);
-      spaced(label, x + 4, y + 5.4, { cs: 0.45 });
-      font('black', 16, C.ink);
+      doc.roundedRect(x, y, tileW, tileH, 2.6, 2.6, 'FD');
+      font('cond', 7.2, C.soft);
+      spaced(label, x + 4, y + 4.9, { cs: 0.45 });
+      font('black', 14.5, C.ink);
       const vw = width(value);
-      text(value, x + 4, y + 13.2);
+      text(value, x + 4, y + 11.3);
       if (sub) {
-        font('regular', 7, C.soft);
-        text(sub, x + 4 + vw + 1.6, y + 13.2);
+        font('regular', 6.8, C.soft);
+        if (width(sub) <= tileW - 9.6 - vw) text(sub, x + 4 + vw + 1.6, y + 11.3);
       }
     };
-    const noWeight = lines.filter((l) => !l.kg).map((l) => l.units).filter(Boolean);
-    stat(M, 'ARTICLES', num(q.count || 0), (q.count || 0) > 1 ? 'au total' : '');
-    stat(M + tileW + 4, 'POIDS INDICATIF', q.totalKg > 0 ? `${num(q.totalKg)}${NBSP}kg` : '—', noWeight.length && q.totalKg > 0 ? `hors ${noWeight.join(', ')}` : '');
+    const noWeight = [...new Set(lines.filter((l) => !l.kg).map((l) => cleanSpaces(l.name)))];
+    stat(M, 'ARTICLES', num(count), count > 1 ? 'au total' : '');
+    stat(
+      M + tileW + 4,
+      'POIDS INDICATIF',
+      q.totalKg > 0 ? `${num(q.totalKg)}${NBSP}kg` : '—',
+      noWeight.length && q.totalKg > 0 ? `hors ${noWeight.join(', ')}` : '',
+    );
 
-    // état livraison
-    const by = y + 21;
-    const bw = lw;
-    let title;
-    let sub;
-    let palette;
-    if (pickup) {
-      title = `Retrait gratuit à ${BRAND.address.street}`;
-      sub = `Ouvert ${BRAND.hours.replace(/\s*·\s*/, ' et ')} — voir l’itinéraire`;
-      palette = { bg: C.ice50, line: C.ice200, color: C.blue };
-    } else if (free) {
-      title = 'Livraison offerte';
-      sub = `Votre commande compte ${num(q.count)} articles : offerte dès ${freeFrom(q)} articles.`;
-      palette = { bg: C.okBg, line: C.okLine, color: C.ok };
-    } else {
-      const n = remainingForFree(q);
-      title = `Plus que ${n} article${n > 1 ? 's' : ''} pour la livraison offerte`;
-      sub = DELIVERY.paidNote;
-      palette = { bg: C.warnBg, line: C.warnLine, color: C.warn };
-    }
-    font('regular', 7.6);
-    const subLines = wrap(sub, bw - 15).slice(0, 3);
-    const bh = 9.6 + subLines.length * 3.6;
+    const by = y + tileH + 3;
     fill(palette.bg);
     stroke(palette.line, 0.3);
-    doc.roundedRect(M, by, bw, bh, 2.6, 2.6, 'FD');
-    // pictogramme : coche (offerte) / repère / flocon
+    doc.roundedRect(M, by, lw, statusH, 2.6, 2.6, 'FD');
+    // pictogramme : coche (offerte) / flocon (hors frais) / repère (retrait)
     const ix = M + 6.2;
-    const iy = by + 6;
+    const iy = by + 5.6;
     fill(palette.color);
     doc.circle(ix, iy, 2.9, 'F');
     stroke(C.white, 0.55);
@@ -723,6 +770,15 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
     if (free) {
       doc.line(ix - 1.3, iy + 0.1, ix - 0.35, iy + 1.1);
       doc.line(ix - 0.35, iy + 1.1, ix + 1.45, iy - 0.95);
+    } else if (pickup) {
+      fill(C.white);
+      doc.moveTo(ix, iy + 1.9);
+      doc.lineTo(ix - 1.1, iy - 0.1);
+      doc.curveTo(ix - 1.7, iy - 1.8, ix + 1.7, iy - 1.8, ix + 1.1, iy - 0.1);
+      doc.close();
+      doc.fill();
+      fill(palette.color);
+      doc.circle(ix, iy - 0.6, 0.5, 'F');
     } else {
       for (let a = 0; a < 3; a++) {
         const ang = (Math.PI / 3) * a + Math.PI / 6;
@@ -730,122 +786,143 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
       }
     }
     doc.setLineCap('butt');
-    font('semibold', 9.2, palette.color);
-    const tl = wrap(title, bw - 15)[0];
-    text(tl, M + 11.5, by + 6.6);
-    font('regular', 7.6, C.muted);
-    subLines.forEach((ln, i) => text(ln, M + 11.5, by + 10.6 + i * 3.6));
-    if (pickup) link(M, by, bw, bh, mapsUrl);
+    const tx = M + 11.5;
+    const innerW = lw - 15;
+    font('semibold', 9, palette.color);
+    let t1 = T(stTitle);
+    while (doc.getTextWidth(t1) > innerW && t1.length > 8) t1 = `${t1.slice(0, -2)}…`;
+    doc.text(t1, tx, by + 6.4);
+    let sy = by + 9.4;
+    if (gauge !== null) {
+      // Jauge givrée : piste claire, remplissage bleu glace (vert si offerte), graduation au seuil.
+      const gw = innerW - 9;
+      const gy = sy;
+      fill(C.white);
+      stroke(palette.line, 0.25);
+      doc.roundedRect(tx, gy, gw, 2, 1, 1, 'FD');
+      if (gauge > 0) {
+        fill(free ? C.ok : C.blue);
+        doc.roundedRect(tx, gy, Math.max(2, gw * gauge), 2, 1, 1, 'F');
+        withAlpha(0.45, () => {
+          fill(C.ice200);
+          doc.roundedRect(tx + 0.5, gy + 0.3, Math.max(1, gw * gauge - 1), 0.55, 0.3, 0.3, 'F');
+        });
+      }
+      font('semibold', 7, palette.color);
+      text(`${num(Math.min(count, 9999))}/${freeFrom(q)}`, tx + innerW, gy + 1.75, { align: 'right' });
+      sy += 4;
+    }
+    font('regular', 7.4, C.muted);
+    stSubLines.forEach((ln, i) => text(ln, tx, sy + 2.6 + i * 3.4));
+    if (pickup) link(M, by, lw, statusH, mapsUrl);
   }
   y += blockH;
 
   /* ---------------- 4 bis. Note du client ---------------- */
   const note = cleanSpaces(q.client?.note || '').trim();
   if (note) {
-    font('regular', 8.6);
+    font('regular', 8.4);
     const nl = wrap(note, CW - 10).slice(0, 6);
-    const nh = 11 + nl.length * 4;
-    if (y + nh > LIMIT) y = newPage();
+    const nh = 9.5 + nl.length * 3.8;
+    if (y + K.gapCta + nh > LIMIT) y = newPage();
+    else y += K.gapCta;
     eyebrow('VOTRE NOTE', M, y + 2);
-    font('regular', 8.6, C.muted);
-    nl.forEach((ln, i) => text(ln, M + 6.5, y + 8 + i * 4));
+    font('regular', 8.4, C.muted);
+    nl.forEach((ln, i) => text(ln, M + 6.5, y + 7.6 + i * 3.8));
     y += nh;
   }
 
-  /* ---------------- 5. Appel à l'action WhatsApp ---------------- */
-  const ctaH = 47;
-  if (y + ctaH + 4 > LIMIT) y = newPage();
-  else y += 2;
+  /* ---------------- 5. Appel à l'action WhatsApp + 6. Mentions (toujours ensemble) ---------------- */
+  const ctaH = 33.5;
+  const mentions = [
+    `${QUOTE.payment} Prix en ${QUOTE.currency}, poids indiqués à titre indicatif.`,
+    QUOTE.deliveryNote,
+  ];
+  font('regular', 7.6);
+  const mLines = mentions.map((m) => wrap(m, CW - 6));
+  const mh = mLines.reduce((a, l) => a + l.length * 3.4 + 0.9, 0) + 5.2;
+  if (y + K.gapCta + ctaH + K.gapMentions + mh > LIMIT) y = newPage();
+  else y += K.gapCta;
   {
     const x = M;
     fill(C.ice50);
     stroke(C.ice200, 0.3);
     doc.roundedRect(x, y, CW, ctaH, 4, 4, 'FD');
-    // reflets givrés dans l'angle
-    withAlpha(0.55, () => {
+    // reflets givrés (facettes de glace)
+    withAlpha(0.6, () => {
       fill(C.ice100);
-      doc.triangle(x + CW - 62, y + 0.15, x + CW - 44, y + 0.15, x + CW - 70, y + ctaH - 0.15, 'F');
+      doc.triangle(x + CW - 64, y + 0.15, x + CW - 47, y + 0.15, x + CW - 74, y + ctaH - 0.15, 'F');
+      doc.triangle(x + CW - 44, y + 0.15, x + CW - 40, y + 0.15, x + CW - 52, y + ctaH - 0.15, 'F');
     });
 
-    eyebrow('ÉTAPE SUIVANTE', x + 7, y + 8.6);
-    font('black', 15.5, C.ink);
-    text('Validez votre commande sur WhatsApp', x + 7, y + 16.4);
-    font('regular', 8.5, C.muted);
-    const desc = wrap(
-      `Cliquez sur le bouton : la discussion s’ouvre avec votre devis prérempli. Joignez-y ce PDF, ${BRAND.name} vous confirme la commande et le transport.`,
-      CW - 62,
-    ).slice(0, 2);
-    desc.forEach((ln, i) => text(ln, x + 7, y + 22 + i * 3.9));
+    eyebrow('ÉTAPE SUIVANTE', x + 7, y + 6.6);
+    font('black', 14.5, C.ink);
+    text('Validez votre commande sur WhatsApp', x + 7, y + 12.9);
 
-    // Bouton
+    // Bouton (zone cliquable = tout le bouton)
     const bx = x + 7;
-    const by = y + 30.4;
+    const by = y + 16.2;
     const bw = 104;
-    const bh = 11.6;
+    const bh = 10.8;
     withAlpha(0.18, () => {
       fill(C.wa);
-      doc.roundedRect(bx + 0.6, by + 1.2, bw, bh, bh / 2, bh / 2, 'F');
+      doc.roundedRect(bx + 0.6, by + 1.1, bw, bh, bh / 2, bh / 2, 'F');
     });
     fill(C.wa);
     doc.roundedRect(bx, by, bw, bh, bh / 2, bh / 2, 'F');
     withAlpha(0.14, () => {
       fill(C.white);
-      doc.roundedRect(bx + 1.2, by + 0.8, bw - 2.4, bh / 2 - 0.6, bh / 4, bh / 4, 'F');
+      doc.roundedRect(bx + 1.2, by + 0.75, bw - 2.4, bh / 2 - 0.6, bh / 4, bh / 4, 'F');
     });
     // bulle de discussion
-    const cx = bx + 8.2;
+    const cx = bx + 7.8;
     const cy = by + bh / 2;
     stroke(C.white, 0.5);
-    doc.circle(cx, cy, 3, 'S');
+    doc.circle(cx, cy, 2.9, 'S');
     fill(C.white);
-    doc.triangle(cx - 2.6, cy + 1.3, cx - 3.4, cy + 3.5, cx - 0.9, cy + 2.75, 'F');
+    doc.triangle(cx - 2.5, cy + 1.25, cx - 3.3, cy + 3.4, cx - 0.85, cy + 2.65, 'F');
     fill(C.wa);
-    doc.circle(cx, cy, 2.55, 'F');
+    doc.circle(cx, cy, 2.45, 'F');
     fill(C.white);
-    [-1.15, 0, 1.15].forEach((d) => doc.circle(cx + d, cy, 0.42, 'F'));
-    font('black', 12.6, C.white);
-    spaced('ENVOYER CE DEVIS SUR WHATSAPP', bx + 14.6, cy + 1.6, { cs: 0.35 });
-    // chevron
+    [-1.1, 0, 1.1].forEach((d) => doc.circle(cx + d, cy, 0.4, 'F'));
+    font('black', 12.4, C.white);
+    spaced('ENVOYER CE DEVIS SUR WHATSAPP', bx + 14, cy + 1.55, { cs: 0.35 });
     stroke(C.white, 0.6);
     doc.setLineCap('round');
-    doc.line(bx + bw - 7.4, cy - 1.8, bx + bw - 5.6, cy);
-    doc.line(bx + bw - 5.6, cy, bx + bw - 7.4, cy + 1.8);
+    doc.line(bx + bw - 7.2, cy - 1.7, bx + bw - 5.5, cy);
+    doc.line(bx + bw - 5.5, cy, bx + bw - 7.2, cy + 1.7);
     doc.setLineCap('butt');
     link(bx, by, bw, bh, waHref);
 
-    // QR code
-    const qs = 33;
-    const qx = x + CW - 7 - qs;
-    const qy = y + 5.5;
+    font('regular', 7.4, C.muted);
+    text(`La discussion s’ouvre avec votre devis prérempli${NBSP}: joignez-y ce PDF.`, bx, y + ctaH - 3);
+
+    // QR code (même lien) + légende à sa gauche
+    const qs = 27;
+    const qx = x + CW - 6 - qs;
+    const qy = y + (ctaH - qs) / 2;
     fill(C.white);
     stroke(C.ice200, 0.3);
-    doc.roundedRect(qx, qy, qs, qs, 2.8, 2.8, 'FD');
-    drawQr(doc, q, waText, qx + 2.5, qy + 2.5, qs - 5);
-    font('regular', 7, C.soft);
-    text('Scannez pour ouvrir WhatsApp', qx + qs / 2, qy + qs + 4.2, { align: 'center' });
+    doc.roundedRect(qx, qy, qs, qs, 2.6, 2.6, 'FD');
+    drawQr(doc, q, waText, qx + 2.2, qy + 2.2, qs - 4.4);
     link(qx, qy, qs, qs, waHref);
-
-    font('semibold', 7.8, C.muted);
-    text(`WhatsApp ${BRAND.phones[0].display}`, bx + bw + 4, cy + 1.3);
+    const lx = qx - 4;
+    font('cond', 7.2, C.blue);
+    spaced('SCANNEZ', lx, qy + qs / 2 - 3.2, { cs: 0.5, align: 'right' });
+    font('regular', 7, C.soft);
+    text('pour ouvrir WhatsApp', lx, qy + qs / 2 + 0.6, { align: 'right' });
+    font('semibold', 7.6, C.ink);
+    text(BRAND.phones[0].display, lx, qy + qs / 2 + 4.4, { align: 'right' });
+    link(lx - width(BRAND.phones[0].display), qy + qs / 2 + 1.6, width(BRAND.phones[0].display), 3.6, `https://wa.me/${BRAND.whatsapp}`);
   }
-  y += ctaH + 7;
+  y += ctaH + K.gapMentions;
 
-  /* ---------------- 6. Mentions ---------------- */
-  const mentions = [
-    QUOTE.payment,
-    QUOTE.deliveryNote,
-    `Devis valable ${QUOTE.validityDays}${NBSP}jours, jusqu’au ${formatQuoteDate(q.validUntil)}. Prix en ${QUOTE.currency}, poids indiqués à titre indicatif.`,
-  ];
-  font('regular', 7.8);
-  const mLines = mentions.map((m) => wrap(m, CW - 6));
-  const mh = mLines.reduce((a, l) => a + l.length * 3.6 + 1.2, 0) + 7;
-  if (y + mh > LIMIT) y = newPage();
   mLines.forEach((ls) => {
     fill(C.ice300);
-    doc.circle(M + 1.2, y - 1.1, 0.7, 'F');
-    font('regular', 7.8, C.muted);
-    ls.forEach((ln, i) => text(ln, M + 4.5, y + i * 3.6));
-    y += ls.length * 3.6 + 1.2;
+    doc.circle(M + 1.2, y - 1.05, 0.7, 'F');
+    font('regular', 7.6, C.muted);
+    ls.forEach((ln, i) => text(ln, M + 4.5, y + i * 3.4));
+    y += ls.length * 3.4 + 0.9;
   });
   y += 1.6;
   font('semibold', 8.6, C.ink);
@@ -908,7 +985,7 @@ export async function buildPdf(q, { fonts = null, logo = null } = {}) {
     text(`N°${NBSP}${number}`, PW - M, fy + 9.4, { align: 'right' });
   }
 
-  return doc.output('blob');
+  return doc;
 }
 
 /* ---------- QR code vectoriel ---------- */
@@ -916,9 +993,9 @@ function drawQr(doc, q, waText, x, y, size) {
   let qr;
   try {
     qr = QRCode.create(whatsappUrl(waText), { errorCorrectionLevel: 'M' });
-    // Au-delà de la version 16 (81 modules), le code devient trop dense pour être scanné sur papier :
+    // Au-delà de la version 14 (73 modules), le code devient trop dense pour être scanné sur papier :
     // on encode alors un message court (n° de devis, total, nom) vers la même discussion WhatsApp.
-    if (qr.version > 16) throw new Error('trop dense');
+    if (qr.version > 14) throw new Error('trop dense');
   } catch {
     qr = QRCode.create(whatsappUrl(shortWhatsappMessage(q)), { errorCorrectionLevel: 'M' });
   }

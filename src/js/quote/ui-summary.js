@@ -135,8 +135,8 @@ export function initSummary(root) {
     el.count.textContent = plural(t.count, 'article', 'articles');
     const hasCups = t.lines.some((l) => !l.kg);
     el.weight.textContent = t.totalKg > 0
-      ? `${nf.format(t.totalKg)}${NBSP}kg${hasCups ? ' (hors gobelets)' : ''}`
-      : hasCups ? 'Gobelets à l’unité' : `0${NBSP}kg`;
+      ? `${nf.format(t.totalKg)}${NBSP}kg${hasCups ? ' (hors Ice Cups)' : ''}`
+      : hasCups ? 'Ice Cups à l’unité' : `0${NBSP}kg`;
     el.sheet.classList.toggle('is-empty', empty);
 
     // Mini-jauge (récapitulatif + barre basse)

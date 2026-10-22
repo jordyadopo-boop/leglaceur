@@ -1,0 +1,133 @@
+<!-- Fabrication (agent story). Module : src/js/modules/process.js · Styles : src/styles/modules/story.css
+     Grand écran : scène collante, le tracé se dessine au défilement, une goutte le parcourt et devient glaçon.
+     Mobile : rail vertical. Sans JS / mouvement réduit : les 5 étapes restent lisibles, tracé complet. -->
+<section class="process section section--dark" id="fabrication" data-module="process" aria-labelledby="fabrication-title">
+  <div class="process__sticky">
+    <div class="process__bg" aria-hidden="true">
+      <span class="process__aurora process__aurora--a"></span>
+      <span class="process__aurora process__aurora--b"></span>
+      <span class="process__grid"></span>
+    </div>
+
+    <div class="container process__inner">
+      <header class="process__head">
+        <div class="process__head-main">
+          <p class="eyebrow">Fabrication</p>
+          <h2 class="process__title" id="fabrication-title" data-split><span>De l’eau pure</span> <span class="ice-text">à votre verre</span></h2>
+        </div>
+        <div class="process__head-side">
+          <p class="lead process__lead">Cinq étapes, une seule exigence&#8239;: que la glace arrive chez vous aussi propre et aussi froide qu’à sa sortie de fabrication.</p>
+          <p class="process__readout" aria-hidden="true"><span class="process__readout-label">Étape</span> <span class="process__readout-num" data-readout>01</span><span class="process__readout-of">/&#8239;05</span> <span class="process__readout-name" data-readout-name>Eau traitée et contrôlée</span></p>
+        </div>
+      </header>
+
+      <div class="process__track" aria-hidden="true">
+        <svg class="process__svg" viewBox="0 0 1200 240" preserveAspectRatio="xMidYMid meet" focusable="false">
+          <defs>
+            <linearGradient id="pr-line" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#4d9bff"/>
+              <stop offset="0.45" stop-color="#8ecfff"/>
+              <stop offset="1" stop-color="#ffffff"/>
+            </linearGradient>
+            <filter id="pr-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path class="process__guide" d="M0 170C60 170 80 170 120 170M1080 170C1120 170 1140 170 1200 170"/>
+          <path class="process__base" d="M120 170C220 170 260 90 360 90S500 170 600 170 740 90 840 90 980 170 1080 170"/>
+          <path class="process__line" data-line d="M120 170C220 170 260 90 360 90S500 170 600 170 740 90 840 90 980 170 1080 170" filter="url(#pr-glow)"/>
+          <g class="process__nodes">
+            <g class="process__node" data-node="0" transform="translate(120 170)"><circle class="process__node-halo" r="22"/><circle class="process__node-ring" r="11"/><circle class="process__node-dot" r="4.5"/></g>
+            <g class="process__node" data-node="1" transform="translate(360 90)"><circle class="process__node-halo" r="22"/><circle class="process__node-ring" r="11"/><circle class="process__node-dot" r="4.5"/></g>
+            <g class="process__node" data-node="2" transform="translate(600 170)"><circle class="process__node-halo" r="22"/><circle class="process__node-ring" r="11"/><circle class="process__node-dot" r="4.5"/></g>
+            <g class="process__node" data-node="3" transform="translate(840 90)"><circle class="process__node-halo" r="22"/><circle class="process__node-ring" r="11"/><circle class="process__node-dot" r="4.5"/></g>
+            <g class="process__node" data-node="4" transform="translate(1080 170)"><circle class="process__node-halo" r="22"/><circle class="process__node-ring" r="11"/><circle class="process__node-dot" r="4.5"/></g>
+          </g>
+          <g class="process__zero" transform="translate(360 36)">
+            <rect x="-62" y="-17" width="124" height="34" rx="17"/>
+            <text x="0" y="6" text-anchor="middle">0&#160;°C</text>
+          </g>
+          <g class="process__glass" transform="translate(1080 170)">
+            <path d="M-34-74-28 6a6 6 0 0 0 6 5.5h44A6 6 0 0 0 28 6l6-80"/>
+            <path class="process__glass-water" d="M-30.6-36c10 4 20 4 30.6 0s20.6-4 30.6 0L28 6a6 6 0 0 1-6 5.5h-44A6 6 0 0 1-28 6Z"/>
+          </g>
+          <g class="process__traveller-slot" data-traveller-slot></g>
+        </svg>
+      </div>
+
+      <ol class="process__steps" role="list">
+        <li class="ps" data-step="0">
+          <div class="ps__rail" aria-hidden="true"><span class="ps__dot"></span></div>
+          <div class="ps__card">
+            <p class="ps__num" aria-hidden="true">01</p>
+            <svg class="ps__icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path class="ps__draw" d="M8 9h12a5 5 0 0 1 5 5v3"/>
+              <path class="ps__draw" d="M4 6.5v5M8 7v4"/>
+              <path class="ps__draw" d="M25 23c-2.6 3.8-5 6.4-5 9.2a5 5 0 0 0 10 0c0-2.8-2.4-5.4-5-9.2Z"/>
+              <path class="ps__draw" d="M33 18.5l3-1.5M34 25h3.5"/>
+            </svg>
+            <h3 class="ps__title">Eau traitée et contrôlée</h3>
+            <p class="ps__text">Tout commence par l’eau&#8239;: traitée puis contrôlée, elle est la première garantie d’une glace pure.</p>
+          </div>
+        </li>
+        <li class="ps" data-step="1">
+          <div class="ps__rail" aria-hidden="true"><span class="ps__dot"></span></div>
+          <div class="ps__card">
+            <p class="ps__num" aria-hidden="true">02</p>
+            <svg class="ps__icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path class="ps__draw" d="M15 6a4 4 0 0 1 8 0v17.5a7.5 7.5 0 1 1-8 0Z"/>
+              <path class="ps__draw" d="M19 14v13.5"/>
+              <path class="ps__draw" d="M30 8v12M24.8 11l10.4 6M24.8 17l10.4-6"/>
+            </svg>
+            <h3 class="ps__title">Congélation maîtrisée</h3>
+            <p class="ps__text">À 0&nbsp;°C, l’eau devient glace. Une congélation maîtrisée pour une glace dense et cristalline.</p>
+            <p class="ps__fact"><span class="ps__fact-temp">0&nbsp;°C</span> l’eau devient glace</p>
+          </div>
+        </li>
+        <li class="ps" data-step="2">
+          <div class="ps__rail" aria-hidden="true"><span class="ps__dot"></span></div>
+          <div class="ps__card">
+            <p class="ps__num" aria-hidden="true">03</p>
+            <svg class="ps__icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path class="ps__draw" d="M9 12h22l-2 23H11Z"/>
+              <path class="ps__draw" d="M9 12l3-6h16l3 6"/>
+              <path class="ps__draw" d="M16 21l4-2.2 4 2.2v4.4L20 27.6l-4-2.2Z"/>
+            </svg>
+            <h3 class="ps__title">Conditionnement hygiénique</h3>
+            <p class="ps__text">La glace est conditionnée proprement, dans le format qu’il vous faut&#8239;: packs, sacs, Ice Cups ou barres.</p>
+          </div>
+        </li>
+        <li class="ps" data-step="3">
+          <div class="ps__rail" aria-hidden="true"><span class="ps__dot"></span></div>
+          <div class="ps__card">
+            <p class="ps__num" aria-hidden="true">04</p>
+            <svg class="ps__icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path class="ps__draw" d="M5 16 20 6l15 10v19H5Z"/>
+              <path class="ps__draw" d="M20 17v14M14 20l12 8M14 28l12-8"/>
+            </svg>
+            <h3 class="ps__title">Stockage au froid en continu</h3>
+            <p class="ps__text">Froid maîtrisé en continu&#8239;: la glace reste au froid jusqu’au moment de partir chez vous.</p>
+          </div>
+        </li>
+        <li class="ps" data-step="4">
+          <div class="ps__rail" aria-hidden="true"><span class="ps__dot"></span></div>
+          <div class="ps__card">
+            <p class="ps__num" aria-hidden="true">05</p>
+            <svg class="ps__icon" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path class="ps__draw" d="M3 11h20v16H3ZM23 16h7l6 6v5H23"/>
+              <path class="ps__draw" d="M12.5 30a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM32 30a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+              <path class="ps__draw" d="M9 16v6M6 19h6"/>
+            </svg>
+            <h3 class="ps__title">Livraison 24h/7j ou retrait</h3>
+            <p class="ps__text"><span data-hours-text>Livrée partout à Abidjan, 24h/24 et 7j/7</span>, <strong data-free-text>offerte dès 20 articles</strong>. Ou retrait gratuit à <span data-street>Abatta – Carrefour Drogba</span>.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="process__cta">
+        <a class="btn" href="#commande" data-module="fx-magnetic">Composer ma commande <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>

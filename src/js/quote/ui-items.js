@@ -17,7 +17,7 @@ const perLabel = (v) => `/ ${v.unit}`;
 /** Pastille sur la vignette : poids du conditionnement ou « 1 u. ». */
 const tagLabel = (v) => (v.kg ? `${nf.format(v.kg)}${NBSP}kg` : `1${NBSP}u.`);
 /** Article défini pour les libellés des boutons : « un paquet », « une barre »… */
-const FEMININE = new Set(['barre']);
+const FEMININE = new Set(['barre', 'Ice Cup']);
 const one = (v) => (v.unit === 'kg' ? 'un kilo' : `${FEMININE.has(v.unit) ? 'une' : 'un'} ${v.unit}`);
 
 function rowTemplate(v) {
@@ -25,14 +25,17 @@ function rowTemplate(v) {
   const li = document.createElement('li');
   li.className = 'quote-item';
   li.dataset.sku = v.sku;
+  li.dataset.product = p.id;
   const img = `${import.meta.env.BASE_URL}img/${p.img}-480.webp`;
   li.innerHTML = `
     <div class="quote-item__media"><img class="quote-item__img" src="${img}" alt="" width="480" height="600" loading="lazy" decoding="async"><span class="quote-item__tag" data-tag></span></div>
     <div class="quote-item__info">
+      <p class="quote-item__badges"><span class="quote-item__alias" data-alias></span></p>
       <h3 class="quote-item__name" id="q-name-${v.sku}" data-name></h3>
       <p class="quote-item__format" data-format></p>
       <p class="quote-item__price"><span data-price="${v.sku}"></span> <span class="quote-item__per" data-per></span></p>
     </div>
+    <button type="button" class="quote-item__info-btn" data-info="${p.id}" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#q-i-info"/></svg><span>Fiche produit</span></button>
     <div class="quote-item__qty"><div class="stepper quote-stepper">
       <button type="button" data-step="-1" aria-controls="q-qty-${v.sku}"><svg class="icon" aria-hidden="true"><use href="#q-i-minus"/></svg></button>
       <input type="number" id="q-qty-${v.sku}" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty>
@@ -43,7 +46,20 @@ function rowTemplate(v) {
   minus.setAttribute('aria-label', `Retirer ${one(v)} – ${p.name}`);
   plus.setAttribute('aria-label', `Ajouter ${one(v)} – ${p.name}`);
   li.querySelector('[data-qty]').setAttribute('aria-label', `Quantité – ${p.name}, ${v.label}`);
+  li.querySelector('[data-info]').setAttribute('aria-label', `Fiche produit : ${p.name} (utilisations, conservation, sécurité)`);
   return li;
+}
+
+/** Image absente (créneau pas encore livré) : visuel givré de secours au lieu d'une icône cassée. */
+function guardImage(li) {
+  const img = li.querySelector('.quote-item__img');
+  if (!img) return;
+  const broken = () => {
+    img.dataset.broken = '1';
+    li.classList.add('has-no-img');
+  };
+  if (img.complete && img.naturalWidth === 0 && img.currentSrc) broken();
+  else img.addEventListener('error', broken, { once: true });
 }
 
 export function initItems(root, { getFlyTarget }) {
@@ -70,6 +86,11 @@ export function initItems(root, { getFlyTarget }) {
     li.querySelector(`[data-price]`).textContent = fcfaShort(v.price);
     li.querySelector('[data-per]').textContent = perLabel(v);
     li.querySelector('[data-tag]').textContent = tagLabel(v);
+    const alias = li.querySelector('[data-alias]');
+    if (alias) alias.textContent = v.product.alias || '';
+    const safety = li.querySelector('[data-safety-text]');
+    if (safety) safety.textContent = v.product.howto.replace(/ ([:;!?])/g, `${NBSP}$1`);
+    guardImage(li);
     const input = li.querySelector('[data-qty]');
     const total = li.querySelector('[data-line-total]');
     setNumber(total, 0, fcfaShort);

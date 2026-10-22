@@ -1,0 +1,291 @@
+<!-- « Composez votre commande » (agent convert-a). Module : src/js/modules/estimator.js · Styles : src/styles/modules/convert-a.css
+     Toutes les variantes de PRODUCTS (config.js) avec quantité libre ; panier partagé avec tout le site (core/quote-store, quote:change).
+     Les noms, prix et fiches ci-dessous proviennent de config.js et sont revérifiés/réécrits par le module au chargement.
+     Sans JavaScript : la liste, les prix et les fiches restent lisibles, les liens « devis » et « WhatsApp » fonctionnent. -->
+<section class="order-express" id="commande" data-module="estimator" aria-labelledby="commande-title">
+  <div class="order-express__decor" aria-hidden="true">
+    <span class="oe-shard oe-shard--1"></span>
+    <span class="oe-shard oe-shard--2"></span>
+    <span class="oe-shard oe-shard--3"></span>
+    <span class="oe-shard oe-shard--4"></span>
+    <span class="order-express__watermark">Commande</span>
+  </div>
+
+  <div class="container order-express__inner">
+    <header class="order-express__head">
+      <p class="eyebrow">Commande express</p>
+      <h2 class="order-express__title" id="commande-title">Composez <span class="ice-text">votre commande</span></h2>
+      <p class="lead order-express__lead">Choisissez librement la quantité de chaque article&nbsp;: le total se calcule en direct et votre devis est prêt en un clic.</p>
+      <ul class="order-express__perks" role="list">
+        <li class="oe-perk oe-perk--hot"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.6" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><span data-free-label>Livraison offerte dès 20 articles</span></li>
+        <li class="oe-perk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.7"/></svg><span>Retrait gratuit à Abatta</span></li>
+        <li class="oe-perk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>24h/24 · 7j/7</span></li>
+        <li class="oe-perk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="6" width="18" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/><path d="m5 20 14-16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Aucun paiement en ligne</span></li>
+      </ul>
+    </header>
+
+    <div class="order-express__grid">
+      <div class="order-express__list-wrap">
+        <div class="oe-ticker" data-ticker aria-hidden="true">
+          <span class="oe-ticker__total" data-ticker-total>0&nbsp;F</span>
+          <span class="oe-ticker__count" data-ticker-count>0 article</span>
+          <span class="oe-ticker__bar"><span class="oe-ticker__fill" data-ticker-fill></span></span>
+        </div>
+        <ol class="order-express__list" role="list" aria-label="Articles disponibles">
+          <li class="oe-item" data-sku="glacons-5kg" data-product="glacons" style="--i:0">
+            <div class="oe-item__card">
+              <span class="oe-thumb" aria-hidden="true"><!-- @img slot="glacons" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-glacons-5kg-nom"><span data-name>Glace cubique</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="glacons-5kg">750&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>pack de 5 kg</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-glacons-5kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Glace cubique"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Glace cubique, pack de 5 kg">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Glace cubique"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Glace cubique</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">Des glaçons denses, cristallins et 100 % alimentaires. Leur fonte lente permet un refroidissement efficace sans trop diluer vos boissons.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Boissons · Cocktails · Jus · Restaurants · Événements · Usage domestique</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">À utiliser directement dans vos boissons.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Conserver en glacière ou en congélateur, à l'abri du soleil.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Servir avec une pelle propre, jamais à mains nues. Ne pas recongeler une glace qui a commencé à fondre.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item" data-sku="grain-5kg" data-product="grain" style="--i:1">
+            <div class="oe-item__card">
+              <span class="oe-thumb" data-thumb-slot="grain" aria-hidden="true"><svg class="oe-thumb__art" viewBox="0 0 96 96" aria-hidden="true" focusable="false"><defs><radialGradient id="oe-nug" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#e3f3ff"/><stop offset="1" stop-color="#8ecfff"/></radialGradient><linearGradient id="oe-nug-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1563d6"/><stop offset="1" stop-color="#0a1f44"/></linearGradient></defs><rect width="96" height="96" fill="url(#oe-nug-bg)"/><ellipse cx="24" cy="66" rx="11" ry="9.5" transform="rotate(-30 24 66)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="44" cy="70" rx="12" ry="10.3" transform="rotate(7 44 70)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="64" cy="67" rx="11" ry="9.5" transform="rotate(-16 64 67)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="80" cy="72" rx="9" ry="7.7" transform="rotate(21 80 72)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="16" cy="80" rx="9" ry="7.7" transform="rotate(-2 16 80)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="34" cy="52" rx="10" ry="8.6" transform="rotate(-25 34 52)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="54" cy="54" rx="11" ry="9.5" transform="rotate(12 54 54)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="72" cy="52" rx="10" ry="8.6" transform="rotate(-11 72 52)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="44" cy="38" rx="9" ry="7.7" transform="rotate(26 44 38)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="62" cy="38" rx="8" ry="6.9" transform="rotate(3 62 38)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="28" cy="38" rx="7" ry="6.0" transform="rotate(-20 28 38)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="52" cy="82" rx="10" ry="8.6" transform="rotate(17 52 82)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="70" cy="84" rx="9" ry="7.7" transform="rotate(-6 70 84)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><ellipse cx="30" cy="84" rx="9" ry="7.7" transform="rotate(-29 30 84)" fill="url(#oe-nug)" stroke="#bfe4ff" stroke-width=".8"/><path d="M10 20 26 14" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/></svg><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-grain-5kg-nom"><span data-name>Glace en grain</span> <span class="badge oe-item__new">Nouveau</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="grain-5kg">750&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>pack de 5 kg</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-grain-5kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Glace en grain"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Glace en grain, pack de 5 kg">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Glace en grain"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Glace en grain</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">De petits grains de glace compactés, à la texture moelleuse. Ils absorbent le sirop et le jus de la boisson et se croquent avec plaisir.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Smoothies · Cocktails d'été · Sodas · Jus de fruits · Fontaines à boissons · Événements</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">À verser directement dans vos boissons et préparations glacées.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Conserver en glacière ou en congélateur&nbsp;; à consommer rapidement une fois ouverte.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Servir avec une pelle ou une cuillère propre. Ne pas recongeler une glace qui a commencé à fondre.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item" data-sku="pilee-50kg" data-product="pilee" style="--i:2">
+            <div class="oe-item__card">
+              <span class="oe-thumb" aria-hidden="true"><!-- @img slot="pilee" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-pilee-50kg-nom"><span data-name>Glace pilée</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="pilee-50kg">3 000&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>sac de 50 kg</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-pilee-50kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Glace pilée"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Glace pilée, sac de 50 kg">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Glace pilée"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Glace pilée</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">De petits fragments de glace à la texture légère, offrant un refroidissement rapide et un apport d'eau maîtrisé.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Cocktails (Mojito, Caïpirinha…) · Frappés · Smoothies · Présentoirs de fruits de mer · Poissonneries · Événements</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">À utiliser directement dans vos préparations ou pour la présentation.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Garder le sac fermé, en glacière ou conservateur, à l'ombre.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Pour le contact avec les aliments (poissons, fruits de mer), utiliser des bacs propres et vidanger l'eau de fonte régulièrement.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item oe-item--carbo" data-sku="carboglace-kg" data-product="carboglace" style="--i:3">
+            <div class="oe-item__card">
+              <span class="oe-thumb oe-thumb--fog" aria-hidden="true"><!-- @img slot="carboglace" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-carboglace-kg-nom"><span data-name>Carboglace</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="carboglace-kg">7 500&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>le kilo</span></span></p>
+                <p class="oe-item__warn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 2.5 20h19L12 3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span data-howto>Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.</span></p>
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-carboglace-kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Carboglace"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Carboglace, le kilo">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Carboglace"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Carboglace</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">Du dioxyde de carbone solide à -78,5 °C. Elle passe directement de l’état solide à l’état gazeux et crée une brume blanche spectaculaire.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Conservation · Transport cryogénique · Événementiel · Mixologie spectaculaire</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Conserver dans une glacière isotherme non hermétique, jamais dans un récipient fermé ni dans une pièce close.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Température de -78,5 °C&nbsp;: toujours manipuler avec des gants épais ou une pince. Ne jamais ingérer, ne jamais mettre en bouche. Utiliser dans un lieu aéré (le CO₂ dégagé remplace l'air). Tenir hors de portée des enfants.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item" data-sku="gobelet" data-product="gobelet" style="--i:4">
+            <div class="oe-item__card">
+              <span class="oe-thumb" aria-hidden="true"><!-- @img slot="gobelet" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-gobelet-nom"><span data-name>Ice Cup</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="gobelet">250&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>1 Ice Cup</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-gobelet-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Ice Cup"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Ice Cup, 1 ice cup">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Ice Cup"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Ice Cup</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">Des glaçons creux, légers et rafraîchissants, conditionnés en gobelet à couvercle pour une consommation immédiate.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Sodas · Jus de fruits · Fast-food · Ventes à emporter · Événements</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">Prêt à l'emploi. Verser directement dans la boisson.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Garder le couvercle fermé jusqu'au service&nbsp;; conserver au frais.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Produit alimentaire à usage unique&nbsp;: ne pas réutiliser le gobelet pour la glace.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item" data-sku="barre-5kg" data-product="barres" style="--i:5">
+            <div class="oe-item__card">
+              <span class="oe-thumb" aria-hidden="true"><!-- @img slot="barres" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-barre-5kg-nom"><span data-name>Barres de glace</span> <span class="oe-item__variant" data-variant>5 kg</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="barre-5kg">350&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>barre de 5 kg</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-barre-5kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Barres de glace, barre de 5 kg"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Barres de glace, barre de 5 kg">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Barres de glace, barre de 5 kg"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Barres de glace</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Conservation des produits alimentaires · Transport de marchandises · Pêche · Marchés · Événements · Usage professionnel</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">À placer dans des glacières, conservateurs ou zones de stockage.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Stocker à l'ombre, en glacière ou chambre froide&nbsp;; plus le bloc est gros, plus il dure.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Manipuler avec des gants (bloc lourd et glissant). Pour le contact direct avec des aliments, utiliser la glace pilée.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+          <li class="oe-item" data-sku="barre-10kg" data-product="barres" style="--i:6">
+            <div class="oe-item__card">
+              <span class="oe-thumb" aria-hidden="true"><!-- @img slot="barres" alt="" sizes="96px" class="oe-thumb__img" --><span class="oe-thumb__gloss"></span></span>
+              <div class="oe-item__info">
+                <h3 class="oe-item__name" id="oe-barre-10kg-nom"><span data-name>Barres de glace</span> <span class="oe-item__variant" data-variant>10 kg</span></h3>
+                <p class="oe-item__meta"><span class="oe-item__price" data-price="barre-10kg">650&nbsp;F</span><span class="oe-item__per">/&nbsp;<span data-label>barre de 10 kg</span></span></p>
+                
+              </div>
+              <div class="oe-item__qty">
+                <div class="stepper oe-stepper" role="group" aria-labelledby="oe-barre-10kg-nom">
+                  <button type="button" data-step="-1" aria-label="Retirer un article : Barres de glace, barre de 10 kg"><span aria-hidden="true">−</span></button>
+                  <input type="number" inputmode="numeric" min="0" max="99999" step="1" value="0" data-qty aria-label="Quantité : Barres de glace, barre de 10 kg">
+                  <button type="button" data-step="1" aria-label="Ajouter un article : Barres de glace, barre de 10 kg"><span aria-hidden="true">+</span></button>
+                </div>
+                <p class="oe-item__line"><span class="sr-only">Sous-total&nbsp;: </span><span data-line>0&nbsp;F</span></p>
+              </div>
+            </div>
+            <details class="oe-more">
+              <summary class="oe-more__toggle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5M12 7.6v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Infos produit</span><span class="sr-only">&nbsp;: Barres de glace</span></summary>
+              <div class="oe-more__body">
+                <p class="oe-more__desc" data-info="description">Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.</p>
+                <dl class="oe-more__list">
+                  <div><dt>Utilisations</dt><dd data-info="uses">Conservation des produits alimentaires · Transport de marchandises · Pêche · Marchés · Événements · Usage professionnel</dd></div>
+                  <div><dt>Mode d’emploi</dt><dd data-info="howto">À placer dans des glacières, conservateurs ou zones de stockage.</dd></div>
+                  <div><dt>Conservation</dt><dd data-info="storage">Stocker à l'ombre, en glacière ou chambre froide&nbsp;; plus le bloc est gros, plus il dure.</dd></div>
+                  <div class="oe-more__safety"><dt>Sécurité</dt><dd data-info="safety">Manipuler avec des gants (bloc lourd et glissant). Pour le contact direct avec des aliments, utiliser la glace pilée.</dd></div>
+                </dl>
+              </div>
+            </details>
+          </li>
+        </ol>
+        <p class="order-express__note">Prix unitaires TTC en F&nbsp;CFA. Aucun paiement en ligne&nbsp;: le règlement se fait à la livraison ou au retrait.</p>
+      </div>
+
+      <aside class="order-express__panel frost ice-edge" aria-labelledby="oe-panel-title" data-panel>
+        <h3 class="sr-only" id="oe-panel-title">Votre sélection</h3>
+        <div class="oe-bin" data-bin>
+          <canvas class="oe-bin__canvas" data-bin-canvas width="1" height="1" aria-hidden="true"></canvas>
+          <div class="oe-bin__empty" data-bin-empty>
+            <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 6 52 17.5v23L32 52 12 40.5v-23L32 6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12.6 17.8 32 29l19.4-11.2M32 29v22.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span>Votre bac à glace est vide&nbsp;:<br>ajoutez vos premiers articles.</span>
+          </div>
+          <div class="oe-bin__goal" data-bin-goal aria-hidden="true"><span>20&nbsp;articles · livraison offerte</span></div>
+          <span class="oe-bin__more" data-bin-more hidden></span>
+        </div>
+
+        <div class="oe-sum" aria-live="polite" aria-atomic="false">
+          <p class="oe-sum__label">Total de votre sélection</p>
+          <p class="oe-sum__total"><span class="oe-sum__amount" data-total>0</span><span class="oe-sum__cur">F&nbsp;CFA</span></p>
+          <p class="oe-sum__meta"><span data-count-label>0 article</span><span class="oe-sum__dot" aria-hidden="true">·</span><span data-kg-label>0 kg</span></p>
+        </div>
+
+        <div class="oe-gauge" data-gauge>
+          <div class="oe-gauge__tube" role="progressbar" aria-label="Progression vers la livraison offerte" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" data-gauge-bar>
+            <span class="oe-gauge__fill" data-gauge-fill></span>
+            <span class="oe-gauge__ticks" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+          <p class="oe-gauge__text" data-gauge-text aria-live="polite">Livraison offerte dès 20 articles</p>
+          <p class="oe-gauge__note" data-gauge-note>En dessous de 20 articles, le devis est établi hors frais de livraison&nbsp;: Le Glaceur vous communique le tarif.</p>
+          <div class="oe-gauge__burst" data-gauge-burst aria-hidden="true"></div>
+        </div>
+
+        <div class="oe-actions">
+          <a class="btn btn--lg btn--block oe-actions__quote" href="devis.html" data-quote-link data-module="fx-magnetic">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 2.8h8.2L19 7.6v13.6H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 2.8v5h5M9 12.5h7M9 16.2h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Générer mon devis</span>
+          </a>
+          <a class="btn btn--wa btn--block oe-actions__wa" href="https://wa.me/2250789851686?text=Bonjour%20Le%20Glaceur%2C%20je%20souhaite%20passer%20une%20commande%20de%20glace." target="_blank" rel="noopener" data-wa-link>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.89 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41Z"/></svg>
+            <span>Envoyer sur WhatsApp</span>
+          </a>
+          <button type="button" class="oe-actions__clear" data-clear hidden>Vider ma sélection</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

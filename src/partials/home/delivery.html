@@ -1,0 +1,151 @@
+<!-- Livraison & retrait (agent convert-a). Module : src/js/modules/delivery.js · Styles : src/styles/modules/convert-a.css
+     Règle (config.js, DELIVERY) : livraison offerte dès 20 articles ; en dessous, devis hors frais de livraison (tarif communiqué
+     par Le Glaceur, AUCUN prix affiché). Retrait gratuit à Abatta. Schéma radial indicatif des communes (DELIVERY.communes),
+     directions approximatives, non à l'échelle. La carte Google n'est chargée qu'au clic. -->
+<section class="delivery" id="livraison" data-module="delivery" aria-labelledby="livraison-title">
+  <div class="delivery__decor" aria-hidden="true"><span class="delivery__glow"></span></div>
+  <div class="container delivery__inner">
+    <div class="delivery__intro">
+      <p class="eyebrow">Livraison &amp; retrait</p>
+      <h2 class="delivery__title" id="livraison-title">Livraison offerte <span class="ice-text">dès&nbsp;20&nbsp;articles</span></h2>
+      <p class="delivery__claim">Partout à Abidjan, <strong>24h/24 et 7j/7</strong>.</p>
+      <p class="lead delivery__lead">Additionnez librement vos articles (packs, sacs, barres, Ice Cups, kilos de carboglace)&nbsp;: dès 20&nbsp;articles au total, nous vous livrons gratuitement.</p>
+
+      <div class="delivery__status frost ice-edge" data-status aria-live="polite">
+        <div class="delivery__status-head">
+          <span class="delivery__status-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M2.8 6.5h10.4v9.2H2.8zM13.2 9.8h3.9l3.3 3.3v2.6h-7.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="6.6" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16.8" cy="17.4" r="1.9" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+          <p class="delivery__status-text" data-status-text>Livraison offerte dès 20 articles</p>
+        </div>
+        <div class="delivery__meter" aria-hidden="true"><span class="delivery__meter-fill" data-status-fill></span></div>
+        <p class="delivery__status-note" data-status-note>En dessous de 20&nbsp;articles&nbsp;: devis hors frais de livraison, tarif communiqué par Le Glaceur.</p>
+      </div>
+
+      <article class="delivery__pickup frost" aria-labelledby="retrait-title">
+        <div class="delivery__pickup-head">
+          <span class="delivery__pin" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+          <div>
+            <h3 class="delivery__pickup-title" id="retrait-title">Retrait sur place <span class="badge badge--ok">Gratuit</span></h3>
+            <p class="delivery__pickup-addr"><span data-address>Abatta – Carrefour Drogba, Abidjan</span><br><span class="delivery__hours">24h/24 · 7j/7</span></p>
+          </div>
+        </div>
+        <div class="delivery__pickup-actions">
+          <a class="btn btn--glass btn--sm" href="https://www.google.com/maps/search/?api=1&amp;query=Abatta%20Carrefour%20Drogba%2C%20Abidjan" target="_blank" rel="noopener" data-maps-link>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-8-8 18-2-8-8-2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span>Itinéraire</span><span class="sr-only"> (Google Maps, nouvel onglet)</span>
+          </a>
+          <button type="button" class="btn btn--glass btn--sm" data-map-toggle aria-expanded="false" aria-controls="retrait-carte">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6.5v13.5L9 17.5l6 2.5 6-2.5V4l-6 2.5L9 4ZM9 4v13.5M15 6.5V20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            <span data-map-toggle-label>Afficher la carte</span>
+          </button>
+        </div>
+        <div class="delivery__mapframe" id="retrait-carte" data-mapframe hidden></div>
+      </article>
+
+      <div class="delivery__ctas">
+        <a class="btn btn--lg" href="devis.html" data-module="fx-magnetic">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 2.8h8.2L19 7.6v13.6H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 2.8v5h5M9 12.5h7M9 16.2h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Demander mon devis</span>
+        </a>
+        <a class="link-arrow" href="#commande">Choisir mes quantités <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <figure class="delivery__map" data-map>
+      <div class="dmap frost ice-edge">
+        <svg class="dmap__svg" viewBox="0 0 820 600" role="img" aria-labelledby="dmap-title dmap-desc" data-map-svg>
+          <title id="dmap-title">Schéma des livraisons depuis Abatta – Carrefour Drogba</title>
+          <desc id="dmap-desc">Schéma indicatif, non à l’échelle&nbsp;: depuis Abatta, des trajets rejoignent les communes desservies, placées selon leur direction approximative.</desc>
+          <defs>
+            <radialGradient id="dmap-core" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfe4ff"/><stop offset="1" stop-color="#1563d6"/></radialGradient>
+            <linearGradient id="dmap-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe4ff" stop-opacity=".55"/><stop offset="1" stop-color="#8ecfff" stop-opacity=".35"/></linearGradient>
+            <linearGradient id="dmap-ocean" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ecfff" stop-opacity=".25"/><stop offset="1" stop-color="#4d9bff" stop-opacity=".45"/></linearGradient>
+            <pattern id="dmap-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0v40" fill="none" stroke="#1563d6" stroke-opacity=".07" stroke-width="1"/></pattern>
+          </defs>
+          <rect class="dmap__grid" width="820" height="600" fill="url(#dmap-grid)"/>
+          <g class="dmap__geo" aria-hidden="true">
+            <path class="dmap__ocean" d="M0 572 C120 560 240 578 360 568 S600 556 700 566 S800 572 820 568 V600 H0Z" fill="url(#dmap-ocean)"/>
+            <path class="dmap__lagoon" d="M0 392 C40 380 80 404 130 394 S200 372 230 392 S300 410 330 396 S410 372 450 394 S520 410 560 384 S640 366 680 378 S760 396 820 380 V408 C770 424 720 404 680 410 S600 430 560 418 S470 430 430 420 S350 432 300 424 S220 416 170 424 S60 418 0 422Z" fill="url(#dmap-water)"/>
+            <text class="dmap__water-label" x="96" y="413">Lagune Ébrié</text>
+            <text class="dmap__water-label" x="410" y="592">Océan Atlantique</text>
+          </g>
+          <g class="dmap__rings" aria-hidden="true">
+            <circle cx="560" cy="290" r="120"/><circle cx="560" cy="290" r="240"/><circle cx="560" cy="290" r="380"/>
+          </g>
+          <g class="dmap__compass" transform="translate(770 56)" aria-hidden="true">
+            <circle r="24"/><path d="M0 -17 5 0 0 17 -5 0Z"/><path class="dmap__compass-n" d="M0 -17 5 0 -5 0Z"/><text y="-30" text-anchor="middle">N</text>
+          </g>
+          <g class="dmap__routes" aria-hidden="true">
+          <path class="dmap__route" data-route="Abobo" id="dmap-route-abobo" d="M560 290 Q416.6 258.7 318 150"/>
+          <path class="dmap__route" data-route="Adjamé" id="dmap-route-adjame" d="M560 290 Q404.4 225.3 238 252"/>
+          <path class="dmap__route" data-route="Anyama" id="dmap-route-anyama" d="M560 290 Q460.8 200.5 432 70"/>
+          <path class="dmap__route" data-route="Attécoubé" id="dmap-route-attecoube" d="M560 290 Q351.9 258.1 150 318"/>
+          <path class="dmap__route" data-route="Bingerville" id="dmap-route-bingerville" d="M560 290 Q634.2 280.6 700 316"/>
+          <path class="dmap__route" data-route="Cocody" id="dmap-route-cocody" d="M560 290 Q482.8 252.1 398 266"/>
+          <path class="dmap__route" data-route="Koumassi" id="dmap-route-koumassi" d="M560 290 Q536.1 401.3 452 478"/>
+          <path class="dmap__route" data-route="Marcory" id="dmap-route-marcory" d="M560 290 Q430.7 335.7 352 448"/>
+          <path class="dmap__route" data-route="Plateau" id="dmap-route-plateau" d="M560 290 Q421.8 360.3 268 340"/>
+          <path class="dmap__route" data-route="Port-Bouët" id="dmap-route-port-bouet" d="M560 290 Q524.8 403.3 562 516"/>
+          <path class="dmap__route" data-route="Songon" id="dmap-route-songon" d="M560 290 Q300.6 334.0 42 286"/>
+          <path class="dmap__route" data-route="Treichville" id="dmap-route-treichville" d="M560 290 Q384.5 316.9 246 428"/>
+          <path class="dmap__route" data-route="Yopougon" id="dmap-route-yopougon" d="M560 290 Q331.4 298.4 118 216"/>
+          <path class="dmap__route" data-route="Grand-Bassam" id="dmap-route-grand-bassam" d="M560 290 Q620.7 424.1 748 498"/>
+          </g>
+          <g class="dmap__nodes" aria-hidden="true">
+          <g class="dmap__node" data-node="Abobo" transform="translate(318 150)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="-14" y="5" text-anchor="end">Abobo</text></g>
+          <g class="dmap__node" data-node="Adjamé" transform="translate(238 252)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="-20" text-anchor="middle">Adjamé</text></g>
+          <g class="dmap__node" data-node="Anyama" transform="translate(432 70)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="14" y="5" text-anchor="start">Anyama</text></g>
+          <g class="dmap__node" data-node="Attécoubé" transform="translate(150 318)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Attécoubé</text></g>
+          <g class="dmap__node" data-node="Bingerville" transform="translate(700 316)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="14" y="5" text-anchor="start">Bingerville</text></g>
+          <g class="dmap__node" data-node="Cocody" transform="translate(398 266)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="-20" text-anchor="middle">Cocody</text></g>
+          <g class="dmap__node" data-node="Koumassi" transform="translate(452 478)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Koumassi</text></g>
+          <g class="dmap__node" data-node="Marcory" transform="translate(352 448)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Marcory</text></g>
+          <g class="dmap__node" data-node="Plateau" transform="translate(268 340)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="-16" y="5" text-anchor="end">Plateau</text></g>
+          <g class="dmap__node" data-node="Port-Bouët" transform="translate(562 516)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Port-Bouët</text></g>
+          <g class="dmap__node" data-node="Songon" transform="translate(42 286)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="-20" text-anchor="middle">Songon</text></g>
+          <g class="dmap__node" data-node="Treichville" transform="translate(246 428)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Treichville</text></g>
+          <g class="dmap__node" data-node="Yopougon" transform="translate(118 216)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="-20" text-anchor="middle">Yopougon</text></g>
+          <g class="dmap__node" data-node="Grand-Bassam" transform="translate(748 498)"><circle class="dmap__halo" r="16"/><path class="dmap__gem" d="M0 -8.5 7 0 0 8.5 -7 0Z"/><text class="dmap__label" x="0" y="32" text-anchor="middle">Grand-Bassam</text></g>
+          </g>
+          <g class="dmap__hub" transform="translate(560 290)" aria-hidden="true">
+            <circle class="dmap__pulse" r="22"/>
+            <circle class="dmap__pulse dmap__pulse--2" r="22"/>
+            <circle class="dmap__hub-core" r="15"/>
+            <path class="dmap__hub-gem" d="M0 -8 6.5 0 0 8 -6.5 0Z"/>
+            <g class="dmap__hub-tag" transform="translate(0 -40)"><rect x="-96" y="-17" width="192" height="34" rx="17"/><text y="5.5" text-anchor="middle">Abatta – Carrefour Drogba</text></g>
+          </g>
+          <g class="dmap__truck" data-truck aria-hidden="true">
+            <g class="dmap__truck-body" data-truck-body>
+              <rect class="dmap__truck-box" x="-21" y="-14" width="27" height="19" rx="3"/>
+              <path class="dmap__truck-snow" d="M-7.5 -9.5v10M-12 -7l9 5M-12 -2l9 -5"/>
+              <path class="dmap__truck-cab" d="M7 -8h7.5l5.5 6v7H7Z"/>
+              <path class="dmap__truck-win" d="M9.5 -5.5h4.4l3.4 3.8H9.5Z"/>
+              <circle class="dmap__truck-wheel" cx="-13" cy="6.5" r="3.6"/><circle class="dmap__truck-wheel" cx="13.5" cy="6.5" r="3.6"/>
+            </g>
+          </g>
+        </svg>
+        <p class="dmap__legend"><span class="dmap__legend-dot" aria-hidden="true"></span>Schéma indicatif, non à l’échelle</p>
+      </div>
+      <figcaption class="dmap__caption">
+        <h3 class="dmap__caption-title" id="communes-title">Communes desservies</h3>
+        <p class="dmap__caption-hint" data-commune-hint>Touchez une commune pour la voir sur le schéma et la noter pour votre devis.</p>
+        <ul class="dmap__chips" role="list" aria-labelledby="communes-title">
+            <li><button type="button" class="dchip" data-commune="Abobo" aria-pressed="false">Abobo</button></li>
+            <li><button type="button" class="dchip" data-commune="Adjamé" aria-pressed="false">Adjamé</button></li>
+            <li><button type="button" class="dchip" data-commune="Anyama" aria-pressed="false">Anyama</button></li>
+            <li><button type="button" class="dchip" data-commune="Attécoubé" aria-pressed="false">Attécoubé</button></li>
+            <li><button type="button" class="dchip" data-commune="Bingerville" aria-pressed="false">Bingerville</button></li>
+            <li><button type="button" class="dchip" data-commune="Cocody" aria-pressed="false">Cocody</button></li>
+            <li><button type="button" class="dchip" data-commune="Koumassi" aria-pressed="false">Koumassi</button></li>
+            <li><button type="button" class="dchip" data-commune="Marcory" aria-pressed="false">Marcory</button></li>
+            <li><button type="button" class="dchip" data-commune="Plateau" aria-pressed="false">Plateau</button></li>
+            <li><button type="button" class="dchip" data-commune="Port-Bouët" aria-pressed="false">Port-Bouët</button></li>
+            <li><button type="button" class="dchip" data-commune="Songon" aria-pressed="false">Songon</button></li>
+            <li><button type="button" class="dchip" data-commune="Treichville" aria-pressed="false">Treichville</button></li>
+            <li><button type="button" class="dchip" data-commune="Yopougon" aria-pressed="false">Yopougon</button></li>
+            <li><button type="button" class="dchip" data-commune="Grand-Bassam" aria-pressed="false">Grand-Bassam</button></li>
+            <li><button type="button" class="dchip dchip--other" data-commune="Autre localité" aria-pressed="false">Autre localité</button></li>
+        </ul>
+      </figcaption>
+    </figure>
+  </div>
+</section>

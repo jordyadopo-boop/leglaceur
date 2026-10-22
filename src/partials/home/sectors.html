@@ -1,0 +1,145 @@
+<!-- Secteurs (agent story). Module : src/js/modules/sectors.js · Styles : src/styles/modules/story.css
+     Grand écran : accordéon horizontal de « blocs de glace » qui s'élargissent au survol / au focus.
+     Mobile : liste empilée. Les produits recommandés sont enrichis par le module depuis config.js (SKUS) :
+     prix, variante et bouton d'ajout direct au devis (core/quote-store addQty). -->
+<section class="sectors section" id="secteurs" data-module="sectors" aria-labelledby="secteurs-title">
+  <div class="sectors__decor" aria-hidden="true">
+    <span class="sectors__glow"></span>
+    <svg class="sectors__flake" viewBox="-50 -50 100 100"><use href="#story-flake"/></svg>
+  </div>
+  <div class="container sectors__inner">
+    <header class="sectors__head">
+      <div>
+        <p class="eyebrow">Secteurs</p>
+        <h2 class="sectors__title" id="secteurs-title" data-split><span>Pour tous</span> <span class="ice-text">vos usages</span></h2>
+      </div>
+      <p class="lead sectors__lead">Restaurant, bar, événement, poissonnerie, maison ou activité professionnelle&#8239;: chaque usage a sa glace. Ajoutez nos recommandations à votre devis en un geste.</p>
+    </header>
+
+    <ul class="sectors__list" role="list" data-list>
+      <li class="sector is-active" data-sector="restaurants" style="--i:0">
+        <article class="sector__block" aria-labelledby="secteur-restaurants">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="usage-restaurant" alt="Barman préparant une boisson sur glace au comptoir" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">01</span><span class="sector__spine-label">Restaurants</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">01</p>
+            <h3 class="sector__name" id="secteur-restaurants">Restaurants</h3>
+            <p class="sector__text">Des glaçons denses pour toutes les boissons du service, de la glace pilée pour les cocktails et les présentations froides.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="glacons-5kg pilee-50kg"><li>Glace cubique</li><li>Glace pilée</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="sector" data-sector="bars" style="--i:1">
+        <article class="sector__block" aria-labelledby="secteur-bars">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="usage-whisky" alt="Whisky versé sur un gros glaçon dans un verre bas" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">02</span><span class="sector__spine-label">Bars &amp; lounges</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">02</p>
+            <h3 class="sector__name" id="secteur-bars">Bars &amp; lounges</h3>
+            <p class="sector__text">Des glaçons à fonte lente qui rafraîchissent sans trop diluer vos spiritueux, et de la glace pilée pour les mojitos et caïpirinhas.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="glacons-5kg pilee-50kg"><li>Glace cubique</li><li>Glace pilée</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="sector" data-sector="evenements" style="--i:2">
+        <article class="sector__block" aria-labelledby="secteur-evenements">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="usage-event" alt="Seau à champagne rempli de glaçons et de bouteilles lors d’une réception" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">03</span><span class="sector__spine-label">Événements</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">03</p>
+            <h3 class="sector__name" id="secteur-evenements">Événements</h3>
+            <p class="sector__text">Mariages, anniversaires, réceptions&#8239;: des boissons fraîches pour tous, des Ice Cups prêtes à servir, des barres pour les glacières et de la carboglace pour les effets de fumée.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="glacons-5kg gobelet barre-5kg barre-10kg carboglace-kg"><li>Glace cubique</li><li>Ice Cup</li><li>Barres de glace</li><li>Carboglace</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="sector" data-sector="poissonneries" style="--i:3">
+        <article class="sector__block" aria-labelledby="secteur-poissonneries">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="usage-poisson" alt="Poissons frais disposés sur un lit de glace pilée" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">04</span><span class="sector__spine-label">Poissonneries</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">04</p>
+            <h3 class="sector__name" id="secteur-poissonneries">Poissonneries</h3>
+            <p class="sector__text">De la glace pilée pour présenter poissons et fruits de mer sur l’étal, des barres pour garder vos glacières au froid.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="pilee-50kg barre-5kg barre-10kg"><li>Glace pilée</li><li>Barres de glace</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="sector" data-sector="menages" style="--i:4">
+        <article class="sector__block" aria-labelledby="secteur-menages">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="usage-jus" alt="Boissons fraîches aux fruits servies avec des glaçons" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">05</span><span class="sector__spine-label">Ménages</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">05</p>
+            <h3 class="sector__name" id="secteur-menages">Ménages</h3>
+            <p class="sector__text">Pour les boissons de la famille, les fêtes à la maison ou la glacière du week-end&#8239;: des glaçons en pack et des Ice Cups pratiques.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="glacons-5kg gobelet"><li>Glace cubique</li><li>Ice Cup</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+      <li class="sector" data-sector="pros" style="--i:5">
+        <article class="sector__block" aria-labelledby="secteur-pros">
+          <div class="sector__media" data-module="fx-droplets">
+            <!-- @img slot="barres" alt="Pains de glace rectangulaires empilés sur un quai de chargement" sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 92vw" class="sector__img" -->
+          </div>
+          <div class="sector__frost" aria-hidden="true"></div>
+          <div class="sector__spine" aria-hidden="true"><span class="sector__spine-num">06</span><span class="sector__spine-label">Usages professionnels</span></div>
+          <div class="sector__body">
+            <p class="sector__num" aria-hidden="true">06</p>
+            <h3 class="sector__name" id="secteur-pros">Usages professionnels</h3>
+            <p class="sector__text">Conservation des produits alimentaires, transport de marchandises, marchés&#8239;: des barres à fonte lente, de la glace pilée et de la carboglace pour le froid extrême.</p>
+            <div class="sector__recos">
+              <p class="sector__recos-label">Nos recommandations</p>
+              <ul class="sector__reco-list" role="list" data-skus="barre-5kg barre-10kg pilee-50kg carboglace-kg"><li>Barres de glace</li><li>Glace pilée</li><li>Carboglace</li></ul>
+              <a class="link-arrow sector__link" href="#produits">Voir les produits <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </article>
+      </li>
+    </ul>
+
+    <div class="sectors__basket frost ice-edge" data-basket hidden>
+      <div class="sb__info">
+        <p class="sb__count"><span class="sb__count-label">Votre devis</span> <strong data-basket-count>0 article</strong></p>
+        <p class="sb__msg" data-basket-msg aria-live="polite">Livraison offerte dès 20 articles</p>
+      </div>
+      <div class="sb__gauge" aria-hidden="true"><span class="sb__fill" data-basket-fill></span><span class="sb__ticks"></span></div>
+      <a class="btn btn--sm sb__btn" href="devis.html">Voir mon devis <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
