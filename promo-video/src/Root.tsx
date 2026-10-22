@@ -23,6 +23,7 @@ export const RemotionRoot: React.FC = () => (
     <style>{css}</style>
     <Composition id="Promo" component={Main} durationInFrames={TOTAL} fps={FPS} width={1080} height={1920} defaultProps={{ bgm: true }} />
     <Composition id="Tutoriel" component={Tutoriel} durationInFrames={TUTO_TOTAL} fps={FPS} width={TW} height={TH} />
+    <Composition id="TutorielVertical" component={Tutoriel} durationInFrames={TUTO_TOTAL} fps={FPS} width={TH} height={TW} />
     {Object.keys(STORIES).map((id) => (
       <Composition key={`v-${id}`} id={`video-${id}`} component={Story} durationInFrames={storyDuration(id)} fps={FPS} width={1080} height={1920} defaultProps={{ id, bgm: true }} />
     ))}
