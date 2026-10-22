@@ -11,7 +11,7 @@ import { beatF } from '../beat';
 const A = 22; // premier temps du plan
 const bt = (k: number) => beatF(A + k) - beatF(A); // image locale du temps k
 const ROW_H = 168;
-const FS = 112;
+const FS = 100;
 const CY = 720;
 const PILL_X = 80;
 const PILL_W = 920;
@@ -26,7 +26,7 @@ const ROWS: Row[] = [
   { name: 'Glace pilée', price: '3 000', unit: 'le sac 50 kg', pill: '#6db3ff', bg: '#0a1f44', ink: '#03102a' },
   { name: 'Carboglace', price: '7 500', unit: 'le kilo · −78,5 °C', pill: '#ffffff', bg: '#020812', ink: '#020812' },
   { name: 'Ice Cup', price: '250', unit: 'le gobelet', pill: '#5ee3e0', bg: '#03182a', ink: '#022426' },
-  { name: 'Barres 5 · 10 kg', price: '350 · 650', unit: 'la barre', pill: '#2f8cf2', bg: '#0f2c5e', ink: '#f3faff' },
+  { name: 'Barres', price: '350/650', unit: 'la barre 5 kg / 10 kg', pill: '#2f8cf2', bg: '#0f2c5e', ink: '#f3faff' },
 ];
 const N = ROWS.length - 1; // 5 pas
 const PAD_ROWS = 2; // lignes vides au-dessus pour l'entrée
@@ -84,14 +84,14 @@ export const PriceList: React.FC = () => {
           <div style={{ position: 'absolute', left: 0, right: 0, top: listTop, transform: `translateY(${(listY + (1 - listIn) * 60).toFixed(2)}px)` }}>
             {ROWS.map((r, i) => {
               const d = Math.abs(i - pos);
-              const op = Math.max(0, 0.45 - 0.13 * Math.max(0, d - 1)) * listIn;
+              const op = Math.max(0, 0.72 - 0.2 * Math.max(0, d - 1)) * listIn;
               const sc = 1 - Math.min(0.14, 0.05 * Math.max(0, d - 0.5));
               const blur = Math.max(0, d - 1.5) * 3;
               return (
                 <span key={r.name} style={{
                   ...rowStyle, top: i * ROW_H, left: PILL_X + PAD, color: `rgba(243,250,255,${op.toFixed(3)})`,
                   transform: `scale(${sc.toFixed(4)})`, filter: blur > 0.3 ? `blur(${blur.toFixed(2)}px)` : undefined,
-                }}>{r.name}</span>
+                }}>{r.name}<span style={{ position: 'absolute', left: PILL_W - 2 * PAD, transform: 'translateX(-100%)', fontSize: 64 }}>{r.price} F</span></span>
               );
             })}
           </div>
@@ -105,7 +105,7 @@ export const PriceList: React.FC = () => {
         }}>
           <SpeedBlur vx={0} vy={vy} amount={0.16} max={9}>
             <div style={{ position: 'absolute', left: 0, right: 0, top: PILL_H / 2 - ROW_H / 2, transform: `translateY(${listY.toFixed(2)}px)` }}>
-              {ROWS.map((r, i) => <span key={r.name} style={{ ...rowStyle, top: i * ROW_H, left: PAD, color: r.ink }}>{r.name}</span>)}
+              {ROWS.map((r, i) => <span key={r.name} style={{ ...rowStyle, top: i * ROW_H, left: PAD, color: r.ink }}>{r.name}<span style={{ position: 'absolute', left: PILL_W - 2 * PAD, transform: 'translateX(-100%)', fontSize: 64 }}>{r.price} F</span></span>)}
             </div>
           </SpeedBlur>
           <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: PILL_H * 0.45, background: 'linear-gradient(rgba(255,255,255,0.18), rgba(255,255,255,0))' }} />
@@ -113,7 +113,7 @@ export const PriceList: React.FC = () => {
       </AbsoluteFill>
 
       <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 380, background: `linear-gradient(${bgColor} 40%, ${css(bg, 0)})` }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 1000, bottom: 0, background: `linear-gradient(${css(bg, 0)}, ${bgColor} 22%)` }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 940, bottom: 0, background: `linear-gradient(${css(bg, 0)}, ${bgColor} 22%)` }} />
 
       {/* en-tête */}
       <div style={{ position: 'absolute', left: 80, top: 150, display: 'flex', alignItems: 'center', gap: 22, opacity: ramp(frame, 0, 10, EASE.out) }}>
@@ -149,18 +149,7 @@ export const PriceList: React.FC = () => {
         </div>
       </div>
 
-      {/* pastilles de progression */}
-      <div style={{ position: 'absolute', left: 80, top: 1560, display: 'flex', gap: 20 }}>
-        {ROWS.map((r, k) => {
-          const cur = k === beat;
-          const pop = cur && beat > 0 ? interpolate(t, [0, 0.6, 1], [0.7, 1.12, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) : 1;
-          return <div key={k} style={{
-            width: 46, height: 46, borderRadius: 23, background: r.pill, transform: `scale(${((cur ? 1 : 0.62) * pop).toFixed(4)})`,
-            opacity: cur ? 1 : k < beat ? 0.55 : 0.3, boxShadow: cur ? `0 0 0 5px ${bgColor}, 0 0 0 7px rgba(255,255,255,0.85), 0 0 30px ${alpha(r.pill, 0.6)}` : 'none',
-          }} />;
-        })}
-      </div>
-      <div style={{ position: 'absolute', left: 80, right: 80, top: 1660, fontSize: 64, fontWeight: 700, color: '#f3faff' }}>
+      <div style={{ position: 'absolute', left: 80, right: 80, top: 1470, fontSize: 64, fontWeight: 700, color: '#f3faff' }}>
         <TextReveal text="Livraison ou retrait" by="word" variant="rise" start={bt(N) + 2} each={10} gap={2} />
       </div>
       <Vignette strength={0.45} inner={0.45} color="#020306" />

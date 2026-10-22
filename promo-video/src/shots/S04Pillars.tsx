@@ -23,8 +23,8 @@ type Slot = { word: string; sub: string; in0: number; out0: number | null };
 // bornes locales : temps 0 / 2 / 4 du plan = images 0 / 29 / 59
 const SLOTS: Slot[] = [
   { word: 'Pureté', sub: 'Une eau traitée et contrôlée', in0: -2, out0: 24 },
-  { word: 'Hygiène', sub: 'Hygiénique & sûr', in0: 27, out0: 54 },
-  { word: 'Qualité', sub: 'Froid maîtrisé en continu', in0: 57, out0: null },
+  { word: 'Hygiène', sub: 'Des normes strictes', in0: 27, out0: 54 },
+  { word: 'Qualité', sub: 'Conditionnement soigné', in0: 57, out0: null },
 ];
 
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
@@ -206,7 +206,7 @@ export const PillarsRelay: React.FC = () => {
               ...type(64, 600), color: L.ink2, opacity: 1 - e[i].tout,
               filter: e[i].tout > 0.02 ? `blur(${(e[i].tout * 6).toFixed(2)}px)` : undefined,
             }}>
-              <TextReveal text={s.sub} by="word" variant="rise" start={s.in0 + 5} each={10} gap={2} />
+              <TextReveal text={s.sub} by="word" variant="rise" start={s.in0 + 3} each={3} gap={2} />
             </div>
           ) : null,
         )}

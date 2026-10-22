@@ -10,9 +10,9 @@ import { GlaceurLogo, GlaceurMark } from '../_fixtures/Brand';
 
 const L = LOOKS.glaceur;
 const AX = 80;
-const AY = 300;
+const AY = 270;
 const AW = 920;
-const AH = 1420;
+const AH = 1300;
 const SCAN0 = 3;
 const SCAN1 = 36;
 const Y0 = -20;
@@ -28,9 +28,9 @@ const PLAN: Plan[] = (() => {
     { key: 'badge', box: [56, 180, 640, 72], from: [-700, -40], rot: -6, land: 0 },
     { key: 'h1', box: [56, 280, 808, 290], from: [-980, 80], rot: -4, land: 0 },
     { key: 'body', box: [56, 600, 808, 150], from: [900, 120], rot: 3, land: 0 },
-    { key: 'media', box: [56, 790, 808, 360], from: [960, 60], rot: 6, land: 0 },
-    { key: 'cta', box: [56, 1190, 808, 112], from: [-160, 520], rot: 3, land: 0 },
-    { key: 'stats', box: [56, 1324, 808, 76], from: [180, 460], rot: -2, land: 0 },
+    { key: 'media', box: [56, 780, 808, 250], from: [960, 60], rot: 6, land: 0 },
+    { key: 'cta', box: [56, 1060, 808, 112], from: [-160, 520], rot: 3, land: 0 },
+    { key: 'stats', box: [56, 1190, 808, 76], from: [180, 460], rot: -2, land: 0 },
   ];
   let prev = -99;
   for (const p of ps) {

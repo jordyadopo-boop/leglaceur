@@ -61,9 +61,9 @@ export const SectorsCuts: React.FC = () => {
       {/* en-tête : compteur des secteurs */}
       <div style={{ position: 'absolute', left: 80, top: 150, display: 'flex', alignItems: 'center', gap: 20 }}>
         <GlaceurMark size={84} tone="dark" />
-        <span style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 64, letterSpacing: '0.14em', color: '#f3faff' }}>ILS NOUS FONT CONFIANCE</span>
+        <span style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 64, letterSpacing: '0.14em', color: '#f3faff' }}>POUR TOUS LES PROS</span>
       </div>
-      <div style={{ position: 'absolute', left: 80, right: 80, bottom: 260, opacity: lab, transform: `translateY(${((1 - lab) * 50).toFixed(1)}px)` }}>
+      <div style={{ position: 'absolute', left: 80, right: 80, bottom: 420, opacity: lab, transform: `translateY(${((1 - lab) * 50).toFixed(1)}px)` }}>
         <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 64, letterSpacing: '0.16em', color: '#8ecfff' }}>0{seg + 1} / 04</div>
         <div style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 168, lineHeight: 0.95, color: '#f3faff', textTransform: 'uppercase', marginTop: 8 }}>{s.name}</div>
         <div style={{ fontSize: 64, fontWeight: 600, color: '#bfe4ff', marginTop: 14 }}>{s.sub}</div>

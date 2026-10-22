@@ -133,8 +133,8 @@ export const NeonHours: React.FC = () => {
           <div style={{ position: 'absolute', left: 0, top: FLOOR_Y, width: PLANE_W, height: 340, background: 'linear-gradient(180deg, #040a18 0%, #02050c 100%)' }} />
           <div style={{
             position: 'absolute', left: 0, top: FLOOR_Y, width: PLANE_W, height: 300, overflow: 'hidden',
-            WebkitMaskImage: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)',
-            maskImage: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(3px)',
+            WebkitMaskImage: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 60%)',
+            maskImage: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 60%)', filter: 'blur(7px)',
           }}>
             <div style={{ position: 'absolute', left: 0, top: 0, width: PLANE_W, height: 600, transform: 'scaleY(-1)', transformOrigin: '50% 50%' }}>
               <MarqueeRow row={ROWS[2]} f={f} mid={at(2) + 7} y={ROW_Y[2] - 300} lit={lit[2]} glass={glass[2]} cheap />
@@ -152,7 +152,7 @@ export const NeonHours: React.FC = () => {
       </div>
       <Vignette strength={0.6} inner={0.4} color="#01040b" />
       <div style={{
-        position: 'absolute', left: 0, right: 0, top: 1600, textAlign: 'center', opacity: cap, transform: `translateY(${((1 - cap) * 24).toFixed(1)}px)`,
+        position: 'absolute', left: 0, right: 0, top: 1450, textAlign: 'center', opacity: cap, transform: `translateY(${((1 - cap) * 24).toFixed(1)}px)`,
         fontFamily: F.display, fontWeight: 600, fontSize: 60, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#bfe4ff',
       }}>
         Commande en ligne, à toute heure

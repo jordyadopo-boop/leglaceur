@@ -98,8 +98,8 @@ export const SectorWords: React.FC = () => {
         const q = project(it.x, it.y, Math.max(0, u - SPEED), roll);
         const vx = p.sx - q.sx, vy = p.sy - q.sy;
         // zone du titre (ellipse) : les mots qui la traversent sont atténués
-        const k = ((p.sx - CX) / 640) ** 2 + ((p.sy - (CY - 70)) / 270) ** 2;
-        const occl = k < 1 ? 0.06 + 0.94 * k * k * k : 1;
+        const k = ((p.sx - CX) / 950) ** 2 + ((p.sy - (CY - 70)) / 330) ** 2;
+        const occl = k < 1 ? k ** 4 : 1;
         const op = curve(u) * occl;
         if (op <= 0.005) return null;
         const blur = (u < 0.22 ? (1 - u / 0.22) * 2.2 : 0) + (u > 0.86 ? (u - 0.86) * 60 : 0);
