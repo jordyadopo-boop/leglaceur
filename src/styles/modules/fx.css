@@ -203,12 +203,23 @@
 
 /* ---------- 4. Condensation, brume, bordure givrée ---------- */
 .fx-droplets { z-index: 2; }
+.fx-droplets--live { z-index: 2; }
+/* Brume : au-dessus d'un visuel (over) ou derrière le texte d'une carte (under). */
 .fx-fog { z-index: 2; }
-.fx-frost-border { z-index: 2; }
-.fx-frost-border--final { opacity: 0; }
+.fx-fog-host--under { isolation: isolate; }
+.fx-fog--under { z-index: -1; }
+/* Givre de bordure : sous le contenu (les cartes placent leur contenu au-dessus des .fx-layer). */
+.fx-frost-border { z-index: 1; opacity: 1; }
+.fx-frost-border__line { z-index: 1; overflow: visible; }
+.fx-frost-border__line rect { filter: drop-shadow(0 0 2px rgba(142, 207, 255, 0.85)); }
+.fx-frost-border__line--dark rect { filter: drop-shadow(0 0 3px rgba(191, 228, 255, 0.9)); }
+@media (hover: hover) and (pointer: fine) {
+  .fx-frost-border-host.is-frosted .fx-frost-border { transition: opacity 0.6s var(--ease-out); }
+  .fx-frost-border-host.is-frosted:hover .fx-frost-border { opacity: 0.95 !important; }
+}
 
 /* ---------- 5. Inclinaison 3D ---------- */
-.fx-tilt-host { transform-style: flat; will-change: transform; }
+.fx-tilt-host { will-change: transform; }
 .fx-tilt__glare {
   position: absolute;
   inset: 0;
@@ -227,13 +238,25 @@
   width: 200%;
   height: 200%;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.42) 0%, rgba(227, 243, 255, 0.16) 18%, rgba(255, 255, 255, 0) 38%),
-    linear-gradient(115deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.16) 48%, rgba(191, 228, 255, 0.08) 52%, rgba(255, 255, 255, 0) 60%);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(227, 243, 255, 0.18) 16%, rgba(255, 255, 255, 0) 34%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0) 41%, rgba(255, 255, 255, 0.2) 48%, rgba(191, 228, 255, 0.1) 52%, rgba(255, 255, 255, 0) 59%);
   mix-blend-mode: soft-light;
   will-change: transform;
 }
+/* Liseré qui s'allume du côté de la lumière (angle piloté par --fx-glare-a). */
+.fx-tilt__glare-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  opacity: var(--fx-glare-k, 0.5);
+  background: conic-gradient(from var(--fx-glare-a, 0deg), rgba(255, 255, 255, 0.95), rgba(142, 207, 255, 0.35) 16%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(142, 207, 255, 0.35) 84%, rgba(255, 255, 255, 0.95));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
 .section--dark .fx-tilt__glare-spot,
-.fx-tilt-host[data-fx-tone='dark'] .fx-tilt__glare-spot { mix-blend-mode: screen; opacity: 0.7; }
+.fx-tilt-host--dark .fx-tilt__glare-spot { mix-blend-mode: screen; opacity: 0.55; }
 
 /* ---------- 6. Éclats ---------- */
 .fx-shatter-layer {
@@ -247,11 +270,13 @@
 
 /* ---------- 7. Garde-fous ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .fx-ambient__dust, .fx-ambient__veil, .fx-cursor, .fx-shatter-layer, .fx-wipe, .fx-wipe-hint { display: none !important; }
+  /* Le givre de bordure et la condensation figée restent (aucun mouvement). */
+  .fx-ambient__dust, .fx-ambient__veil, .fx-cursor, .fx-shatter-layer, .fx-wipe, .fx-wipe-hint,
+  .fx-fog, .fx-droplets--live, .fx-tilt__glare { display: none !important; }
 }
 @media (hover: none), (pointer: coarse) {
   .fx-cursor { display: none; }
 }
 @media print {
-  .fx-ambient, .fx-cursor, .fx-layer, .fx-shatter-layer, .fx-tilt__glare, .fx-wipe-hint { display: none !important; }
+  .fx-ambient, .fx-cursor, .fx-layer, .fx-shatter-layer, .fx-tilt__glare, .fx-wipe-hint, .fx-frost-border__line { display: none !important; }
 }

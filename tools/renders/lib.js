@@ -131,8 +131,8 @@ export function canvasTex(c, { srgb = true, repeat = false } = {}) {
 /** Studio froid : pièce marine + boîtes à lumière. `flip` pour la passe miroir (non utilisé). */
 export function buildEnvironment(renderer, opts = {}) {
   const {
-    room = 0x081833, top = 6, left = 3.2, right = 4.2, back = 2.4, front = 1.2,
-    tint = 0xeaf4ff, cyan = 0x9fdcff, blue = 0x4d8dff,
+    room = 0x0a1528, top = 6, left = 3.2, right = 4.2, back = 2.4, front = 1.2,
+    tint = 0xf2f7ff, cyan = 0xb5e3ff, blue = 0x7aa6e6,
   } = opts;
   const env = new THREE.Scene();
   const box = new THREE.Mesh(
@@ -163,36 +163,49 @@ export function buildEnvironment(renderer, opts = {}) {
 
 /* ------------------------------------------------------------------ décor */
 
-/** Mur de fond : dégradé marine + halo froid (émissif, non éclairé). */
-export function buildBackdrop({ haloPos = [0.5, 0.42], haloSize = 0.55, top = '#01050f', mid = '#071a3e', halo = '#2a6cc0', glow = 0.5 } = {}) {
+/** Résolution de la cible courante (partagée par les shaders en espace écran). */
+export const SCREEN = { value: new THREE.Vector2(1, 1) };
+
+/** Fond en espace écran, partagé entre le mur et le brouillard du sol → horizon sans couture. */
+export const BACKDROP_GLSL = /* glsl */ `
+  uniform vec2 uScreen; uniform vec3 cTop, cMid, cHalo; uniform vec2 haloPos; uniform float haloSize, glow, horizon;
+  vec3 backdropColor(vec2 s){
+    vec3 c = mix(cMid, cTop, smoothstep(horizon - 0.05, 1.05, s.y));
+    c = mix(c * 0.7, c, smoothstep(0.0, horizon, s.y));
+    vec2 d = s - haloPos; d.x *= uScreen.x / uScreen.y;
+    float r = length(d) / haloSize;
+    c += cHalo * glow * (exp(-r * r * 2.4) * 0.8 + exp(-r * r * 0.45) * 0.3);
+    return c;
+  }`;
+
+export function backdropUniforms({ haloPos = [0.5, 0.55], haloSize = 0.45, top = '#02060f', mid = '#0b1a33', halo = '#4f7fb8', glow = 0.5, horizon = 0.5 } = {}) {
+  return {
+    uScreen: SCREEN,
+    cTop: { value: new THREE.Color(top) },
+    cMid: { value: new THREE.Color(mid) },
+    cHalo: { value: new THREE.Color(halo) },
+    haloPos: { value: new THREE.Vector2(...haloPos) },
+    haloSize: { value: haloSize },
+    glow: { value: glow },
+    horizon: { value: horizon },
+  };
+}
+
+/** Mur de fond (grand plan lointain, couleur calculée en espace écran). */
+export function buildBackdrop(bd) {
   const mat = new THREE.ShaderMaterial({
-    uniforms: {
-      cTop: { value: new THREE.Color(top) },
-      cMid: { value: new THREE.Color(mid) },
-      cHalo: { value: new THREE.Color(halo) },
-      haloPos: { value: new THREE.Vector2(...haloPos) },
-      haloSize: { value: haloSize },
-      glow: { value: glow },
-    },
-    vertexShader: /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-    fragmentShader: /* glsl */ `
-      uniform vec3 cTop, cMid, cHalo; uniform vec2 haloPos; uniform float haloSize, glow; varying vec2 vUv;
-      void main(){
-        vec3 c = mix(cMid, cTop, smoothstep(0.2, 0.9, vUv.y));
-        vec2 d = (vUv - haloPos) * vec2(1.0, 1.25);
-        float r = length(d) / haloSize;
-        c += cHalo * glow * (exp(-r*r*2.2) * 0.9 + exp(-r*r*0.6) * 0.25);
-        gl_FragColor = vec4(c, 1.0);
-      }`,
+    uniforms: bd,
+    vertexShader: /* glsl */ `void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: BACKDROP_GLSL + /* glsl */ `
+      void main(){ gl_FragColor = vec4(backdropColor(gl_FragCoord.xy / uScreen), 1.0); }`,
   });
-  mat.toneMapped = true;
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
   m.userData.backdrop = true;
   return m;
 }
 
 /** Sol mouillé : PBR sombre + vernis + réflexion miroir injectée (floue, ondulée). */
-export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0.7 } = {}) {
+export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0.7, bd } = {}) {
   const N = 1024;
   // micro-relief + flaques
   const hFine = fbm(N, N, { cells: 48, octaves: 4, seed });
@@ -206,14 +219,17 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
   }
   const normal = heightToNormal(ripple, N, N, 3.0);
   const rmap = packTex(N, N, null, rough, null, null);
+  const cau = normalizeArr(fbm(512, 512, { cells: 5, octaves: 3, seed: seed + 21, ridged: true, gain: 0.45 }));
+  for (let i = 0; i < cau.length; i++) cau[i] = Math.pow(cau[i], 5);
+  const causticTex = packTex(512, 512, cau, cau, cau, null);
   const ripTex = heightToNormal(fbm(512, 512, { cells: 6, octaves: 3, seed: seed + 11 }), 512, 512, 6.0);
   const mat = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(color),
     roughness: 1, roughnessMap: rmap,
     metalness: 0,
     normalMap: normal, normalScale: new THREE.Vector2(0.25, 0.25),
-    specularIntensity: 0.5,
-    envMapIntensity: 0.22,
+    specularIntensity: 0.06,
+    envMapIntensity: 0.2,
   });
   [normal, rmap].forEach((t) => t.repeat.set(size / 6, size / 6));
   const uniforms = {
@@ -225,8 +241,14 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
     reflDistort: { value: 0.006 },
     fadeCenter: { value: new THREE.Vector2(0, 0) },
     fadeRadius: { value: 14 },
-    fogColor: { value: new THREE.Color('#071a3e') },
     fogFar: { value: 30 },
+    poolCenter: { value: new THREE.Vector2(0, -3) },
+    poolRadius: { value: new THREE.Vector2(3, 2) },
+    poolColor: { value: new THREE.Color(0, 0, 0) },
+    tCaustic: { value: causticTex },
+    causticScale: { value: 0.22 },
+    causticMix: { value: 0.75 },
+    ...bd,
   };
   mat.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, uniforms);
@@ -235,7 +257,8 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
       .replace('#include <project_vertex>', '#include <project_vertex>\nvec4 wp_ = modelMatrix * vec4(transformed,1.0); vWPos = wp_.xyz; vReflCoord = reflMatrix * wp_;');
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform sampler2D tReflect; uniform sampler2D tRipple; uniform float reflStrength, reflBlur, reflDistort, fadeRadius, fogFar; uniform vec2 fadeCenter; uniform vec3 fogColor;
+        uniform sampler2D tReflect; uniform sampler2D tRipple; uniform float reflStrength, reflBlur, reflDistort, fadeRadius, fogFar; uniform vec2 fadeCenter, poolCenter, poolRadius; uniform vec3 poolColor; uniform sampler2D tCaustic; uniform float causticScale, causticMix;
+        ${BACKDROP_GLSL}
         varying vec4 vReflCoord; varying vec3 vWPos;`)
       .replace('#include <opaque_fragment>', `
         {
@@ -256,9 +279,12 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
           float ndv = clamp(V.y, 0.0, 1.0);
           float fres = 0.32 + 0.68 * pow(1.0 - ndv, 4.0);
           float fade = 1.0 - smoothstep(fadeRadius * 0.45, fadeRadius, length(vWPos.xz - fadeCenter));
+          vec2 pd = (vWPos.xz - poolCenter) / poolRadius;
+          float cau = texture2D(tCaustic, vWPos.xz * causticScale).r * 0.6 + texture2D(tCaustic, vWPos.xz * causticScale * 1.7 + 0.31).r * 0.4;
+          outgoingLight += poolColor * exp(-dot(pd, pd) * 1.6) * mix(1.0, 0.25 + cau * 3.0, causticMix);
           outgoingLight += refl * reflStrength * fres * fade;
           float fogK = smoothstep(fadeRadius * 0.5, fogFar, length(vWPos.xz - fadeCenter));
-          outgoingLight = mix(outgoingLight, fogColor, fogK);
+          outgoingLight = mix(outgoingLight, backdropColor(gl_FragCoord.xy / uScreen), fogK);
         }
         #include <opaque_fragment>`);
   };
@@ -272,27 +298,47 @@ export function buildFloor({ size = 200, color = '#030a19', seed = 3, puddle = 0
 
 /* ------------------------------------------------------------------ glace */
 
+/** UV « boîte » en unités monde (texture isotrope quelle que soit la face). */
+export function boxUV(geo, scale = 0.5) {
+  const p = geo.attributes.position, n = geo.attributes.normal, uv = geo.attributes.uv;
+  for (let i = 0; i < p.count; i++) {
+    const ax = Math.abs(n.getX(i)), ay = Math.abs(n.getY(i)), az = Math.abs(n.getZ(i));
+    let u, v;
+    if (ax >= ay && ax >= az) { u = p.getZ(i); v = p.getY(i); }
+    else if (ay >= az) { u = p.getX(i); v = p.getZ(i); }
+    else { u = p.getX(i); v = p.getY(i); }
+    uv.setXY(i, u * scale + 0.37, v * scale + 0.61);
+  }
+  uv.needsUpdate = true;
+  return geo;
+}
+
 /** Cartes de surface de glace : normal (fonte + givre), R = transmission, G = rugosité. */
 export function iceMaps({ seed = 1, size = 512, frost = 0.5, melt = 1, aspect = 1 } = {}) {
   const w = size, h = size;
   const meltH = fbm(w, h, { cells: 3, cellsY: Math.max(1, Math.round(3 / aspect)), octaves: 4, seed, ridged: false });
   const ridge = fbm(w, h, { cells: 5, octaves: 3, seed: seed + 3, ridged: true });
   const fine = fbm(w, h, { cells: 64, octaves: 3, seed: seed + 5 });
-  const frostN = normalizeArr(fbm(w, h, { cells: 4, octaves: 5, seed: seed + 9 }));
-  const hgt = new Float32Array(w * h), tr = new Float32Array(w * h), ro = new Float32Array(w * h);
+  const frostN = normalizeArr(fbm(w, h, { cells: 3, octaves: 4, seed: seed + 9 }));
+  const grain = normalizeArr(fbm(w, h, { cells: 96, octaves: 2, seed: seed + 13 }));
+  const hgt = new Float32Array(w * h), tr = new Float32Array(w * h), ro = new Float32Array(w * h), fr = new Float32Array(w * h);
   for (let i = 0; i < w * h; i++) {
-    const f = THREE.MathUtils.smoothstep(frostN[i], 1 - frost * 0.9, 1.05 - frost * 0.35);
-    hgt[i] = meltH[i] * 0.9 * melt + ridge[i] * 0.25 * melt + fine[i] * (0.08 + f * 0.25);
-    tr[i] = 1 - f * 0.55;
-    ro[i] = 0.05 + f * 0.33 + fine[i] * 0.03;
+    const dens = THREE.MathUtils.smoothstep(frostN[i], 0.55 - frost * 0.35, 0.95) * frost;
+    const g = THREE.MathUtils.smoothstep(grain[i], 0.4, 0.8);
+    const f = Math.min(1, dens * (0.9 + 0.1 * g));
+    fr[i] = f;
+    hgt[i] = meltH[i] * 0.9 * melt + ridge[i] * 0.25 * melt + fine[i] * 0.08 + g * dens * 0.1;
+    tr[i] = 1 - f * 0.25;
+    ro[i] = 0.015 + f * 0.3 + fine[i] * 0.012;
   }
   return {
     normal: heightToNormal(hgt, w, h, 6),
     trRough: packTex(w, h, tr, ro, null, null),
+    frost: packTex(w, h, fr, fr, fr, null),
   };
 }
 
-export function iceMaterial({ maps, thickness = 1, ior = 1.31, normalScale = 0.5, envMapIntensity = 1.35, attenuation = '#bfe6ff', attenuationDistance = 4, side = THREE.FrontSide } = {}) {
+export function iceMaterial({ maps, thickness = 1, ior = 1.31, normalScale = 0.5, envMapIntensity = 1.35, attenuation = '#bfe6ff', attenuationDistance = 4, side = THREE.FrontSide, frostGlow = 0.04, clearcoat = 0 } = {}) {
   return new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     metalness: 0,
@@ -301,9 +347,11 @@ export function iceMaterial({ maps, thickness = 1, ior = 1.31, normalScale = 0.5
     thickness, ior,
     attenuationColor: new THREE.Color(attenuation), attenuationDistance,
     specularIntensity: 1,
-    clearcoat: 0.35, clearcoatRoughness: 0.06,
+    clearcoat, clearcoatRoughness: 0.06,
     normalMap: maps?.normal ?? null, normalScale: new THREE.Vector2(normalScale, normalScale),
     envMapIntensity,
+    emissive: new THREE.Color(0.62, 0.74, 0.9).multiplyScalar(frostGlow),
+    emissiveMap: maps?.frost ?? null,
     side,
   });
 }
@@ -384,6 +432,7 @@ export class Studio {
         this.bgQuad.material.uniforms.tColor.value = prev.texture;
         this.bgQuad.material.uniforms.tDepth.value = prev.depthTexture;
       }
+      SCREEN.value.set(cur.width, cur.height);
       r.setRenderTarget(cur);
       r.setClearColor(0x000000, 1);
       r.clear(true, true, true);
@@ -456,7 +505,7 @@ export class Studio {
     this.finish(out, post);
   }
 
-  finish(rt, { bloom = 0.22, threshold = 1.1, vignette = 0.35, grain = 0.012, saturation = 1.0 } = {}) {
+  finish(rt, { bloom = 0.22, threshold = 1.1, vignette = 0.35, grain = 0.012, saturation = 0.9 } = {}) {
     const r = this.renderer;
     // chaîne de flou pour le bloom : copie en mipmaps
     const w = this.w, h = this.h;

@@ -48,7 +48,7 @@
 /* Mot géant CSS (repli ; la scène WebGL le redessine en réfraction) */
 .hero__word {
   position: absolute; left: 50%; bottom: 0; margin: 0; max-width: none;
-  transform: translate(-50%, 40%);
+  transform: translate(-50%, 34%);
   font-family: var(--font-display); font-weight: 800; font-size: 27.6vw; line-height: 0.8; letter-spacing: 0;
   text-transform: uppercase; white-space: nowrap; user-select: none;
   transition: opacity 1.2s var(--ease-out);
@@ -68,6 +68,8 @@
 .hero.is-webgl .hero__canvas { opacity: 1; }
 .hero.is-webgl .hero__word,
 .hero.is-webgl .hero__cubes { opacity: 0; transition-delay: 0.2s; }
+/* WebGL disponible : les glaçons CSS ne servent que de repli (échec de chargement / contexte perdu) */
+.hero.has-gl:not(.is-static) .hero__cubes { opacity: 0; }
 
 /* Givre cristallin dans les angles (grain teinté, fondu radial) */
 .hero__frost {
@@ -93,7 +95,8 @@
   pointer-events: none; /* les clics passent aux glaçons… */
 }
 .hero__content { position: relative; display: grid; gap: clamp(1.1rem, 2.4vh, 1.6rem); justify-items: start; max-width: 40rem; pointer-events: auto; }
-.hero__visual { position: relative; flex: 1 1 auto; min-height: clamp(230px, 34svh, 380px); margin-top: 0.75rem; }
+.hero__visual { position: relative; flex: 1 1 auto; min-height: clamp(220px, 30svh, 380px); margin-top: 0.25rem; }
+@media (max-width: 899px) { .hero__inner { padding-bottom: 0.5rem; } }
 
 @media (min-width: 900px) {
   .hero { min-height: min(100svh, 1000px); min-height: max(640px, min(100svh, 1000px)); }
@@ -192,7 +195,7 @@
 
 /* ---------- Indice d'interaction et indicateur de défilement ---------- */
 .hero__hint {
-  position: absolute; right: 0; bottom: 0.5rem; margin: 0;
+  position: absolute; left: 0; bottom: 0.5rem; margin: 0;
   display: inline-flex; align-items: center; gap: 0.55rem;
   font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-700);
   opacity: 0; transform: translateY(8px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);

@@ -62,6 +62,31 @@ export default function init(el) {
     }, 220);
   });
 
+  // Régulateur : si l'appareil peine pendant que le voile est affiché, on baisse sa résolution,
+  // puis on passe au repli 2D (simple opacité). Désactivable en dev avec ?fx-hq.
+  let slowMs = 0;
+  let slowRun = 0;
+  let lastNow = 0;
+  const governed = !(import.meta.env.DEV && /[?&]fx-hq\b/.test(location.search));
+  async function degrade() {
+    if (!veil) return;
+    if (veil.kind === 'webgl' && veil.quality > 0.6) {
+      veil.setQuality(0.55);
+      return;
+    }
+    if (veil.kind === 'webgl') {
+      const { createVeil2D } = await import('../fx/frost-veil.js');
+      veil.destroy();
+      const old = el.querySelector('.fx-ambient__veil');
+      const fresh = document.createElement('canvas');
+      fresh.className = 'fx-ambient__veil';
+      fresh.setAttribute('aria-hidden', 'true');
+      fresh.style.visibility = 'hidden';
+      old?.replaceWith(fresh);
+      veil = createVeil2D(fresh);
+    }
+  }
+
   const task = createTask('ambient', (dt, t) => {
     const y = window.scrollY;
     const dy = y - lastY;
@@ -73,6 +98,25 @@ export default function init(el) {
     else level = Math.max(target, level - dt * (0.22 + level * 0.18));
     dust.update(dt, t, dy);
     veil?.render(level, t);
+    // Mesure en temps réel (dt est plafonné par la boucle) : plusieurs images lentes d'affilée
+    // pendant que le voile est affiché = le GPU ne suit pas (un à-coup isolé au chargement ne compte pas).
+    const now = performance.now();
+    const interval = lastNow ? now - lastNow : 16;
+    lastNow = now;
+    if (governed && veil && veil.kind === 'webgl' && level > 0.05) {
+      if (interval > 34) {
+        slowRun++;
+        slowMs += interval;
+      } else {
+        slowRun = 0;
+        slowMs = Math.max(0, slowMs - interval);
+      }
+      if (slowRun >= 3 && slowMs > 500) {
+        slowRun = 0;
+        slowMs = 0;
+        degrade();
+      }
+    }
   });
   task.start();
 }

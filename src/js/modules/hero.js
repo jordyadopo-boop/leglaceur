@@ -2,7 +2,7 @@
  * Hero de l'accueil (agent hero) — « La fraîcheur sous toutes ses formes ».
  * 1. Contenu relu depuis config.js (lien WhatsApp, engagements, livraison offerte + jauge du panier).
  * 2. Intro orchestrée : le titre « gèle » lettre par lettre (SplitText), puis accroche, CTA, confiance.
- *    Démarre à 'preloader:done' (ou seule après 2,5 s, tout de suite sans préchargeur).
+ *    Démarre à 'preloader:done' (ou seule après 2,5 s) ; sans préchargeur, dès que la scène est prête (1,2 s au plus).
  * 3. Scène WebGL (src/js/hero/scene.js) chargée en import() dynamique après le premier rendu :
  *    glaçons en verre qui tombent et se figent, mot « GLACEUR » réfracté, givre, éclats au clic.
  *    Repli : glaçons en verre CSS + mot géant CSS (sans WebGL, ou avant que la scène ne soit prête).
@@ -113,20 +113,6 @@ function makeSparkles(title, chars, n) {
   return { els: out.map((o) => o.s), place };
 }
 
-/* ------------------------------------------------------------------ */
-/* Déclencheur de l'intro                                              */
-/* ------------------------------------------------------------------ */
-function whenIntro(cb) {
-  const html = document.documentElement;
-  const hasPreloader = html.classList.contains('preload') && !window.__lgPreloaderDone && !!document.querySelector('.preloader');
-  if (!hasPreloader) { cb(); return () => {}; }
-  let done = false;
-  const go = () => { if (done) return; done = true; window.removeEventListener('preloader:done', go); clearTimeout(timer); cb(); };
-  window.addEventListener('preloader:done', go);
-  const timer = setTimeout(go, 2500);
-  return go;
-}
-
 const webglOk = () => {
   try {
     const c = document.createElement('canvas');
@@ -141,9 +127,7 @@ export default function init(el) {
   const canvas = el.querySelector('[data-hero-canvas]');
   const zoneEl = el.querySelector('[data-hero-zone]');
   const hint = el.querySelector('[data-hero-hint]');
-  const anims = [...el.querySelectorAll('[data-hero-anim]')];
   const scrollCue = el.querySelector('[data-hero-scroll]');
-  const cssCubes = [...el.querySelectorAll('.hero__cube')];
   const offContent = fillContent(el);
 
   const wideMq = window.matchMedia('(min-width: 900px)');
@@ -153,15 +137,50 @@ export default function init(el) {
   let disposed = false;
 
   if (hint) hint.textContent = finePointer ? 'Cliquez sur un glaçon' : 'Touchez un glaçon';
+  const glSupported = !!(canvas && zoneEl && webglOk());
+  el.classList.add(glSupported ? 'has-gl' : 'is-static');
+
+  /* ---------- Scène 3D : construite (import + compilation) PUIS affichée ----------
+     La compilation des shaders peut bloquer le fil principal : elle n'a jamais lieu pendant l'intro du texte. */
+  let built = null;
+  function buildScene() {
+    if (!glSupported) return Promise.resolve(null);
+    built ??= new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 30)))
+      .then(() => import('../hero/scene.js'))
+      .then(async ({ createIceScene }) => {
+        if (disposed) return null;
+        const s = await createIceScene({
+          canvas, mobile: isMobile, reduced: reducedMotion,
+          onLost: () => { el.classList.remove('is-webgl'); el.classList.add('is-static'); scene = null; },
+        });
+        const z = measureZone();
+        s.resize(z.W, z.H, z);
+        await s.warm();
+        if (disposed) { s.dispose(); return null; }
+        return s;
+      })
+      .catch((err) => {
+        console.warn('[hero] scène 3D indisponible, rendu statique.', err);
+        el.classList.add('is-static');
+        return null;
+      });
+    return built;
+  }
+  function showScene(s) {
+    if (!s || disposed || scene) return;
+    s.renderOnce(); // premier rendu (compilation éventuelle) : hors intro
+    scene = s;
+    el.classList.add('is-webgl');
+    if (reducedMotion) return;
+    if (hint) gsap.delayedCall(3.2, () => hint.classList.add('is-on'));
+    sync();
+  }
 
   /* ---------- Mouvement réduit : tout est visible, scène figée (rendue une fois) ---------- */
   if (reducedMotion) {
     el.dataset.intro = 'done';
-    const z = () => measureZone();
-    let s0 = null;
-    const ro0 = new ResizeObserver(() => { if (s0) { const m = z(); s0.resize(m.W, m.H, m); } });
-    ro0.observe(el);
-    loadScene((s) => { s0 = s; });
+    new ResizeObserver(() => { if (scene) { const m = measureZone(); scene.resize(m.W, m.H, m); } }).observe(el);
+    buildScene().then(showScene);
     return;
   }
 
@@ -173,6 +192,7 @@ export default function init(el) {
   const trustBits = [...el.querySelectorAll('.hero__values li, .hero__free')];
   const lead = el.querySelector('.hero__lead');
   const eyebrow = el.querySelector('.hero__eyebrow');
+  const cubesWrap = el.querySelector('.hero__cubes');
 
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'ice' } });
   tl.from(eyebrow, { opacity: 0, x: -18, filter: 'blur(6px)', duration: 0.9 }, 0)
@@ -206,26 +226,46 @@ export default function init(el) {
     el.dataset.intro = 'playing';
     sparks.place();
     tl.play(0);
-    if (scene) scene.intro();
-    else if (cssCubes.length) {
-      // La scène n'est pas encore là : les glaçons CSS tombent à sa place.
-      gsap.from(cssCubes, { yPercent: -260, opacity: 0, rotate: () => gsap.utils.random(-40, 40), duration: 1.3, stagger: 0.12, ease: 'bounce.out', delay: 0.1 });
+    if (scene) scene.intro(); // les glaçons tombent pendant que le titre gèle
+    else if (!glSupported && cubesWrap) {
+      // Repli CSS : les glaçons en verre tombent (on anime le conteneur, jamais l'élément preserve-3d).
+      gsap.from(cubesWrap, { y: () => -(el.offsetHeight * 0.8), duration: 1.4, ease: 'bounce.out', delay: 0.15 });
     }
   };
-  const forceIntro = whenIntro(playIntro);
+
+  // Scène prête : affichée tout de suite si l'intro n'a pas commencé (ou est finie), sinon juste après.
+  const sceneShown = buildScene().then((s) => {
+    if (!s) return;
+    const reveal = () => { showScene(s); if (introPlayed) scene?.intro(); };
+    if (el.dataset.intro === 'playing') tl.then(reveal);
+    else reveal();
+  });
+
+  // Déclencheur : fin du préchargeur (ou 2,5 s) ; sans préchargeur, on attend la scène au plus 1,2 s.
+  const html = document.documentElement;
+  const hasPreloader = html.classList.contains('preload') && !window.__lgPreloaderDone && !!document.querySelector('.preloader');
+  let introTimer = 0;
+  const onPre = () => playIntro();
+  if (hasPreloader) {
+    window.addEventListener('preloader:done', onPre, { once: true });
+    introTimer = setTimeout(playIntro, 2500);
+  } else {
+    Promise.race([sceneShown, new Promise((r) => { introTimer = setTimeout(r, 1200); })]).then(playIntro);
+  }
 
   /* ---------- Défilement : contenu qui s'éloigne, scène qui se dissout ---------- */
   const scrollTl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: el, start: 'top top', end: 'bottom top', scrub: true,
-      onUpdate: (self) => scene?.setScroll(self.progress),
+      trigger: el, start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true,
+      // Mobile : les glaçons sont sous le texte, la dissolution commence plus tard.
+      onUpdate: (self) => scene?.setScroll(wideMq.matches ? self.progress : Math.max(0, (self.progress - 0.3) / 0.7)),
     },
   });
   // (les opacités pilotées ici portent sur des conteneurs : les fondus CSS .is-webgl restent libres)
   const stage = el.querySelector('.hero__stage');
   scrollTl.to(content, { yPercent: -10, opacity: 0.2, duration: 1 }, 0)
-    .to(stage, { yPercent: 16, duration: 1 }, 0)
+    .to(stage, { yPercent: () => (wideMq.matches ? 16 : 6), duration: 1 }, 0)
     .to(stage, { opacity: 0, scale: 1.04, duration: 0.45 }, 0.55)
     .to(zoneEl, { opacity: 0, duration: 0.45 }, 0.5)
     .to(scrollCue, { opacity: 0, duration: 0.2 }, 0);
@@ -303,46 +343,11 @@ export default function init(el) {
   io.observe(el);
   document.addEventListener('visibilitychange', sync);
 
-  /* ---------- Chargement de la scène après le premier rendu ---------- */
-  loadScene();
-
-  function loadScene(onReady) {
-    if (!canvas || !zoneEl || !webglOk()) { el.classList.add('is-static'); return; }
-    const kick = () => {
-      import('../hero/scene.js')
-        .then(async ({ createIceScene }) => {
-          if (disposed) return;
-          const s = await createIceScene({
-            canvas, mobile: isMobile, reduced: reducedMotion,
-            onLost: () => { el.classList.remove('is-webgl'); el.classList.add('is-static'); scene = null; },
-          });
-          if (disposed) { s.dispose(); return; }
-          const z = measureZone();
-          s.resize(z.W, z.H, z);
-          await s.warm();
-          if (disposed) { s.dispose(); return; }
-          s.renderOnce();
-          scene = s;
-          el.classList.add('is-webgl');
-          if (reducedMotion) { onReady?.(s); return; }
-          if (hint && !isMobile) gsap.delayedCall(introPlayed ? 2.4 : 4, () => hint.classList.add('is-on'));
-          else if (hint) gsap.delayedCall(4, () => hint.classList.add('is-on'));
-          if (introPlayed) scene.intro();
-          sync();
-        })
-        .catch((err) => {
-          console.warn('[hero] scène 3D indisponible, rendu statique.', err);
-          el.classList.add('is-static');
-        });
-    };
-    // Après le premier rendu (le texte s'affiche d'abord), sans gêner le préchargeur.
-    requestAnimationFrame(() => setTimeout(kick, 30));
-  }
-
   // Nettoyage (si la section est retirée du document).
   el._heroDispose = () => {
     disposed = true;
-    forceIntro?.();
+    clearTimeout(introTimer);
+    window.removeEventListener('preloader:done', onPre);
     offContent();
     ro.disconnect();
     io.disconnect();
