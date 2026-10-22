@@ -37,21 +37,20 @@ Si l'adresse ne répond pas après le premier déploiement : **Settings → Page
 4. Sur GitHub : **Settings → Pages**, vérifiez que le domaine personnalisé est `www.leglaceur.ci` puis cochez **Enforce HTTPS**
    dès que le certificat est émis (quelques minutes à quelques heures après la propagation DNS).
 
-## 3. (Facultatif) Recevoir chaque devis dans un tableur Google Sheets
+## 3. Espace administrateur : registre de tous les devis (gratuit)
 
-Le site n'a pas de serveur : un devis n'est transmis que lorsque le client l'envoie sur WhatsApp.
-Pour garder aussi une trace de chaque devis (fichier clients, relances), créez un script Google Apps Script :
+Chaque devis généré (PDF, Excel ou WhatsApp) est enregistré dans un Google Sheet ; la page privée
+**www.leglaceur.ci/admin** (non liée, non indexée, protégée par un code) affiche les devis d'une période :
+récapitulatif, liste avec « + » pour dérouler chaque devis, totaux par produit et export Excel.
 
-1. Dans un Google Sheets : **Extensions → Apps Script**, collez :
-   ```js
-   function doPost(e) {
-     const q = JSON.parse(e.postData.contents);
-     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-     sheet.appendRow([new Date(), q.number, q.client.name, q.client.phone, q.client.type,
-       q.delivery.label, q.delivery.address, q.delivery.date, q.delivery.slot,
-       q.lines.map(l => `${l.qty} × ${l.name} (${l.label})`).join(' ; '), q.subtotal, q.delivery.free ? 'Offerte' : (q.delivery.mode === 'retrait' ? 'Retrait' : 'Hors frais'), q.total]);
-     return ContentService.createTextOutput('ok');
-   }
-   ```
-2. **Déployer → Nouveau déploiement → Application Web**, accès : « Tout le monde ». Copiez l'URL.
-3. Dans `src/js/config.js`, renseignez `BRAND.quoteWebhook` avec cette URL et poussez.
+Installation (une seule fois, ~5 min, avec le compte Google de Le Glaceur) :
+
+1. Créez un Google Sheets vide nommé « Registre des devis Le Glaceur ».
+2. **Extensions → Apps Script** : effacez le contenu, collez tout `docs/apps-script/registre-devis.gs`.
+3. Ligne `const CODE_ADMIN = 'A-CHANGER';` : remplacez `A-CHANGER` par votre code secret. Enregistrez.
+4. **Déployer → Nouveau déploiement → type « Application Web »** ; Exécuter en tant que : *Moi* ;
+   Qui peut accéder : *Tout le monde*. Autorisez l'accès demandé par Google. Copiez l'URL (`…/exec`).
+5. Dans `src/js/config.js`, mettez cette URL dans `BRAND.quoteWebhook` et poussez.
+
+Si vous modifiez le script plus tard : **Déployer → Gérer les déploiements → modifier → Nouvelle version**
+(l'URL reste la même). Les devis restent consultables directement dans le Google Sheet.

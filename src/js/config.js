@@ -33,7 +33,8 @@ export const BRAND = {
   email: 'sdlsitgroup@gmail.com', // confirmée par le client le 22/10/2026
   hours: '24h/24 · 7j/7',
   deliveryClaim: 'Livraison partout à Abidjan',
-  // Optionnel : URL (ex. Google Apps Script) qui reçoit chaque devis en JSON pour constituer un fichier clients.
+  // URL du registre des devis (Google Apps Script, docs/apps-script/registre-devis.gs) : reçoit chaque devis
+  // et alimente la page /admin. null = registre non branché.
   quoteWebhook: null,
 };
 

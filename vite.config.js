@@ -87,6 +87,7 @@ export default defineConfig({
         guide: resolve(root, 'guide.html'),
         mentions: resolve(root, 'mentions-legales.html'),
         notfound: resolve(root, '404.html'),
+        admin: resolve(root, 'admin.html'),
       },
     },
   },
