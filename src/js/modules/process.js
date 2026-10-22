@@ -120,7 +120,8 @@ function setStep(root, steps, idx, readout) {
     const n = String(idx + 1).padStart(2, '0');
     const name = steps[idx].querySelector('.ps__title')?.textContent || '';
     const dir = idx > prev ? 1 : -1;
-    gsap.timeline()
+    root._readoutTl?.progress(1).kill();
+    root._readoutTl = gsap.timeline()
       .to([readout.num, readout.name], { yPercent: -60 * dir, opacity: 0, duration: 0.18, ease: 'power2.in' })
       .add(() => { readout.num.textContent = n; readout.name.textContent = name; })
       .fromTo([readout.num, readout.name], { yPercent: 60 * dir, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: 'back.out(2)', stagger: 0.05 });
@@ -182,24 +183,35 @@ function setupTrack(root, steps, sticky) {
     animation: tl,
     refreshPriority: -1,
     invalidateOnRefresh: true,
-    onUpdate(self) {
-      const p = tl.time();
-      let idx = -1;
-      t.forEach((ti, i) => { if (p >= ti - 0.012) idx = i; });
-      setStep(root, steps, Math.max(0, idx), readout);
-      if (self.progress < 0.001) setStep(root, steps, 0, readout);
-    },
   });
+  // Les étapes suivent la timeline elle-même (le scrub lissé continue après le dernier événement de défilement) :
+  // lecture à chaque image, uniquement tant que la scène est active.
+  root._tl = tl;
+  const sync = () => {
+    const p = tl.time();
+    let idx = 0;
+    t.forEach((ti, i) => { if (p >= ti - 0.012) idx = i; });
+    setStep(root, steps, idx, readout);
+  };
+  let ticking = false;
+  const watch = (on) => {
+    if (on && !ticking) { gsap.ticker.add(sync); ticking = true; }
+    if (!on && ticking) { gsap.ticker.remove(sync); ticking = false; sync(); }
+  };
+  const io = new IntersectionObserver(([e]) => watch(e.isIntersecting));
+  io.observe(root);
   setStep(root, steps, 0, null);
 
   // Entrée de la scène.
   const head = root.querySelectorAll('.process__head-main > *, .process__head-side > *');
   const intro = gsap.timeline({ scrollTrigger: { trigger: root, start: 'top 75%', once: true } });
   intro.from(head, { y: 40, opacity: 0, duration: 1, stagger: 0.08 }, 0)
-    .from(steps.map((s) => s.querySelector('.ps__card')), { y: 60, opacity: 0, duration: 1.1, stagger: 0.08, clearProps: 'transform,opacity' }, 0.15)
+    .from(steps, { y: 60, opacity: 0, duration: 1.1, stagger: 0.08, clearProps: 'transform,opacity' }, 0.15)
     .from(root.querySelector('.process__track'), { opacity: 0, duration: 1.2 }, 0.1);
 
   return () => {
+    io.disconnect();
+    watch(false);
     st.kill();
     tl.kill();
     intro.kill();
@@ -274,7 +286,7 @@ function setupRail(root, steps) {
   setStep(root, steps, -1, null);
 
   steps.forEach((s) => {
-    gsap.from(s.querySelector('.ps__card'), { x: 40, opacity: 0, duration: 1, scrollTrigger: { trigger: s, start: 'top 88%', once: true }, clearProps: 'transform,opacity' });
+    gsap.from(s, { x: 40, opacity: 0, duration: 1, scrollTrigger: { trigger: s, start: 'top 88%', once: true }, clearProps: 'transform,opacity' });
   });
 
   return () => {

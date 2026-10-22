@@ -1,0 +1,404 @@
+/* ==========================================================================
+   Pied de page « nuit polaire » (agent chrome) — .site-footer
+   Plan :
+   1. La page blanche se termine par un rebord de neige d'où pendent des stalactites (SVG inline, slice) :
+      elles « respirent » (étirement lent) et des gouttes se forment à leur pointe puis tombent — uniquement à l'écran.
+   2. Ciel polaire : dégradé marine profond, deux aurores bleu glacier qui dérivent, poussière d'étoiles qui scintille.
+   3. Grille : marque (logo blanc, Pureté · Hygiène · Qualité, CTA devis + WhatsApp) / plan du site / contact.
+   4. Signature géante « LE GLACEUR » sculptée dans la glace (texte givré + grain), un reflet suit le pointeur.
+   5. Barre basse : signature SDLSIT Group, © année automatique, retour en haut.
+   Sans JS ni en mouvement réduit : tout est visible et immobile.
+   ========================================================================== */
+
+.site-footer {
+  --sf-fg: var(--text-on-dark);
+  --sf-muted: var(--text-on-dark-muted);
+  --sf-edge-h: clamp(84px, 7.8vw, 150px);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-top: calc(var(--sf-edge-h) + clamp(2.5rem, 6vw, 5rem));
+  padding-bottom: calc(clamp(1.25rem, 3vw, 2rem) + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(110% 70% at 50% 0%, #15386f 0%, rgba(10, 31, 68, 0) 62%),
+    linear-gradient(180deg, #0c2550 0%, var(--ink-900) 38%, var(--ink-950) 100%);
+  color: var(--sf-fg);
+}
+
+/* ---------- Stalactites ---------- */
+.site-footer__edge {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--sf-edge-h);
+  z-index: 2;
+  pointer-events: none;
+}
+.site-footer__edge-svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: visible;
+  filter: drop-shadow(0 10px 14px rgba(2, 8, 22, 0.45));
+}
+.site-footer__ledge { fill: var(--bg, #fff); }
+.site-footer__icicle { fill: url(#sf-icicle); transform-box: fill-box; transform-origin: 50% 0; }
+.site-footer__glints path { fill: none; stroke: #fff; stroke-width: 1.4; stroke-linecap: round; opacity: 0.75; }
+.site-footer__drops circle { fill: url(#sf-drop); opacity: 0; transform-box: fill-box; transform-origin: 50% 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-footer.is-inview .site-footer__icicle.is-long {
+    animation: sf-melt calc(6s + var(--i) * 0.7s) var(--ease-in-out) calc(var(--i) * -0.9s) infinite;
+  }
+  .site-footer.is-inview .site-footer__drops circle {
+    animation: sf-drip calc(4.4s + var(--d) * 0.23s) cubic-bezier(0.55, 0, 0.9, 0.4) calc(var(--d) * 0.73s) infinite;
+  }
+}
+@keyframes sf-melt {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.06); }
+}
+@keyframes sf-drip {
+  0% { opacity: 0; transform: translateY(-2px) scale(0.1, 0.1); }
+  30% { opacity: 1; transform: translateY(0) scale(0.75, 0.9); }
+  52% { opacity: 1; transform: translateY(2px) scale(0.85, 1.2); }
+  56% { opacity: 1; transform: translateY(6px) scale(0.9, 1.05); }
+  88% { opacity: 0.9; transform: translateY(150px) scale(0.75, 1.5); }
+  100% { opacity: 0; transform: translateY(200px) scale(0.6, 1.6); }
+}
+
+/* ---------- Ciel polaire ---------- */
+.site-footer__sky { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.site-footer__aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+  will-change: transform;
+}
+.site-footer__aurora--a {
+  width: 70vmax; height: 34vmax; top: 6%; left: -18vmax;
+  background: radial-gradient(closest-side, rgba(77, 155, 255, 0.55), rgba(77, 155, 255, 0));
+}
+.site-footer__aurora--b {
+  width: 60vmax; height: 30vmax; top: 30%; right: -20vmax;
+  background: radial-gradient(closest-side, rgba(142, 207, 255, 0.42), rgba(142, 207, 255, 0));
+}
+.site-footer__stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 22%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 27% 64%, #cfe9ff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 46% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 63% 48%, #bfe4ff 50%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 78% 28%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 88% 70%, #cfe9ff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 36% 86%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 5% 78%, #bfe4ff 50%, transparent 51%);
+  background-size: 520px 420px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-footer.is-inview .site-footer__aurora--a { animation: sf-aurora 18s var(--ease-in-out) infinite alternate; }
+  .site-footer.is-inview .site-footer__aurora--b { animation: sf-aurora 22s var(--ease-in-out) -7s infinite alternate-reverse; }
+  .site-footer.is-inview .site-footer__stars { animation: sf-twinkle 5s var(--ease-in-out) infinite alternate; }
+}
+@keyframes sf-aurora {
+  from { transform: translate3d(0, 0, 0) rotate(-6deg) scale(1); }
+  to { transform: translate3d(14vmax, 4vmax, 0) rotate(8deg) scale(1.15); }
+}
+@keyframes sf-twinkle { from { opacity: 0.25; } to { opacity: 0.7; } }
+
+/* ---------- Grille ---------- */
+.site-footer__inner { position: relative; z-index: 1; }
+.site-footer__top {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 760px) {
+  .site-footer__top { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .site-footer__brand { grid-column: 1 / -1; }
+}
+@media (min-width: 1080px) {
+  .site-footer__top { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.25fr) minmax(0, 1fr); }
+  .site-footer__brand { grid-column: auto; }
+}
+
+/* Marque */
+.site-footer__brand { display: grid; gap: 1.25rem; justify-items: start; align-content: start; }
+.site-footer__logo { display: inline-flex; border-radius: 12px; text-decoration: none; }
+.site-footer__logo .brand-logo { --brand-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.5rem); }
+.site-footer__values {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.8rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ice-200);
+}
+.site-footer__values i {
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  border-radius: 1px;
+  background: linear-gradient(135deg, #fff, var(--ice-300));
+  box-shadow: 0 0 10px rgba(142, 207, 255, 0.9);
+}
+.site-footer .site-footer__pitch { max-width: 44ch; color: var(--sf-muted); font-size: 1rem; }
+.site-footer__cta { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.site-footer__btn { min-height: 50px; padding-inline: 1.35rem; font-size: 1rem; }
+.site-footer__btn .icon--wa { stroke: none; }
+
+/* Colonnes */
+.site-footer__nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); }
+.site-footer__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ice-300);
+}
+.site-footer__title::before {
+  content: '';
+  width: 0.6em;
+  height: 0.6em;
+  flex: none;
+  transform: rotate(45deg);
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--ice-200), var(--blue-500));
+  box-shadow: 0 0 12px rgba(77, 155, 255, 0.75);
+}
+.site-footer .site-footer__title { color: var(--ice-300); }
+.site-footer__list { display: grid; gap: 0.1rem; list-style: none; }
+.site-footer__list a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding-block: 0.2rem;
+  color: var(--sf-muted);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.35s var(--ease-out), transform 0.45s var(--ease-out);
+}
+.site-footer__list a::after { /* trait de givre qui se dessine */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.55rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ice-300), rgba(142, 207, 255, 0));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s var(--ease-out);
+}
+.site-footer__list a:hover, .site-footer__list a:focus-visible { color: #fff; }
+.site-footer__list a:hover::after, .site-footer__list a:focus-visible::after { transform: scaleX(1); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .site-footer__list a:hover { transform: translateX(4px); }
+}
+.site-footer__new {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-900);
+  background: linear-gradient(135deg, #fff, var(--ice-300));
+  box-shadow: 0 0 12px rgba(142, 207, 255, 0.55);
+}
+.site-footer__new--soon { background: linear-gradient(135deg, #fff6e0, #ffd98a); }
+
+/* Contact */
+.site-footer__address { display: grid; gap: 0.6rem; font-style: normal; }
+.site-footer__list--contact { gap: 0.15rem; }
+.site-footer__list .site-footer__phone { display: grid; gap: 0.05rem; align-content: center; padding-block: 0.3rem; }
+.site-footer__phone small {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sf-muted);
+  opacity: 0.85;
+}
+.site-footer__phone span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.32rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.site-footer__list .site-footer__phone::after { bottom: 0.2rem; }
+.site-footer__mail,
+.site-footer__place {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  color: #fff;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.site-footer__mail { font-weight: 600; text-decoration: underline; text-decoration-color: rgba(142, 207, 255, 0.5); text-underline-offset: 0.25em; }
+.site-footer__mail:hover { text-decoration-color: var(--ice-300); }
+.site-footer__place { align-items: flex-start; color: var(--sf-muted); }
+.site-footer__place .icon { margin-top: 0.15rem; color: var(--ice-300); }
+.site-footer__place > span { display: grid; }
+.site-footer__place small {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ice-300);
+}
+.site-footer__place:hover > span > span { color: #fff; }
+.site-footer__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; list-style: none; }
+.site-footer__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(191, 228, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(191, 228, 255, 0.2);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.site-footer__badge--perk { color: var(--ink-900); background: linear-gradient(135deg, #ffffff, var(--ice-200)); box-shadow: 0 10px 26px -12px rgba(142, 207, 255, 0.8); }
+.site-footer__badge--perk .icon { color: var(--blue-600); }
+.site-footer__dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--wa-bright); box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.22); }
+@media (prefers-reduced-motion: no-preference) {
+  .site-footer.is-inview .site-footer__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--wa-bright);
+    animation: sf-live 2.4s var(--ease-out) infinite;
+  }
+}
+@keyframes sf-live { from { transform: scale(1); opacity: 0.8; } to { transform: scale(3.2); opacity: 0; } }
+
+/* ---------- Signature géante sculptée ---------- */
+.site-footer__word {
+  --mx: 50%;
+  --my: 40%;
+  position: relative;
+  max-width: none;
+  margin: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(-0.6rem, -1vw, -0.2rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 16.2vw, 15.5rem);
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, rgba(0, 0, 0, 0.35) 78%, rgba(0, 0, 0, 0.1) 100%);
+  mask-image: linear-gradient(180deg, #000 30%, rgba(0, 0, 0, 0.35) 78%, rgba(0, 0, 0, 0.1) 100%);
+}
+.site-footer__word > span,
+.site-footer__word .sf-char {
+  background:
+    radial-gradient(22rem 14rem at var(--mx) var(--my), rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%),
+    var(--noise),
+    linear-gradient(180deg, rgba(227, 243, 255, 0.92) 0%, rgba(142, 207, 255, 0.55) 55%, rgba(77, 155, 255, 0.22) 100%);
+  background-size: auto, 160px 160px, auto;
+  background-attachment: scroll;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.site-footer__word .sf-char { display: inline-block; }
+.site-footer__word > span { display: inline-block; }
+.site-footer__word.is-split > span { background: none; }
+.site-footer__word::after { /* reflet de la glace polie */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  opacity: 0.6;
+}
+
+/* ---------- Barre basse ---------- */
+.site-footer__bottom {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--line-on-dark);
+}
+.site-footer__sdlsit { --sdlsit-size: 0.92rem; display: inline-flex; }
+.site-footer .site-footer__legal { flex: 1 1 18rem; max-width: none; margin: 0; font-size: 0.9rem; color: var(--sf-muted); }
+.site-footer__legal a { display: inline-flex; align-items: center; min-height: 44px; margin-left: 0.4rem; color: #fff; text-underline-offset: 0.25em; }
+.site-footer__top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 48px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+}
+.site-footer__top-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(191, 228, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 0 0 1px rgba(191, 228, 255, 0.28);
+  transition: transform 0.5s var(--ease-spring), background 0.4s var(--ease-out);
+}
+.site-footer__top-link:hover .site-footer__top-icon { transform: translateY(-4px); background: rgba(191, 228, 255, 0.2); }
+
+@media (max-width: 559px) {
+  .site-footer__bottom { flex-direction: column; align-items: flex-start; }
+  .site-footer__nav { gap: 1.25rem; }
+  .site-footer__btn { flex: 1 1 auto; }
+}
+
+@media (forced-colors: active) {
+  .site-footer__word > span, .site-footer__word .sf-char { color: CanvasText; background: none; }
+  .site-footer__edge { display: none; }
+}
+@media print {
+  .site-footer__edge, .site-footer__sky, .site-footer__word, .site-footer__cta { display: none; }
+}

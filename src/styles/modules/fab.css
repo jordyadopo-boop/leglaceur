@@ -1,0 +1,203 @@
+/* ==========================================================================
+   Bouton flottant WhatsApp (agent chrome) — .fab
+   Plan :
+   1. Pastille verte WhatsApp taillée comme un glaçon : dégradé vert, reflet de verre, grain de givre,
+      liseré glacé, deux petits cristaux accrochés au bord.
+   2. Anneaux de pulsation « onde de froid » (bleu glacier) toutes les quelques secondes.
+   3. Libellé « Commander sur WhatsApp » en verre dépoli qui se déploie depuis le bouton (survol, focus,
+      et une fois automatiquement après l'arrivée — piloté par fab.js).
+   4. Safe-area iOS ; se retire quand le menu mobile est ouvert et derrière la barre récapitulative de la page devis.
+   ========================================================================== */
+
+.fab {
+  --fab-size: 60px;
+  --fab-gap: 16px;
+  position: fixed;
+  right: calc(var(--fab-gap) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--fab-gap) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-fab);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-height: var(--fab-size);
+  border-radius: var(--r-pill);
+  text-decoration: none;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.6s var(--ease-out), opacity 0.4s var(--ease-out), visibility 0s linear 0s;
+}
+@media (min-width: 760px) { .fab { --fab-size: 64px; --fab-gap: 24px; } }
+
+/* retrait : menu mobile ouvert, barre récapitulative du devis visible, avant la fin du préchargeur */
+html.menu-open .fab,
+.fab.is-away,
+body:has(.quote-mobilebar.is-visible) .fab {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(24px) scale(0.85);
+  pointer-events: none;
+  transition: transform 0.5s var(--ease-out), opacity 0.3s var(--ease-out), visibility 0s linear 0.5s;
+}
+html.preload:not(.preloader-done) .fab { opacity: 0; }
+
+/* ---------- Bouton ---------- */
+.fab__btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  order: 2;
+  z-index: 1;
+}
+.fab__core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 30% 15%, #4ff08f 0%, rgba(79, 240, 143, 0) 55%),
+    linear-gradient(160deg, #22c463 0%, #12994c 55%, var(--wa) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -3px 6px rgba(4, 60, 30, 0.35),
+    0 0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 0 4px rgba(142, 207, 255, 0.55),
+    0 16px 32px -10px rgba(14, 122, 63, 0.65),
+    0 6px 14px -6px rgba(10, 31, 68, 0.35);
+  transition: transform 0.5s var(--ease-spring), box-shadow 0.4s var(--ease-out);
+}
+.fab__frost { /* grain de givre + reflet de verre */
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 38%),
+    var(--noise);
+  background-size: auto, 120px 120px;
+  opacity: 0.55;
+  mix-blend-mode: soft-light;
+}
+.fab__icon { width: 52%; height: 52%; overflow: visible; filter: drop-shadow(0 1px 1px rgba(4, 60, 30, 0.45)); }
+.fab__bubble { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linejoin: round; }
+.fab__phone { fill: #fff; transform-box: fill-box; transform-origin: 50% 50%; }
+.fab__glint {
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.65) 50%, transparent 60%);
+  transform: translateX(-80%);
+  pointer-events: none;
+}
+
+/* cristaux accrochés */
+.fab__crystal {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #ffffff, var(--ice-300));
+  box-shadow: 0 0 10px rgba(77, 155, 255, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+.fab__crystal--a { top: 2px; right: 4px; }
+.fab__crystal--b { width: 6px; height: 6px; bottom: 6px; left: 1px; }
+
+/* anneaux de pulsation */
+.fab__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 2px solid rgba(142, 207, 255, 0.85);
+  box-shadow: 0 0 18px rgba(77, 155, 255, 0.45), inset 0 0 12px rgba(37, 211, 102, 0.35);
+  opacity: 0;
+}
+
+/* ---------- Libellé ---------- */
+.fab__label {
+  order: 1;
+  display: grid;
+  grid-template-columns: 0fr;
+  margin-right: -26px;
+  padding-right: 26px;
+  min-height: 48px;
+  align-items: center;
+  border-radius: var(--r-pill) 0 0 var(--r-pill);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.94), rgba(227, 243, 255, 0.86));
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(16px) saturate(1.5);
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(142, 207, 255, 0.6), 0 14px 30px -14px rgba(10, 31, 68, 0.45);
+  color: var(--ink-900);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: grid-template-columns 0.6s var(--ease-out), opacity 0.35s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.fab__label-text {
+  overflow: hidden;
+  min-width: 0;
+  padding-left: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: padding 0.6s var(--ease-out);
+}
+.fab.is-open .fab__label,
+.fab:focus-visible .fab__label {
+  grid-template-columns: 1fr;
+  opacity: 1;
+  transform: none;
+}
+.fab.is-open .fab__label-text,
+.fab:focus-visible .fab__label-text { padding-left: 1.2rem; padding-right: 0.5rem; }
+@media (hover: hover) {
+  .fab:hover .fab__label { grid-template-columns: 1fr; opacity: 1; transform: none; }
+  .fab:hover .fab__label-text { padding-left: 1.2rem; padding-right: 0.5rem; }
+  .fab:hover .fab__core { transform: scale(1.06) rotate(-6deg); }
+}
+.fab:active .fab__core { transform: scale(0.94); }
+.fab:focus-visible { outline: none; }
+.fab:focus-visible .fab__core { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), 0 0 0 2px #fff, 0 0 0 5px var(--blue-500), 0 16px 32px -10px rgba(14, 122, 63, 0.65); }
+
+/* ---------- Mouvement ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .fab.is-live .fab__ring { animation: fab-pulse 3.6s var(--ease-out) infinite; }
+  .fab.is-live .fab__ring--2 { animation-delay: 0.55s; }
+  .fab.is-live .fab__glint { animation: fab-glint 7s var(--ease-in-out) 1.5s infinite; }
+  .fab.is-live .fab__phone { animation: fab-ring 7s var(--ease-in-out) 2s infinite; }
+  .fab.is-live .fab__crystal--a { animation: fab-twinkle 2.8s var(--ease-in-out) infinite alternate; }
+  .fab.is-live .fab__crystal--b { animation: fab-twinkle 3.4s var(--ease-in-out) -1.2s infinite alternate; }
+}
+@keyframes fab-pulse {
+  0% { opacity: 0.9; transform: scale(1); }
+  55%, 100% { opacity: 0; transform: scale(1.75); }
+}
+@keyframes fab-glint {
+  0%, 70% { transform: translateX(-80%); }
+  100% { transform: translateX(80%); }
+}
+@keyframes fab-ring {
+  0%, 84%, 100% { transform: rotate(0); }
+  86% { transform: rotate(-14deg); }
+  88% { transform: rotate(12deg); }
+  90% { transform: rotate(-10deg); }
+  92% { transform: rotate(8deg); }
+  94% { transform: rotate(0); }
+}
+@keyframes fab-twinkle { from { opacity: 0.45; transform: rotate(45deg) scale(0.8); } to { opacity: 1; transform: rotate(45deg) scale(1.1); } }
+
+@media print { .fab { display: none; } }
+@media (forced-colors: active) {
+  .fab__core { background: ButtonFace; border: 2px solid ButtonText; }
+  .fab__bubble { stroke: ButtonText; }
+  .fab__phone { fill: ButtonText; }
+}

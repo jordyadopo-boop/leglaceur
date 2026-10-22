@@ -1,0 +1,173 @@
+/* ==========================================================================
+   Préchargeur « 32 °C → −18 °C » (agent chrome) — .preloader
+   Plan :
+   1. Une vitre plein écran, d'abord chaude (brume sable/orangée de la chaleur d'Abidjan), qui se refroidit :
+      la teinte glacier gagne, le givre envahit les bords (cristaux dendritiques tracés en SVG depuis les coins).
+   2. Au centre : le symbole Le Glaceur se dessine (DrawSVG), le thermomètre descend de 32 °C à −18 °C,
+      un curseur-cristal glisse sur la jauge chaud → froid.
+   3. À −18 °C : impact, fissures tracées depuis le centre, éclair de givre, la vitre se brise en éclats
+      (polygones SVG soumis à la gravité) qui tombent et révèlent le hero. Durée ≈ 2 s, une fois par session.
+   4. N'apparaît que si le script en ligne a posé html.preload (donc jamais sans JS ni en mouvement réduit) ;
+      filet de sécurité : disparaît seul après 4 s.
+   ========================================================================== */
+
+.preloader { display: none; }
+html.preload .preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--ink-900);
+  animation: pre-failsafe 0.5s ease 4s forwards;
+}
+html.preloader-done .preloader { pointer-events: none; }
+@keyframes pre-failsafe { to { opacity: 0; visibility: hidden; } }
+html.preload-lock, html.preload-lock body { overflow: hidden; }
+
+/* ---------- Vitre ---------- */
+.preloader__pane { position: absolute; inset: 0; overflow: hidden; }
+.preloader__pane > * { position: absolute; inset: 0; }
+.preloader__heat {
+  background:
+    radial-gradient(70% 55% at 50% 38%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%),
+    radial-gradient(90% 70% at 85% 0%, rgba(255, 196, 140, 0.55), rgba(255, 196, 140, 0) 60%),
+    radial-gradient(80% 60% at 0% 100%, rgba(255, 170, 110, 0.4), rgba(255, 170, 110, 0) 60%),
+    linear-gradient(180deg, #fffaf3 0%, #ffeedd 55%, #ffe1c6 100%);
+}
+/* ondulation de chaleur */
+.preloader__heat::after {
+  content: '';
+  position: absolute;
+  inset: -10% 0;
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0) 0 22px, rgba(255, 255, 255, 0.28) 30px, rgba(255, 255, 255, 0) 40px);
+  opacity: 0.6;
+  animation: pre-shimmer 1.6s linear infinite;
+}
+@keyframes pre-shimmer { to { transform: translateY(-40px); } }
+.preloader__cold {
+  opacity: 0;
+  background:
+    radial-gradient(65% 55% at 50% 42%, #ffffff 0%, rgba(255, 255, 255, 0) 72%),
+    radial-gradient(120% 90% at 50% 120%, rgba(142, 207, 255, 0.75), rgba(142, 207, 255, 0) 60%),
+    linear-gradient(180deg, #f6fbff 0%, #e3f3ff 55%, #cbe8ff 100%);
+}
+.preloader__frost {
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 45%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.92) 100%),
+    var(--noise);
+  background-size: auto, 220px 220px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent 35%, #000 85%);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, transparent 35%, #000 85%);
+  mix-blend-mode: normal;
+}
+.preloader__crystals,
+.preloader__cracks { width: 100%; height: 100%; max-width: none; overflow: visible; }
+.preloader__crystals path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.preloader__crystals .c-main { stroke: rgba(122, 190, 245, 0.9); stroke-width: 2.2; }
+.preloader__crystals .c-twig { stroke: rgba(21, 99, 214, 0.32); stroke-width: 1.1; }
+.preloader__crystals .c-glow { stroke: #ffffff; stroke-width: 5; opacity: 0.85; }
+.preloader__cracks path { fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 0 3px rgba(77, 155, 255, 0.9)); }
+.preloader__cracks .k-dark { stroke: rgba(21, 99, 214, 0.55); stroke-width: 1; filter: none; }
+
+/* ---------- Contenu ---------- */
+.preloader__content {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  justify-items: center;
+  gap: clamp(1rem, 3vh, 1.6rem);
+  padding: 1.5rem;
+  text-align: center;
+  will-change: transform, opacity;
+}
+.preloader__mark { width: clamp(96px, 24vw, 148px); filter: drop-shadow(0 18px 30px rgba(10, 31, 68, 0.18)); }
+.preloader__mark .brand-mark { width: 100%; }
+.preloader__readout { display: grid; justify-items: center; gap: 0.7rem; }
+.preloader__temp {
+  --pre-c: #b9531a;
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4.2rem, 17vw, 7.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--pre-c);
+}
+.preloader__deg { display: inline-block; min-width: 2.3ch; text-align: right; }
+.preloader__unit { margin-left: 0.06em; font-size: 0.42em; line-height: 1.1; font-weight: 700; letter-spacing: 0.02em; opacity: 0.85; }
+.preloader__gauge {
+  position: relative;
+  width: min(300px, 68vw);
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--blue-600) 0%, var(--ice-300) 45%, #ffd2a6 75%, #e7742e 100%);
+  box-shadow: inset 0 1px 2px rgba(10, 31, 68, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+.preloader__gauge-fill { /* curseur-cristal */
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  transform: rotate(45deg);
+  border-radius: 3px;
+  background: linear-gradient(135deg, #ffffff, var(--ice-200));
+  box-shadow: 0 0 0 2px #fff, 0 0 16px 2px rgba(77, 155, 255, 0.85), 0 4px 10px rgba(10, 31, 68, 0.3);
+}
+.preloader__gauge-ticks {
+  position: absolute;
+  inset: 12px 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, rgba(10, 31, 68, 0.28) 0 1px, transparent 1px 10%);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.preloader__caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.6rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.preloader__arrow { position: relative; width: 38px; height: 1px; background: currentColor; opacity: 0.5; }
+.preloader__arrow::after { content: ''; position: absolute; right: 0; top: -3px; width: 7px; height: 7px; border-top: 1px solid; border-right: 1px solid; transform: rotate(45deg); }
+.preloader__to { color: var(--blue-600); }
+
+/* ---------- Éclats ---------- */
+.preloader__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(60% 50% at 50% 45%, #ffffff, rgba(227, 243, 255, 0.85) 60%, rgba(191, 228, 255, 0.6));
+}
+.preloader__shards {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  overflow: visible;
+  pointer-events: none;
+}
+.preloader__shards polygon { stroke: rgba(255, 255, 255, 0.95); stroke-width: 1.5; stroke-linejoin: round; }
+.preloader__shards .s-edge { fill: none; stroke: rgba(21, 99, 214, 0.35); stroke-width: 1; }
+.preloader__shards g { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.preload .preloader { display: none; }
+}

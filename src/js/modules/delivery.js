@@ -195,7 +195,7 @@ export default function init(root) {
     const tl = gsap.timeline({ scrollTrigger: st });
     tl.from(dmap, { opacity: 0, y: 40, scale: 0.97, filter: 'blur(8px)', duration: 1.1, clearProps: 'transform,filter' })
       .from(svg.querySelector('.dmap__hub-core'), { scale: 0, transformOrigin: '50% 50%', duration: 0.8, ease: 'back.out(2.5)' }, 0.25)
-      .from(svg.querySelector('.dmap__hub-tag'), { opacity: 0, y: 10, duration: 0.6 }, 0.45)
+      .from(svg.querySelector('.dmap__hub-tag'), { opacity: 0, duration: 0.6 }, 0.45)
       .from(routeEls, { drawSVG: '0%', duration: 1.3, stagger: 0.06, ease: 'power2.inOut' }, 0.4)
       .from(svg.querySelectorAll('.dmap__gem, .dmap__halo'), { scale: 0, transformOrigin: '50% 50%', duration: 0.6, stagger: 0.03, ease: 'back.out(2.2)' }, 0.9)
       .from(svg.querySelectorAll('.dmap__label'), { opacity: 0, duration: 0.6, stagger: 0.03, clearProps: 'opacity' }, 1.1)

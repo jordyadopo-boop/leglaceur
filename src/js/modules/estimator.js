@@ -17,7 +17,7 @@ const nf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const money = (n) => nf.format(Math.round(n || 0));
 const articles = (n) => `${nf.format(n)}${NBSP}article${n > 1 ? 's' : ''}`;
 const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
-const nbsp = (s) => String(s).replace(/ ([;:!?])/g, `${NNBSP}$1`);
+const nbsp = (s) => String(s).replace(/ ([;:!?])/g, `${NNBSP}$1`).replace(/(\d) (°C|kg|%)/g, `$1${NNBSP}$2`);
 
 export default function init(root) {
   const goal = DELIVERY.freeFrom;

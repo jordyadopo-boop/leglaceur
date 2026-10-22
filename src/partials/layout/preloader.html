@@ -1,0 +1,39 @@
+<!-- Préchargeur de l'accueil (agent chrome). Styles : src/styles/modules/preloader.css · Séquence : src/js/modules/preloader.js
+     32 °C (la chaleur d'Abidjan) → -18 °C : le givre envahit la vitre, le symbole se dessine, puis la vitre se brise sur le hero.
+     Une fois par session, sauté en mouvement réduit ; sans JS il ne s'affiche pas ; filet de sécurité CSS à 4 s. -->
+<div class="preloader" data-module="preloader" role="status" aria-live="polite">
+  <script>
+    (function (s) {
+      var d = document.documentElement, skip = true;
+      try { skip = !!sessionStorage.getItem('lg:intro') || location.hash.length > 1 || matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+      if (skip) { s.parentNode.parentNode.removeChild(s.parentNode); return; }
+      d.classList.add('preload');
+      setTimeout(function () {
+        if (window.__lgPreloaderDone) return;
+        window.__lgPreloaderDone = true;
+        d.classList.add('preloader-done');
+        d.classList.remove('preload');
+        window.dispatchEvent(new Event('preloader:done'));
+      }, 4200);
+    })(document.currentScript);
+  </script>
+  <span class="sr-only">Chargement de Le Glaceur…</span>
+  <div class="preloader__pane" aria-hidden="true">
+    <div class="preloader__heat"></div>
+    <div class="preloader__cold"></div>
+    <div class="preloader__frost"></div>
+    <svg class="preloader__crystals" data-pre-crystals focusable="false"></svg>
+    <svg class="preloader__cracks" data-pre-cracks focusable="false"></svg>
+  </div>
+  <div class="preloader__content" aria-hidden="true">
+    <div class="preloader__mark">
+      <!-- @include brand/logo-mark.html -->
+    </div>
+    <div class="preloader__readout">
+      <p class="preloader__temp"><span class="preloader__deg" data-pre-temp>32</span><span class="preloader__unit">°C</span></p>
+      <div class="preloader__gauge"><span class="preloader__gauge-fill" data-pre-fill></span><span class="preloader__gauge-ticks"></span></div>
+      <p class="preloader__caption"><span class="preloader__from">Abidjan</span><span class="preloader__arrow"></span><span class="preloader__to">Le Glaceur</span></p>
+    </div>
+  </div>
+  <div class="preloader__flash" aria-hidden="true"></div>
+</div>
