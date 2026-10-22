@@ -1,0 +1,237 @@
+/**
+ * Le Glaceur — source unique des données métier.
+ * Tout prix, numéro, zone ou texte commercial affiché par le site vient d'ici.
+ * Les valeurs marquées « À VALIDER » sont des propositions en attente de confirmation client.
+ */
+
+export const BRAND = {
+  name: 'Le Glaceur',
+  parent: 'SDLSIT Group',
+  signature: 'Marque de SDLSIT Group',
+  tagline: 'La fraîcheur sous toutes ses formes',
+  promise: 'Une glace alimentaire de qualité',
+  values: [
+    { id: 'purete', label: 'Pureté', text: 'Une eau traitée et contrôlée' },
+    { id: 'hygiene', label: 'Hygiène', text: 'Des procédés de fabrication rigoureux' },
+    { id: 'qualite', label: 'Qualité', text: 'Une fraîcheur constante et fiable' },
+  ],
+  url: 'https://www.leglaceur.ci',
+  address: {
+    street: 'Abatta – Carrefour Drogba',
+    city: 'Abidjan',
+    country: "Côte d'Ivoire",
+    countryCode: 'CI',
+    mapsQuery: 'Abatta Carrefour Drogba, Abidjan',
+  },
+  phones: [
+    { label: 'Service client & WhatsApp', display: '+225 07 89 85 16 86', tel: '+2250789851686' },
+    { label: 'Service client', display: '+225 05 66 04 31 69', tel: '+2250566043169' },
+    { label: 'Ligne fixe', display: '+225 27 24 46 75 66', tel: '+2252724467566' },
+  ],
+  // À VALIDER : numéro WhatsApp qui reçoit les devis (présent sur les deux affiches).
+  whatsapp: '2250789851686',
+  email: null, // À VALIDER : aucune adresse e-mail fournie pour l'instant.
+  hours: '24h/24 · 7j/7',
+  deliveryClaim: 'Livraison partout à Abidjan',
+  // Optionnel : URL (ex. Google Apps Script) qui reçoit chaque devis en JSON pour constituer un fichier clients.
+  quoteWebhook: null,
+};
+
+export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`;
+export const mapsEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(BRAND.address.mapsQuery)}&z=15&output=embed`;
+
+/**
+ * Catalogue. Chaque produit a au moins une variante (sku) : c'est la variante qui va dans le devis.
+ * available: false → affiché « Bientôt disponible », non ajoutable au devis.
+ */
+export const PRODUCTS = [
+  {
+    id: 'glacons',
+    name: 'Glaçons alimentaires',
+    alias: 'Glace cubique',
+    tagline: 'Fraîcheur longue durée',
+    available: true,
+    img: 'glacons',
+    description:
+      'Des glaçons denses, cristallins et 100 % alimentaires. Leur fonte lente permet un refroidissement efficace sans trop diluer vos boissons.',
+    uses: ['Boissons', 'Cocktails', 'Jus', 'Restaurants', 'Événements', 'Usage domestique'],
+    howto: 'À utiliser directement dans vos boissons.',
+    variants: [{ sku: 'glacons-5kg', label: 'Paquet de 5 kg', unit: 'paquet', units: 'paquets', kg: 5, price: 750 }],
+  },
+  {
+    id: 'gobelet',
+    name: 'Gobelet de glaçons',
+    alias: 'Gobelet de glace alimentaire',
+    tagline: "Pratique et prêt à l'emploi",
+    available: true,
+    img: 'gobelet',
+    description:
+      'Des glaçons creux, légers et rafraîchissants, conditionnés en gobelets pratiques pour une consommation immédiate.',
+    uses: ['Sodas', 'Jus de fruits', 'Fast-food', 'Ventes à emporter', 'Événements'],
+    howto: "Prêt à l'emploi. Verser directement dans la boisson.",
+    variants: [{ sku: 'gobelet', label: '1 gobelet', unit: 'gobelet', units: 'gobelets', kg: null, price: 250 }],
+  },
+  {
+    id: 'barres',
+    name: 'Barres de glace',
+    alias: 'Pains de glace',
+    tagline: 'Fraîcheur et conservation',
+    available: true,
+    img: 'barres',
+    description:
+      'Des barres de glace de grand format, à fonte lente et homogène, idéales pour maintenir durablement la fraîcheur de vos produits.',
+    uses: ['Conservation des produits alimentaires', 'Transport de marchandises', 'Pêche', 'Marchés', 'Événements', 'Usage professionnel'],
+    howto: 'À placer dans des glacières, conservateurs ou zones de stockage.',
+    variants: [
+      { sku: 'barre-5kg', label: 'Barre de 5 kg', unit: 'barre', units: 'barres', kg: 5, price: 350 },
+      { sku: 'barre-10kg', label: 'Barre de 10 kg', unit: 'barre', units: 'barres', kg: 10, price: 650 },
+    ],
+  },
+  {
+    id: 'pilee',
+    name: 'Glace pilée',
+    alias: 'Glace concassée',
+    tagline: 'Une fraîcheur intense',
+    available: true,
+    img: 'pilee',
+    description:
+      "De petits fragments de glace à la texture légère, offrant un refroidissement rapide et un apport d'eau maîtrisé.",
+    uses: ['Cocktails (Mojito, Caïpirinha…)', 'Frappés', 'Smoothies', 'Présentoirs de fruits de mer', 'Poissonneries', 'Événements'],
+    howto: 'À utiliser directement dans vos préparations ou pour la présentation.',
+    variants: [{ sku: 'pilee-50kg', label: 'Sac de 50 kg', unit: 'sac', units: 'sacs', kg: 50, price: 3000 }],
+  },
+  {
+    id: 'carboglace',
+    name: 'Glace carbonique',
+    alias: 'Carboglace · glace sèche',
+    tagline: 'Froid extrême · effet fumée',
+    // À VALIDER : produit hors affiche principale → « Bientôt disponible » par défaut.
+    available: false,
+    img: 'carboglace',
+    description:
+      'Du dioxyde de carbone solide à -78,5 °C. Elle passe directement de l’état solide à l’état gazeux et crée une brume blanche spectaculaire.',
+    uses: ['Conservation', 'Transport cryogénique', 'Événementiel', 'Mixologie spectaculaire'],
+    howto: 'Manipuler avec des gants. Ne jamais ingérer ni toucher à mains nues.',
+    variants: [{ sku: 'carboglace-kg', label: 'Le kilo', unit: 'kg', units: 'kg', kg: 1, price: 7500 }],
+  },
+];
+
+export const SKUS = Object.fromEntries(
+  PRODUCTS.flatMap((p) => p.variants.map((v) => [v.sku, { ...v, product: p }])),
+);
+
+/** Secteurs servis (affiches). */
+export const SECTORS = [
+  { id: 'restaurants', label: 'Restaurants' },
+  { id: 'bars', label: 'Bars & lounges' },
+  { id: 'evenements', label: 'Événements' },
+  { id: 'poissonneries', label: 'Poissonneries' },
+  { id: 'menages', label: 'Ménages' },
+  { id: 'pros', label: 'Usages professionnels' },
+];
+
+/** Engagements (affiche 1). */
+export const PILLARS = [
+  { id: 'hygiene', label: 'Hygiénique & sûr' },
+  { id: 'eau', label: 'Eau traitée haute qualité' },
+  { id: 'froid', label: 'Froid maîtrisé en continu' },
+  { id: 'emballage', label: 'Emballage responsable' },
+];
+
+/**
+ * Livraison. À VALIDER : grille indicative proposée en attendant les tarifs du client.
+ * price: null → « sur devis », non additionné au total.
+ */
+export const DELIVERY = {
+  note: 'Tarifs indicatifs, négociables selon la distance et le volume commandé.',
+  validated: false,
+  pickup: {
+    id: 'retrait',
+    label: 'Retrait sur place',
+    price: 0,
+    text: 'Venez récupérer votre commande à Abatta – Carrefour Drogba.',
+  },
+  zones: [
+    { id: 'z1', name: 'Zone 1 · Proximité', price: 1000, areas: ['Abatta', 'Riviera', 'Faya', 'Palmeraie', 'Angré', 'Bingerville'] },
+    { id: 'z2', name: 'Zone 2 · Centre', price: 2000, areas: ['Cocody', 'II Plateaux', 'Plateau', 'Adjamé', 'Treichville', 'Marcory', 'Koumassi', 'Abobo'] },
+    { id: 'z3', name: 'Zone 3 · Étendue', price: 3000, areas: ['Yopougon', 'Attécoubé', 'Port-Bouët', 'Anyama'] },
+    { id: 'z4', name: 'Zone 4 · Hors Abidjan', price: null, areas: ['Songon', 'Grand-Bassam', 'Dabou', 'Autre localité'] },
+  ],
+};
+
+/**
+ * Estimation pour un événement (règle donnée par le client) : nombre d'invités → paquets de glaçons de 5 kg.
+ * Interpolation linéaire entre les points de référence. Le client garde la main sur la quantité finale.
+ */
+export const ESTIMATOR = {
+  sku: 'glacons-5kg',
+  anchors: [
+    [0, 0],
+    [30, 5],
+    [100, 20],
+    [400, 40],
+    [1000, 100],
+  ],
+  beyondPerGuest: 0.1, // au-delà de 1 000 invités
+  min: 10,
+  max: 3000,
+};
+
+export function estimateBags(guests) {
+  const n = Math.max(0, Number(guests) || 0);
+  const a = ESTIMATOR.anchors;
+  const last = a[a.length - 1];
+  if (n >= last[0]) return Math.ceil(last[1] + (n - last[0]) * ESTIMATOR.beyondPerGuest);
+  for (let i = 1; i < a.length; i++) {
+    const [x0, y0] = a[i - 1];
+    const [x1, y1] = a[i];
+    if (n <= x1) return Math.max(n > 0 ? 1 : 0, Math.ceil(y0 + ((n - x0) * (y1 - y0)) / (x1 - x0)));
+  }
+  return 0;
+}
+
+export const QUOTE = {
+  prefix: 'GLC',
+  validityDays: 7, // À VALIDER
+  currency: 'FCFA',
+  disclaimer: 'Ce document est un devis et ne constitue pas une facture.',
+  payment: 'Aucun paiement en ligne : le règlement se fait à la livraison ou au retrait.',
+  deliveryNote: 'Frais de livraison indicatifs, négociables selon la distance.',
+  storageKey: 'leglaceur:devis:v1',
+};
+
+/** Contenu pédagogique (guide PDF « Les glaces alimentaires : typologies & usages métiers »). */
+export const ICE_TYPES = [
+  { id: 'plein', name: 'Glaçon plein', alt: 'Cube gourmet', temp: '-2 °C à -5 °C', melt: 'Lente', meltScore: 3, dilution: 'Faible', sector: 'Bars & spiritueux',
+    physical: "Dense, cristallin et 100 % massif. Poids élevé, absence d'air emprisonné.",
+    speed: 'Très lente. Refroidissement continu sans diluer la boisson.',
+    uses: 'Spiritueux nobles (whisky, cognac), cocktails « on the rocks », verres old fashioned.' },
+  { id: 'creux', name: 'Glaçon creux', alt: 'Cylindrique', temp: '-1 °C à -3 °C', melt: 'Rapide', meltScore: 7, dilution: 'Élevée', sector: 'Fast-food & softs',
+    physical: 'Forme de dé à coudre avec cavité centrale, produite par pulvérisation d’eau sur des palettes froides.',
+    speed: 'Rapide : les surfaces interne et externe sont en contact avec le liquide.',
+    uses: 'Sodas, jus de fruits, fast-food, verres de brasserie.' },
+  { id: 'pilee', name: 'Glace pilée', alt: 'Crushed ice', temp: '-1 °C à -4 °C', melt: 'Moyenne à rapide', meltScore: 6, dilution: 'Contrôlée', sector: 'Mixologie (mojito)',
+    physical: 'Fragments d’eau congelée cassés mécaniquement, de 5 à 15 mm.',
+    speed: 'Modérée à rapide. Fraîcheur intense et apport d’eau maîtrisé.',
+    uses: 'Mojito, caïpirinha, caïpiroska, seaux à champagne, présentoirs d’huîtres.' },
+  { id: 'sphere', name: 'Sphère de glace', alt: 'Ice sphere', temp: '-3 °C à -6 °C', melt: 'Ultra-lente', meltScore: 1, dilution: 'Traces', sector: 'Cocktails premium',
+    physical: 'Sphère ultra-transparente : le plus faible ratio surface/volume de la géométrie.',
+    speed: 'Ultra-lente. Boisson à 0 °C plus de 30 minutes sans dilution notable.',
+    uses: 'Bars à cocktails premium, dégustation de spiritueux haut de gamme.' },
+  { id: 'ecailles', name: 'Glace en écailles', alt: 'Flake ice', temp: '-7 °C à -10 °C', melt: 'Très lente', meltScore: 2, dilution: 'Nulle à sec', sector: 'Poissonneries & industrie',
+    physical: 'Lames plates et sèches sous-refroidies, de 1,5 à 2 mm d’épaisseur.',
+    speed: 'Épouse la forme des aliments sans blesser les chairs fraîches.',
+    uses: 'Étals de poissonnerie, transport des produits de la mer, boulangerie.' },
+  { id: 'grains', name: 'Glace en grains', alt: 'Nugget ice', temp: '-1 °C à -3 °C', melt: 'Rapide', meltScore: 7, dilution: 'Élevée', sector: 'Smoothies & soda',
+    physical: 'Petits amalgames de glace compactés, texture moelleuse et compressible.',
+    speed: 'Absorbe le sirop et le jus de la boisson : un encas « mâchable ».',
+    uses: 'Smoothies, cocktails d’été, fontaines à soda, milieux hospitaliers.' },
+  { id: 'carbo', name: 'Carboglace (CO₂)', alt: 'Glace sèche', temp: '-78,5 °C', melt: 'Sublimation', meltScore: 0, dilution: 'Aucune (gaz)', sector: 'Événementiel & cryogénie',
+    physical: 'Dioxyde de carbone solide. Passe directement de solide à gaz.',
+    speed: 'Brume blanche dense au contact d’un liquide chaud ou tiède.',
+    uses: 'Mixologie spectaculaire, transport cryogénique. Ne jamais ingérer.' },
+];
+
+export const SCIENCE = {
+  latentHeat: 334, // J/g absorbés à la fusion
+};

@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Le Glaceur — tokens du design system « glace »
+   Concept : une vitrine réfrigérée. Fond givré clair, sections « nuit polaire »
+   marine profond, matières de verre dépoli, reflets cyan, condensation.
+   ========================================================================== */
+:root {
+  /* Marine (marque) */
+  --ink-950: #040e24;
+  --ink-900: #0a1f44;
+  --ink-800: #0f2c5e;
+  --ink-700: #173c7a;
+  /* Bleus de la marque */
+  --blue-700: #0f4fb3;
+  --blue-600: #1563d6;
+  --blue-500: #2a7deb;
+  --blue-400: #4d9bff;
+  /* Glace */
+  --ice-300: #8ecfff;
+  --ice-200: #bfe4ff;
+  --ice-100: #e3f3ff;
+  --ice-50: #f3faff;
+  --frost: #ffffff;
+  /* Accents */
+  --leaf: #39a85b;
+  --wa: #0e7a3f;
+  --wa-bright: #25d366;
+  --danger: #c93636;
+  --warn: #b7791f;
+  --ok: #1f8f5a;
+  /* Textes */
+  --text: #0a1f44;
+  --text-muted: #45597c;
+  --text-soft: #6b7f9f;
+  --text-on-dark: #eaf5ff;
+  --text-on-dark-muted: #a9c3e6;
+  /* Surfaces */
+  --bg: #f3faff;
+  --bg-elevated: #ffffff;
+  --line: rgba(21, 99, 214, 0.14);
+  --line-strong: rgba(21, 99, 214, 0.28);
+  --line-on-dark: rgba(191, 228, 255, 0.16);
+
+  /* Verre dépoli */
+  --glass-bg: linear-gradient(140deg, rgba(255, 255, 255, 0.78), rgba(227, 243, 255, 0.5));
+  --glass-bg-dark: linear-gradient(140deg, rgba(191, 228, 255, 0.12), rgba(77, 155, 255, 0.04));
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-border-dark: rgba(191, 228, 255, 0.22);
+  --glass-blur: 18px;
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(142, 207, 255, 0.35),
+    0 24px 60px -24px rgba(10, 31, 68, 0.35);
+  --glass-shadow-dark: inset 0 1px 0 rgba(191, 228, 255, 0.25), 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+  --glow-ice: 0 0 0 1px rgba(142, 207, 255, 0.5), 0 0 40px -6px rgba(77, 155, 255, 0.55);
+
+  /* Dégradés signature */
+  --grad-ice: linear-gradient(180deg, #ffffff 0%, #e3f3ff 45%, #bfe4ff 100%);
+  --grad-polar: radial-gradient(120% 80% at 50% 0%, #173c7a 0%, #0a1f44 45%, #040e24 100%);
+  --grad-btn: linear-gradient(180deg, #4d9bff 0%, #1563d6 55%, #0f4fb3 100%);
+  --grad-text-ice: linear-gradient(100deg, #0a1f44 0%, #1563d6 40%, #4d9bff 55%, #1563d6 70%, #0a1f44 100%);
+  --grad-text-frost: linear-gradient(100deg, #ffffff 0%, #bfe4ff 35%, #ffffff 50%, #8ecfff 70%, #ffffff 100%);
+
+  /* Grain de givre (texture SVG) */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Typographie */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  --font-body: 'Barlow', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  --fs-hero: clamp(3.4rem, 10.5vw, 10rem);
+  --fs-h1: clamp(2.8rem, 7vw, 6.5rem);
+  --fs-h2: clamp(2.3rem, 5vw, 4.6rem);
+  --fs-h3: clamp(1.45rem, 2.3vw, 2.1rem);
+  --fs-h4: clamp(1.15rem, 1.5vw, 1.35rem);
+  --fs-lead: clamp(1.08rem, 1.4vw, 1.3rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-micro: 0.78rem;
+  --lh-tight: 0.92;
+  --lh-snug: 1.15;
+  --lh-body: 1.6;
+
+  /* Espacements */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --section-y: clamp(5rem, 11vw, 9.5rem);
+  --container: 1280px;
+  --container-narrow: 880px;
+  --gutter: max(16px, min(5vw, 48px));
+  --header-h: 76px;
+
+  /* Rayons */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 18px;
+  --r-lg: 28px;
+  --r-xl: 40px;
+  --r-pill: 999px;
+
+  /* Mouvement */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur: 360ms;
+  --dur-slow: 700ms;
+
+  /* Plans */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-sticky: 50;
+  --z-header: 100;
+  --z-fab: 150;
+  --z-overlay: 200;
+  --z-modal: 300;
+  --z-cursor: 400;
+  --z-preloader: 500;
+}
