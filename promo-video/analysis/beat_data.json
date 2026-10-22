@@ -1,0 +1,20 @@
+{
+  "track": "house-vibez.mp3",
+  "tool": "librosa beat_track + linear fit (uv, python 3.11)",
+  "bpm": 122.0,
+  "beat_interval_sec": 0.4917855,
+  "t0_sec": 5.9894124,
+  "fit_max_residual_ms": 18.7,
+  "segment_start_beat": 112,
+  "segment_start_sec": 61.0694,
+  "notes": {
+    "local_beats_0_3": "fin du break : coupure quasi silencieuse (L1-L2), hit au L3",
+    "drop": "L4 (beat 116, 63.04 s) : retour kick 4/4, clap sur les temps impairs",
+    "phrases": "phrases de 8 temps a partir du drop : L4, L12, L20, L28, L36, L44, L52, L60",
+    "energy_lift": "L68 (beat 180) : montee de la section suivante (hors film)"
+  },
+  "strong_hits_local": [4, 20, 36, 60],
+  "kick": "chaque temps a partir de L4 (bande < 120 Hz)",
+  "snare_clap": "temps impairs (L5, L7, ...) bande 1.5-5 kHz",
+  "hihat": "contre-temps (offbeat) > 7 kHz"
+}
