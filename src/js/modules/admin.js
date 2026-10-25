@@ -1,16 +1,17 @@
 /**
- * Espace administrateur (/admin) : registre des devis sur une période choisie.
+ * Espace administrateur (/admin) : tableau de bord (résultat, budget), registre des devis, saisie des dépenses et autres recettes.
  * - Les devis sont lus dans le Google Sheet du registre (BRAND.quoteWebhook, script docs/apps-script/registre-devis.gs),
  *   avec le code administrateur saisi ici (gardé pour la session de l'onglet seulement).
  * - Récapitulatif (devis, articles, montant), tableau dépliable (+) et totaux par produit.
  * - Export Excel de la période : feuilles « Devis », « Lignes » et « Par produit ».
+ * - Résultat, dépenses, autres recettes et budget : voir ../admin/finance.js.
  */
 import { BRAND } from '../config.js';
 import { money, num, formatPhone, formatQuoteDate, formatDay, formatSlot } from '../quote/message.js';
+import { esc, ymd, createDashboard, mountMovements, mountBudget } from '../admin/finance.js';
 
 const KEY = 'leglaceur:admin';
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const FIRST_DAY = '2020-01-01';
 const shortDate = (iso) => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
@@ -26,10 +27,12 @@ export default function init(root) {
   const err = $('[data-admin-error]');
   const status = $('[data-admin-status]');
   const result = $('[data-admin-result]');
+  const empty = $('[data-admin-empty]');
   const logout = $('[data-admin-logout]');
   const period = $('[data-admin-period]');
   let code = '';
-  let current = { du: '', au: '', devis: [] };
+  let current = { du: '', au: '', devis: [], mouvements: [], budgets: [], hasMv: false, prev: null };
+  let presetName = 'month';
   try { code = sessionStorage.getItem(KEY) || ''; } catch { /* stockage indisponible */ }
 
   if (!BRAND.quoteWebhook) {
@@ -45,6 +48,46 @@ export default function init(root) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   }
+
+  async function post(body) {
+    const res = await fetch(BRAND.quoteWebhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // requête simple : pas de pré-vol CORS
+      body: JSON.stringify({ code, ...body }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  /* ---------- Onglets ---------- */
+  const tabs = [...root.querySelectorAll('[data-tab]')];
+  const panels = Object.fromEntries([...root.querySelectorAll('[data-panel]')].map((p) => [p.dataset.panel, p]));
+  const dash = createDashboard(panels.bilan);
+  const ctx = { post, reload: () => load(), period: () => ({ du: current.du, au: current.au }) };
+  const editors = [
+    mountMovements(panels.depense, 'depense', ctx),
+    mountMovements(panels.recette, 'recette', ctx),
+    mountBudget(panels.budget, ctx),
+  ];
+  function show(name, focus = false) {
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === name;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    Object.entries(panels).forEach(([k, p]) => { p.hidden = k !== name; });
+    if (name === 'bilan') dash.draw();
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => show(t.dataset.tab));
+    t.addEventListener('keydown', (e) => {
+      const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!d) return;
+      e.preventDefault();
+      show(tabs[(i + d + tabs.length) % tabs.length].dataset.tab, true);
+    });
+  });
 
   function showError(msg) { err.textContent = msg; err.hidden = !msg; }
 
@@ -88,12 +131,22 @@ export default function init(root) {
     if (p === 'month') a = new Date(now.getFullYear(), now.getMonth(), 1);
     if (p === 'lastmonth') { a = new Date(now.getFullYear(), now.getMonth() - 1, 1); b = new Date(now.getFullYear(), now.getMonth(), 0); }
     if (p === 'year') a = new Date(now.getFullYear(), 0, 1);
+    if (p === 'all') a = new Date(2020, 0, 1);
+    presetName = p;
     period.du.value = ymd(a);
     period.au.value = ymd(b);
     period.querySelectorAll('[data-preset]').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.preset === p)));
   }
   period.querySelectorAll('[data-preset]').forEach((c) => c.addEventListener('click', () => { preset(c.dataset.preset); load(); }));
-  period.addEventListener('input', () => period.querySelectorAll('[data-preset]').forEach((c) => c.setAttribute('aria-pressed', 'false')));
+  period.addEventListener('input', () => { presetName = ''; period.querySelectorAll('[data-preset]').forEach((c) => c.setAttribute('aria-pressed', 'false')); });
+
+  /** Période précédente de même durée, pour les variations des indicateurs. */
+  function previous(du, au) {
+    const [y1, m1, d1] = du.split('-').map(Number);
+    const [y2, m2, d2] = au.split('-').map(Number);
+    const n = Math.round((new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1)) / 86400000) + 1;
+    return { du: ymd(new Date(y1, m1 - 1, d1 - n)), au: ymd(new Date(y1, m1 - 1, d1 - 1)) };
+  }
   period.addEventListener('submit', (e) => { e.preventDefault(); load(); });
 
   async function load() {
@@ -103,10 +156,21 @@ export default function init(root) {
     if (du > au) { status.textContent = 'La date de début doit précéder la date de fin.'; return; }
     status.textContent = 'Chargement…';
     try {
-      const r = await fetchDevis(du, au);
+      const all = presetName === 'all' || du <= FIRST_DAY;
+      const pp = previous(du, au);
+      const [r, prev] = await Promise.all([fetchDevis(du, au), all ? null : fetchDevis(pp.du, pp.au).catch(() => null)]);
       if (!r.ok) { try { sessionStorage.removeItem(KEY); } catch { /* ignoré */ } location.reload(); return; }
-      current = { du, au, devis: r.devis || [] };
+      const hasMv = Array.isArray(r.mouvements);
+      current = {
+        du, au, hasMv,
+        devis: r.devis || [],
+        mouvements: r.mouvements || [],
+        budgets: r.budgets || [],
+        prev: prev?.ok ? { devis: prev.devis || [], mouvements: prev.mouvements || [] } : null,
+      };
       render();
+      dash.render(current);
+      editors.forEach((ed) => ed.update(current));
     } catch {
       status.textContent = 'Registre injoignable. Réessayez dans un instant.';
     }
@@ -132,8 +196,10 @@ export default function init(root) {
     const total = devis.reduce((a, q) => a + (q.total || 0), 0);
     const count = devis.reduce((a, q) => a + (q.count || 0), 0);
     const range = du === au ? formatDay(du) : `du ${formatDay(du)} au ${formatDay(au)}`;
-    status.textContent = devis.length ? `${devis.length} devis ${range}.` : `Aucun devis ${range}.`;
+    const mv = current.mouvements.length;
+    status.textContent = `Période ${presetName === 'all' ? 'depuis le début' : range} · ${num(devis.length)} devis · ${num(mv)} mouvement${mv > 1 ? 's' : ''} saisi${mv > 1 ? 's' : ''}.`;
     result.hidden = !devis.length;
+    empty.hidden = !!devis.length;
     if (!devis.length) return;
 
     const kpis = [
