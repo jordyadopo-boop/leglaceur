@@ -5,7 +5,8 @@
  *   mise à jour si le client modifie puis renvoie le même devis.
  * - doGet  : la page /admin lit les devis et les mouvements (dépenses, autres recettes) d'une période,
  *            uniquement avec le bon code administrateur.
- * - doPost avec { code, action } : la page /admin enregistre ou supprime une dépense / une autre recette
+ * - doPost avec { code, action } : la page /admin enregistre ou supprime une dépense / une autre recette,
+ *            supprime un devis ou une ligne de devis (actions « supprimer-devis », « supprimer-ligne »)
  *            (feuille « Mouvements »), ou le budget mensuel (feuille « Budget », action « budget »).
  *
  * Installation : voir docs/DEPLOIEMENT.md § « Espace administrateur ».
@@ -96,6 +97,7 @@ function mouvement_(p) {
   lock.waitLock(10000);
   try {
     if (p.action === 'budget') return budget_(p);
+    if (p.action === 'supprimer-devis' || p.action === 'supprimer-ligne') return supprimerDevis_(p);
     const sh = feuilleMv_();
     const n = sh.getLastRow() - 1;
     const ids = n > 0 ? sh.getRange(2, 1, n, 1).getValues().map(function (r) { return String(r[0]); }) : [];
@@ -117,6 +119,31 @@ function mouvement_(p) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/** Supprime un devis entier ({ numero }) ou une de ses lignes ({ numero, ligne, sku }) ; totaux recalculés. */
+function supprimerDevis_(p) {
+  const sh = feuille_();
+  const n = sh.getLastRow() - 1;
+  const nums = n > 0 ? sh.getRange(2, 2, n, 1).getValues().map(function (r) { return String(r[0]); }) : [];
+  const i = nums.indexOf(String(p.numero || ''));
+  if (i < 0) return sortie_({ ok: true });
+  if (p.action === 'supprimer-devis') { sh.deleteRow(i + 2); return sortie_({ ok: true }); }
+  let q;
+  try { q = JSON.parse(sh.getRange(i + 2, 17).getValue()); } catch (err) { return sortie_({ ok: false, erreur: 'donnees' }); }
+  const k = Number(p.ligne);
+  if (!Array.isArray(q.lines) || !q.lines[k] || q.lines[k].sku !== p.sku) return sortie_({ ok: false, erreur: 'donnees' });
+  q.lines.splice(k, 1);
+  if (!q.lines.length) { sh.deleteRow(i + 2); return sortie_({ ok: true }); }
+  q.count = q.lines.reduce(function (a, l) { return a + (Number(l.qty) || 0); }, 0);
+  q.totalKg = q.lines.reduce(function (a, l) { return a + (l.kg ? l.kg * l.qty : 0); }, 0);
+  q.subtotal = q.total = q.lines.reduce(function (a, l) { return a + (Number(l.total) || 0); }, 0);
+  sh.getRange(i + 2, 13, 1, 5).setValues([[
+    q.count, q.totalKg, q.total,
+    q.lines.map(function (l) { return l.qty + ' × ' + l.name + ' (' + l.label + ')'; }).join(' ; '),
+    JSON.stringify(q),
+  ]]);
+  return sortie_({ ok: true });
 }
 
 function feuille_() {

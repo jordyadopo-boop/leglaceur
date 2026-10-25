@@ -64,7 +64,10 @@ ce mois, mois dernier, cette année, depuis le début, ou dates libres) :
   variations par rapport à la période précédente de même durée, graphique recettes / dépenses par jour,
   mois ou année, répartition des dépenses par catégorie et des autres recettes par activité.
 - **Dépenses** et **Autres recettes** (activités annexes) : saisie datée et catégorisée, modification,
-  suppression (feuille « Mouvements » du Google Sheet).
+  suppression avec la croix × en bout de ligne (feuille « Mouvements » du Google Sheet).
+- **Devis** : la croix × en bout de ligne supprime un devis du registre ; dans le détail d'un devis, la
+  croix × d'une ligne supprime ce produit et recalcule le total (supprimer la dernière ligne supprime le devis).
+  Une confirmation est demandée à chaque fois ; la suppression est définitive.
 - **Budget** (facultatif) : objectifs mensuels de ventes et de dépenses (feuille « Budget »). Dès qu'un
   budget couvre la période, le tableau de bord affiche les jauges et les courbes budget / réel des ventes,
   des dépenses et du résultat (marge). Le budget d'un mois est réparti au prorata des jours.

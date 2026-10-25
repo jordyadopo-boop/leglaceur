@@ -203,6 +203,16 @@
 .mv-btn { border: 0; background: none; padding: 0.3rem 0.5rem; border-radius: 8px; color: var(--blue-600); font: 600 0.85rem var(--font-body); cursor: pointer; }
 .mv-btn:hover { background: var(--ice-50); }
 .mv-btn--del { color: var(--c-bad); }
+
+/* Croix de suppression en bout de ligne (devis, lignes de devis, dépenses, autres recettes) */
+.admin-table td.del { width: 1%; padding-inline: 0.25rem; text-align: right; }
+.row-del { position: relative; display: inline-block; vertical-align: middle; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid transparent; background: none; color: color-mix(in srgb, var(--ink-700) 55%, transparent); cursor: pointer; transition: background-color 0.15s, color 0.15s, border-color 0.15s; }
+.row-del::before, .row-del::after { content: ''; position: absolute; inset: 50% auto auto 50%; width: 12px; height: 2px; border-radius: 1px; background: currentColor; translate: -50% -50%; rotate: 45deg; }
+.row-del::after { rotate: -45deg; }
+.row-del:hover, .row-del:focus-visible { color: var(--c-bad); border-color: currentColor; background: color-mix(in srgb, var(--c-bad) 10%, transparent); }
+.row-del:disabled { opacity: 0.4; cursor: progress; }
+.row-del--sm { width: 24px; height: 24px; }
+.row-del--sm::before, .row-del--sm::after { width: 10px; }
 .mv-empty { color: var(--text-soft); text-align: center !important; padding: 1.5rem !important; }
 .bud-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .bud-head > div:first-child { flex: 1 1 360px; }
@@ -230,6 +240,7 @@
   .admin-table--mv :is(th, td) { white-space: normal; }
   .admin-table--mv td:first-child { white-space: nowrap; }
   .mv-btns .mv-btn { display: block; margin-left: auto; padding: 0.2rem 0; font-size: 0.78rem; }
+  .mv-btns .row-del { display: block; margin: 0.15rem 0 0 auto; }
   .admin-table--mv td.num { white-space: nowrap; }
   .mv-tag { border-radius: 8px; font-size: 0.76rem; }
   .admin-table--lines :is(th, td) { white-space: normal; font-size: 0.85rem; }

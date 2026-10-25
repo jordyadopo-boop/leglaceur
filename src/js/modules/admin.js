@@ -221,8 +221,9 @@ export default function init(root) {
         <td>${esc(deliveryShort(q))}${q.delivery?.commune ? `<br><small>${esc(q.delivery.commune)}</small>` : ''}</td>
         <td class="num">${num(q.count || 0)}</td>
         <td class="num"><strong>${money(q.total || 0)}</strong></td>
+        <td class="del"><button class="row-del" type="button" data-del-devis="${i}" aria-label="Supprimer le devis ${esc(q.number)}" title="Supprimer le devis"></button></td>
       </tr>
-      <tr class="admin-detail" id="admin-d${i}" hidden><td colspan="7">${detail(q, i)}</td></tr>`).join('');
+      <tr class="admin-detail" id="admin-d${i}" hidden><td colspan="8">${detail(q, i)}</td></tr>`).join('');
 
     $('[data-admin-products]').innerHTML = byProduct(devis).map((p) => `
       <tr><td>${esc(p.name)}</td><td>${esc(p.label)}</td><td class="num">${num(p.qty)}${p.unit === 'kg' ? ' kg' : ''}</td><td class="num">${money(p.total)}</td></tr>`).join('');
@@ -231,7 +232,7 @@ export default function init(root) {
   function detail(q, i) {
     const c = q.client || {};
     const d = q.delivery || {};
-    const lines = (q.lines || []).map((l) => `<tr><td>${esc(l.name)} <small>${esc(l.label)}</small></td><td class="num">${num(l.qty)}${l.unit === 'kg' ? ' kg' : ''}</td><td class="num">${money(l.price)}</td><td class="num">${money(l.total)}</td></tr>`).join('');
+    const lines = (q.lines || []).map((l, k) => `<tr><td>${esc(l.name)} <small>${esc(l.label)}</small></td><td class="num">${num(l.qty)}${l.unit === 'kg' ? ' kg' : ''}</td><td class="num">${money(l.price)}</td><td class="num">${money(l.total)}</td><td class="del"><button class="row-del row-del--sm" type="button" data-del-ligne="${i}:${k}" aria-label="Supprimer la ligne ${esc(l.name)} ${esc(l.label)}" title="Supprimer la ligne"></button></td></tr>`).join('');
     const info = [
       ['N° devis', q.number],
       ['Client', c.name],
@@ -249,9 +250,9 @@ export default function init(root) {
       <div class="admin-detail__in">
         <dl class="admin-dl">${info.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         <table class="admin-table admin-table--lines">
-          <thead><tr><th scope="col">Produit</th><th scope="col" class="num">Qté</th><th scope="col" class="num">Prix unitaire</th><th scope="col" class="num">Montant</th></tr></thead>
+          <thead><tr><th scope="col">Produit</th><th scope="col" class="num">Qté</th><th scope="col" class="num">Prix unitaire</th><th scope="col" class="num">Montant</th><th scope="col"><span class="sr-only">Supprimer</span></th></tr></thead>
           <tbody>${lines}</tbody>
-          <tfoot><tr><th scope="row" colspan="3">Total${d.excludesDelivery ? ' (hors frais de livraison)' : ''}</th><td class="num"><strong>${money(q.total || 0)}</strong></td></tr></tfoot>
+          <tfoot><tr><th scope="row" colspan="3">Total${d.excludesDelivery ? ' (hors frais de livraison)' : ''}</th><td class="num"><strong>${money(q.total || 0)}</strong></td><td></td></tr></tfoot>
         </table>
         <div class="admin-detail__actions">
           <button class="btn btn--sm" type="button" data-pdf="${i}"><span data-label>PDF du devis</span></button>
@@ -267,6 +268,23 @@ export default function init(root) {
       const opened = plus.getAttribute('aria-expanded') !== 'true';
       plus.setAttribute('aria-expanded', String(opened));
       row.hidden = !opened;
+      return;
+    }
+    const del = e.target.closest('[data-del-devis], [data-del-ligne]');
+    if (del) {
+      const [i, k] = (del.dataset.delDevis ?? del.dataset.delLigne).split(':').map(Number);
+      const q = current.devis[i];
+      const l = k >= 0 ? q.lines[k] : null;
+      const one = l && q.lines.length === 1;
+      const ask = l
+        ? `Supprimer la ligne « ${l.qty} × ${l.name} (${l.label}) » du devis ${q.number} ?${one ? ' C’est sa seule ligne : le devis sera supprimé.' : ''}`
+        : `Supprimer le devis ${q.number} de ${money(q.total || 0)}${q.client?.name ? ` (${q.client.name})` : ''} ? Cette action est définitive.`;
+      if (!confirm(ask)) return;
+      del.disabled = true;
+      try {
+        const r = await post(l ? { action: 'supprimer-ligne', numero: q.number, ligne: k, sku: l.sku } : { action: 'supprimer-devis', numero: q.number });
+        if (r.ok) load(); else { del.disabled = false; alert('Suppression refusée : mettez à jour le script du registre (docs/DEPLOIEMENT.md § 3).'); }
+      } catch { del.disabled = false; alert('Registre injoignable. Réessayez dans un instant.'); }
       return;
     }
     const pdf = e.target.closest('[data-pdf]');

@@ -416,7 +416,7 @@ export function mountMovements(panel, type, ctx) {
             <td><span class="mv-tag mv-tag--${type}">${esc(m.categorie)}</span></td>
             <td class="mv-lib">${esc(m.libelle)}${m.note ? `<br><small>${esc(m.note)}</small>` : ''}</td>
             <td class="num"><strong>${money(m.montant)}</strong></td>
-            <td class="mv-btns"><button class="mv-btn" type="button" data-act="edit" data-i="${i}">Modifier</button><button class="mv-btn mv-btn--del" type="button" data-act="del" data-i="${i}">Supprimer</button></td>
+            <td class="mv-btns"><button class="mv-btn" type="button" data-act="edit" data-i="${i}">Modifier</button><button class="row-del" type="button" data-act="del" data-i="${i}" aria-label="Supprimer" title="Supprimer"></button></td>
           </tr>`).join('')
         : `<tr><td colspan="5" class="mv-empty">Aucune ${noun} enregistrée sur cette période.</td></tr>`;
       const ro = !state.hasMv;
