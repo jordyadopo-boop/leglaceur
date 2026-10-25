@@ -6,12 +6,14 @@
  * - Export Excel de la période : feuilles « Devis », « Lignes » et « Par produit ».
  * - Résultat, dépenses, autres recettes et budget : voir ../admin/finance.js.
  */
-import { BRAND } from '../config.js';
+import { BRAND, FINANCE } from '../config.js';
 import { money, num, formatPhone, formatQuoteDate, formatDay, formatSlot } from '../quote/message.js';
 import { esc, ymd, createDashboard, mountMovements, mountBudget } from '../admin/finance.js';
 
 const KEY = 'leglaceur:admin';
 const FIRST_DAY = '2020-01-01';
+/** AAAA-MM-JJ → JJ/MM/AA */
+const shortDay = (d) => String(d || '').split('-').reverse().map((x, k) => (k === 2 ? x.slice(2) : x)).join('/');
 const shortDate = (iso) => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
@@ -210,6 +212,8 @@ export default function init(root) {
       ['Livraisons offertes', num(devis.filter((q) => q.delivery?.mode !== 'retrait' && q.delivery?.free).length)],
       ['Retraits sur place', num(devis.filter((q) => q.delivery?.mode === 'retrait').length)],
     ];
+    const paid = devis.filter((q) => q.encaisse);
+    kpis.splice(4, 0, ['Devis encaissés', `${num(paid.length)} / ${num(devis.length)}`], ['Reste à encaisser', money(devis.filter((q) => !q.encaisse).reduce((a, q) => a + (q.total || 0), 0))]);
     $('[data-admin-kpis]').innerHTML = kpis.map(([k, v]) => `<div class="admin-kpi frost"><span>${k}</span><strong>${v}</strong></div>`).join('');
 
     $('[data-admin-rows]').innerHTML = devis.map((q, i) => `
@@ -221,9 +225,12 @@ export default function init(root) {
         <td>${esc(deliveryShort(q))}${q.delivery?.commune ? `<br><small>${esc(q.delivery.commune)}</small>` : ''}</td>
         <td class="num">${num(q.count || 0)}</td>
         <td class="num"><strong>${money(q.total || 0)}</strong></td>
+        <td class="enc-cell">${q.encaisse
+          ? `<button class="enc enc--ok" type="button" data-enc="${i}" title="Annuler l’encaissement">✓ Encaissé<small>${esc(shortDay(q.encaisse.date))}${q.encaisse.montant !== q.total ? ` · ${money(q.encaisse.montant)}` : ''}</small></button>`
+          : `<button class="enc" type="button" data-enc="${i}">Encaisser</button>`}</td>
         <td class="del"><button class="row-del" type="button" data-del-devis="${i}" aria-label="Supprimer le devis ${esc(q.number)}" title="Supprimer le devis"></button></td>
       </tr>
-      <tr class="admin-detail" id="admin-d${i}" hidden><td colspan="8">${detail(q, i)}</td></tr>`).join('');
+      <tr class="admin-detail" id="admin-d${i}" hidden><td colspan="9">${detail(q, i)}</td></tr>`).join('');
 
     $('[data-admin-products]').innerHTML = byProduct(devis).map((p) => `
       <tr><td>${esc(p.name)}</td><td>${esc(p.label)}</td><td class="num">${num(p.qty)}${p.unit === 'kg' ? ' kg' : ''}</td><td class="num">${money(p.total)}</td></tr>`).join('');
@@ -268,6 +275,27 @@ export default function init(root) {
       const opened = plus.getAttribute('aria-expanded') !== 'true';
       plus.setAttribute('aria-expanded', String(opened));
       row.hidden = !opened;
+      return;
+    }
+    const enc = e.target.closest('[data-enc]');
+    if (enc) {
+      const q = current.devis[Number(enc.dataset.enc)];
+      let body;
+      if (q.encaisse) {
+        if (!confirm(`Annuler l’encaissement du devis ${q.number} (${money(q.encaisse.montant)}) ? La recette correspondante sera retirée.`)) return;
+        body = { action: 'supprimer', mouvement: { id: q.encaisse.id } };
+      } else {
+        const v = prompt(`Montant encaissé pour le devis ${q.number} (F CFA) — enregistré aujourd’hui dans les recettes « ${FINANCE.glace} » :`, String(q.total || ''));
+        if (v == null) return;
+        const montant = Math.round(Number(v.replace(/\s/g, '').replace(',', '.')));
+        if (!(montant > 0)) { alert('Montant invalide.'); return; }
+        body = { action: 'mouvement', mouvement: { id: '', type: 'recette', date: ymd(new Date()), categorie: FINANCE.glace, libelle: `Devis ${q.number}${q.client?.name ? ` · ${q.client.name}` : ''}`, montant, note: '', devis: q.number } };
+      }
+      enc.disabled = true;
+      try {
+        const r = await post(body);
+        if (r.ok) load(); else { enc.disabled = false; alert('Enregistrement refusé : mettez à jour le script du registre (docs/DEPLOIEMENT.md § 3).'); }
+      } catch { enc.disabled = false; alert('Registre injoignable. Réessayez dans un instant.'); }
       return;
     }
     const del = e.target.closest('[data-del-devis], [data-del-ligne]');

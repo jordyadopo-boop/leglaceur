@@ -3,7 +3,7 @@
  *
  * - doPost : le site envoie chaque devis (PDF, Excel ou WhatsApp) ; une ligne par n° de devis,
  *   mise à jour si le client modifie puis renvoie le même devis.
- * - doGet  : la page /admin lit les devis et les mouvements (dépenses, autres recettes) d'une période,
+ * - doGet  : la page /admin lit les devis (avec leur encaissement éventuel) et les mouvements (dépenses, autres recettes) d'une période,
  *            uniquement avec le bon code administrateur.
  * - doPost avec { code, action } : la page /admin enregistre ou supprime une dépense / une autre recette,
  *            supprime un devis ou une ligne de devis (actions « supprimer-devis », « supprimer-ligne »)
@@ -22,7 +22,7 @@ const ENTETES = [
 ];
 
 const FEUILLE_MV = 'Mouvements';
-const ENTETES_MV = ['ID', 'Type', 'Date', 'Catégorie', 'Libellé', 'Montant (F CFA)', 'Note', 'Saisi le'];
+const ENTETES_MV = ['ID', 'Type', 'Date', 'Catégorie', 'Libellé', 'Montant (F CFA)', 'Note', 'Saisi le', 'Devis'];
 const TYPES_MV = ['depense', 'recette'];
 
 const FEUILLE_BUD = 'Budget';
@@ -78,6 +78,8 @@ function feuilleMv_() {
     sh.getRange(1, 1, 1, ENTETES_MV.length).setFontWeight('bold');
     sh.getRange('C:C').setNumberFormat('@'); // dates gardées en texte AAAA-MM-JJ
   }
+  // Colonne « Devis » (n° du devis encaissé) ajoutée aux feuilles créées avant elle.
+  if (sh.getRange(1, ENTETES_MV.length).getValue() === '') sh.getRange(1, ENTETES_MV.length).setValue('Devis').setFontWeight('bold');
   return sh;
 }
 
@@ -87,7 +89,7 @@ function lireMv_() {
   if (n <= 0) return [];
   return sh.getRange(2, 1, n, ENTETES_MV.length).getValues().map(function (r) {
     const d = r[2] instanceof Date ? Utilities.formatDate(r[2], 'UTC', 'yyyy-MM-dd') : String(r[2]);
-    return { id: String(r[0]), type: String(r[1]), date: d, categorie: String(r[3]), libelle: String(r[4]), montant: Number(r[5]) || 0, note: String(r[6]) };
+    return { id: String(r[0]), type: String(r[1]), date: d, categorie: String(r[3]), libelle: String(r[4]), montant: Number(r[5]) || 0, note: String(r[6]), devis: String(r[8] || '') };
   });
 }
 
@@ -112,7 +114,7 @@ function mouvement_(p) {
       return sortie_({ ok: false, erreur: 'donnees' });
     }
     const id = i >= 0 ? ids[i] : Utilities.getUuid();
-    const ligne = [id, m.type, m.date, String(m.categorie).trim().slice(0, 60), String(m.libelle || '').trim().slice(0, 120), montant, String(m.note || '').trim().slice(0, 300), new Date()];
+    const ligne = [id, m.type, m.date, String(m.categorie).trim().slice(0, 60), String(m.libelle || '').trim().slice(0, 120), montant, String(m.note || '').trim().slice(0, 300), new Date(), String(m.devis || '').slice(0, 40)];
     if (i >= 0) sh.getRange(i + 2, 1, 1, ligne.length).setValues([ligne]);
     else sh.appendRow(ligne);
     return sortie_({ ok: true, id: id });
@@ -199,6 +201,10 @@ function doGet(e) {
   const du = /^\d{4}-\d{2}-\d{2}$/.test(p.du || '') ? new Date(p.du + 'T00:00:00Z') : new Date(0);
   const au = /^\d{4}-\d{2}-\d{2}$/.test(p.au || '') ? new Date(p.au + 'T23:59:59.999Z') : new Date(8.64e15);
 
+  const tous = lireMv_();
+  const encaisses = {}; // n° de devis → recette qui l'encaisse (quelle que soit sa date)
+  tous.forEach(function (m) { if (m.devis && m.type === 'recette') encaisses[m.devis] = { id: m.id, date: m.date, montant: m.montant }; });
+
   const sh = feuille_();
   const n = sh.getLastRow() - 1;
   const rows = n > 0 ? sh.getRange(2, 1, n, ENTETES.length).getValues() : [];
@@ -209,6 +215,7 @@ function doGet(e) {
     const t = new Date(q.date || r[2]);
     if (t >= du && t <= au) {
       q.receivedAt = r[0] instanceof Date ? r[0].toISOString() : String(r[0]);
+      q.encaisse = encaisses[q.number] || null;
       devis.push(q);
     }
   });
@@ -216,7 +223,7 @@ function doGet(e) {
 
   const d1 = p.du || '0000-00-00';
   const d2 = p.au || '9999-99-99';
-  const mouvements = lireMv_().filter(function (m) { return m.date >= d1 && m.date <= d2; });
+  const mouvements = tous.filter(function (m) { return m.date >= d1 && m.date <= d2; });
   mouvements.sort(function (a, b) { return b.date.localeCompare(a.date); });
   return sortie_({ ok: true, devis: devis, mouvements: mouvements, budgets: lireBud_() });
 }

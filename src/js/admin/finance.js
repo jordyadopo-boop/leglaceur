@@ -1,6 +1,8 @@
 /**
  * Espace administrateur — tableau de bord financier (onglets Résultat, Dépenses, Autres recettes, Budget).
- * - Recettes = ventes de glace (total des devis) + autres recettes (activités annexes saisies à la main).
+ * - Recettes = sommes réellement encaissées (feuille « Mouvements », type recette) : ventes de glace (catégorie
+ *   FINANCE.glace : devis encaissés via le bouton « Encaisser », ventes sans devis) + autres recettes (activités annexes).
+ *   Un devis non encaissé n'est pas une recette.
  * - Dépenses et autres recettes : feuille « Mouvements » du registre ; budget mensuel : feuille « Budget ».
  * - Le budget d'un mois est réparti au prorata des jours : il se compare donc à n'importe quelle période.
  * Graphiques en SVG maison (aucune dépendance), redessinés à la largeur du conteneur.
@@ -29,9 +31,11 @@ const MONTHS_SHORT = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.',
 /* ---------- Agrégation ---------- */
 
 /** Totaux d'une période (sert aussi à la période précédente). */
-export function totals({ devis = [], mouvements = [] }) {
-  const glace = devis.reduce((a, q) => a + (q.total || 0), 0);
-  const autres = mouvements.filter((m) => m.type === 'recette').reduce((a, m) => a + m.montant, 0);
+export const isGlace = (m) => m.type === 'recette' && m.categorie === FINANCE.glace;
+
+export function totals({ mouvements = [] }) {
+  const glace = mouvements.filter(isGlace).reduce((a, m) => a + m.montant, 0);
+  const autres = mouvements.filter((m) => m.type === 'recette' && !isGlace(m)).reduce((a, m) => a + m.montant, 0);
   const dep = mouvements.filter((m) => m.type === 'depense').reduce((a, m) => a + m.montant, 0);
   const rec = glace + autres;
   return { glace, autres, rec, dep, res: rec - dep, marge: rec ? ((rec - dep) / rec) * 100 : null };
@@ -70,8 +74,7 @@ export function series(state) {
       r.bDep += (b.depenses || 0) / n;
     }
   }
-  for (const q of devis) { const k = keyOf(ymd(new Date(q.date))); if (map.has(k)) row(k).glace += q.total || 0; }
-  for (const m of mouvements) { const k = keyOf(m.date); if (map.has(k)) row(k)[m.type === 'recette' ? 'autres' : 'dep'] += m.montant; }
+  for (const m of mouvements) { const k = keyOf(m.date); if (map.has(k)) row(k)[m.type === 'depense' ? 'dep' : isGlace(m) ? 'glace' : 'autres'] += m.montant; }
   const rows = [...map.values()].map((r) => {
     const rec = r.glace + r.autres;
     return { ...r, rec, res: rec - r.dep, bVentes: Math.round(r.bVentes), bDep: Math.round(r.bDep), bRes: Math.round(r.bVentes - r.bDep) };
@@ -263,7 +266,7 @@ export function createDashboard(panel) {
       const max = list[0]?.[1] || 1;
       $(`[data-fin-cat="${type}"]`).innerHTML = list.length
         ? list.map(([k, v]) => `<li><div class="cat-top"><span>${esc(k)}</span><b>${money(v)}</b></div><div class="cat-bar"><span class="cat-fill cat-fill--${type}" style="--v:${v / max}"></span><small>${pct((v / tot) * 100)}</small></div></li>`).join('')
-        : `<li class="cat-empty">${type === 'depense' ? 'Aucune dépense' : 'Aucune autre recette'} sur la période.</li>`;
+        : `<li class="cat-empty">${type === 'depense' ? 'Aucune dépense' : 'Aucune recette encaissée'} sur la période.</li>`;
     }
 
     const budget = $('[data-fin-budget]');
@@ -318,12 +321,12 @@ export function mountMovements(panel, type, ctx) {
   const lid = `admin-cats-${type}`;
   panel.innerHTML = `
     <form class="mv-form frost" data-mv-form novalidate>
-      <h2 class="admin__h3" data-mv-title>${dep ? 'Nouvelle dépense' : 'Nouvelle recette annexe'}</h2>
-      <p class="admin-note">${dep ? 'Toute sortie d’argent : électricité, carburant, salaires, emballages…' : 'Les revenus de vos activités à côté de la vente de glace.'}</p>
+      <h2 class="admin__h3" data-mv-title>${dep ? 'Nouvelle dépense' : 'Nouvelle recette'}</h2>
+      <p class="admin-note">${dep ? 'Toute sortie d’argent : électricité, carburant, salaires, emballages…' : `Tout argent encaissé : glace vendue sans devis (activité « ${FINANCE.glace} »), boissons, location… Les devis encaissés s’ajoutent ici d’eux-mêmes avec le bouton « Encaisser » de l’onglet Devis.`}</p>
       <div class="mv-grid">
         <div class="field"><label for="${type}-date">Date</label><input class="input" id="${type}-date" name="date" type="date" required></div>
         <div class="field"><label for="${type}-cat">${dep ? 'Catégorie' : 'Activité'}</label><input class="input" id="${type}-cat" name="categorie" list="${lid}" maxlength="60" required placeholder="${dep ? 'Ex. Électricité' : 'Ex. Vente de boissons'}"><datalist id="${lid}"></datalist></div>
-        <div class="field"><label for="${type}-lib">Libellé</label><input class="input" id="${type}-lib" name="libelle" maxlength="120" placeholder="${dep ? 'Ex. Facture CIE octobre' : 'Ex. 3 casiers de sodas'}"></div>
+        <div class="field"><label for="${type}-lib">Libellé</label><input class="input" id="${type}-lib" name="libelle" maxlength="120" placeholder="${dep ? 'Ex. Facture CIE octobre' : 'Ex. Vente comptoir, 10 sacs'}"></div>
         <div class="field"><label for="${type}-mt">Montant (F CFA)</label><input class="input" id="${type}-mt" name="montant" type="number" inputmode="numeric" min="1" step="1" required></div>
         <div class="field mv-grid__wide"><label for="${type}-note">Note <span class="field-hint">(facultatif)</span></label><input class="input" id="${type}-note" name="note" maxlength="300"></div>
       </div>
@@ -333,7 +336,7 @@ export function mountMovements(panel, type, ctx) {
         <p class="admin-note" data-mv-msg role="status"></p>
       </div>
     </form>
-    <div class="mv-head"><h2 class="admin__h2">${dep ? 'Dépenses' : 'Autres recettes'} de la période</h2><strong class="mv-total" data-mv-total></strong></div>
+    <div class="mv-head"><h2 class="admin__h2">${dep ? 'Dépenses' : 'Recettes encaissées'} de la période</h2><strong class="mv-total" data-mv-total></strong></div>
     <div class="admin-table-wrap">
       <table class="admin-table admin-table--mv">
         <thead><tr><th scope="col">Date</th><th scope="col">${dep ? 'Catégorie' : 'Activité'}</th><th scope="col">Libellé</th><th scope="col" class="num">Montant</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
@@ -345,14 +348,16 @@ export function mountMovements(panel, type, ctx) {
   const submit = form.querySelector('[type="submit"]');
   const cancel = panel.querySelector('[data-mv-cancel]');
   let editing = null;
+  let linked = ''; // n° du devis encaissé lié à la recette modifiée (conservé à l'enregistrement)
   let list = [];
 
   function reset() {
     editing = null;
+    linked = '';
     form.reset();
     form.date.value = ymd(new Date());
     submit.querySelector('[data-label]').textContent = `Ajouter la ${noun}`;
-    panel.querySelector('[data-mv-title]').textContent = dep ? 'Nouvelle dépense' : 'Nouvelle recette annexe';
+    panel.querySelector('[data-mv-title]').textContent = dep ? 'Nouvelle dépense' : 'Nouvelle recette';
     cancel.hidden = true;
   }
   reset();
@@ -362,7 +367,7 @@ export function mountMovements(panel, type, ctx) {
     e.preventDefault();
     const m = {
       id: editing || '', type, date: form.date.value, categorie: form.categorie.value.trim(),
-      libelle: form.libelle.value.trim(), montant: Math.round(Number(form.montant.value)), note: form.note.value.trim(),
+      libelle: form.libelle.value.trim(), montant: Math.round(Number(form.montant.value)), note: form.note.value.trim(), devis: linked,
     };
     const bad = [[form.date, !m.date], [form.categorie, !m.categorie], [form.montant, !(m.montant > 0)]];
     bad.forEach(([el, b]) => el.setAttribute('aria-invalid', String(b)));
@@ -387,6 +392,7 @@ export function mountMovements(panel, type, ctx) {
     const m = list[Number(b.dataset.i)];
     if (b.dataset.act === 'edit') {
       editing = m.id;
+      linked = m.devis || '';
       for (const k of ['date', 'categorie', 'libelle', 'montant', 'note']) form[k].value = m[k] ?? '';
       submit.querySelector('[data-label]').textContent = 'Enregistrer la modification';
       panel.querySelector('[data-mv-title]').textContent = `Modifier la ${noun}`;
@@ -413,8 +419,8 @@ export function mountMovements(panel, type, ctx) {
       panel.querySelector('[data-mv-rows]').innerHTML = list.length
         ? list.map((m, i) => `<tr>
             <td>${esc(m.date.split('-').reverse().join('/'))}</td>
-            <td><span class="mv-tag mv-tag--${type}">${esc(m.categorie)}</span></td>
-            <td class="mv-lib">${esc(m.libelle)}${m.note ? `<br><small>${esc(m.note)}</small>` : ''}</td>
+            <td><span class="mv-tag mv-tag--${isGlace(m) ? 'glace' : type}">${esc(m.categorie)}</span></td>
+            <td class="mv-lib">${m.devis ? '<span class="mv-tag mv-tag--devis">Devis</span> ' : ''}${esc(m.libelle)}${m.note ? `<br><small>${esc(m.note)}</small>` : ''}</td>
             <td class="num"><strong>${money(m.montant)}</strong></td>
             <td class="mv-btns"><button class="mv-btn" type="button" data-act="edit" data-i="${i}">Modifier</button><button class="row-del" type="button" data-act="del" data-i="${i}" aria-label="Supprimer" title="Supprimer"></button></td>
           </tr>`).join('')
