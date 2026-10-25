@@ -598,6 +598,7 @@
 .quote-action--wa { white-space: normal; }
 .quote-summary__tip { font-size: 0.84rem; color: var(--text-muted); text-align: center; line-height: 1.4; }
 .quote-summary__dl { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.quote-summary__dl .quote-action--wide { grid-column: 1 / -1; }
 .quote-summary__dl .btn { min-height: 48px; padding-inline: 0.7rem; font-size: 0.9rem; }
 .quote .btn--glass { --btn-bg: #fff; box-shadow: inset 0 0 0 1px var(--line-strong), 0 10px 22px -16px rgba(10, 31, 68, 0.5); }
 .quote .btn--glass:hover { --btn-bg: var(--ice-50); }

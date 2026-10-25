@@ -16,7 +16,7 @@ import { mulberry32, makeIceMaps, makeWordTexture, makeGlintTexture, makeRingTex
 const FOV = 30;
 const CAM_Z = 14;
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
-const R0 = 0.5; // rugosité de base (modulée par la carte de détails)
+const R0 = 0.26; // rugosité de base (modulée par la carte de détails)
 
 /* Points d'ancrage des glaçons, exprimés dans la « zone libre » (u, v ∈ [0, 1], v vers le bas).
    z : profondeur (vers la caméra si > 0), s : taille relative. */
@@ -32,11 +32,12 @@ const ANCHORS = {
     { u: 1.06, v: 0.56, z: -3.8, s: 0.56 },
   ],
   // Mobile / tablette : bande libre sous le texte (paysage).
+  // (le 3e glaçon remonte au niveau du titre, à droite : la 3D est visible dès le premier écran)
   band: [
-    { u: 0.3, v: 0.52, z: 0.6, s: 1 },
-    { u: 0.77, v: 0.36, z: -0.8, s: 0.84 },
-    { u: 0.94, v: 0.86, z: 1.4, s: 0.54 },
-    { u: 0.03, v: 0.16, z: -1.8, s: 0.56 },
+    { u: 0.3, v: 0.46, z: 0.6, s: 1 },
+    { u: 0.8, v: 0.36, z: -0.8, s: 0.84 },
+    { u: 0.95, ay: 0.17, z: -2.6, s: 0.6 }, // ay : hauteur absolue (fraction du hero), à côté du titre
+    { u: 0.96, v: 0.9, z: 1.4, s: 0.5 },
     { u: 0.56, v: 0.94, z: 1.9, s: 0.42 },
     { u: 0.52, v: 0.02, z: -3.2, s: 0.44 },
     { u: -0.06, v: 0.9, z: 0.4, s: 0.48 },
@@ -67,6 +68,7 @@ uniform float uWordLift;
 uniform float uFade;
 uniform float uCaustic;
 uniform vec4 uShadow[NSH];
+uniform float uWordLeft;
 uniform vec3 cTop;
 uniform vec3 cBottom;
 uniform vec3 cHalo;
@@ -114,7 +116,7 @@ void main() {
     if (s.w <= 0.001) continue;
     vec2 d = (uv - s.xy) * vec2(asp, 1.0) / s.z;
     float r2 = dot(d, d);
-    col = mix(col, cShadow, exp(-r2 * 2.6) * s.w * 0.2);
+    col = mix(col, cShadow, exp(-r2 * 2.6) * s.w * 0.3);
     col = mix(col, cLine, exp(-r2 * 7.0) * s.w * 0.16);
     col = mix(col, vec3(1.0), exp(-r2 * 26.0) * s.w * 0.55);
   }
@@ -123,7 +125,8 @@ void main() {
   vec2 w = (uv - uWordRect.xy - vec2(0.0, uWordLift)) / uWordRect.zw + 0.5 + uPar * 0.02;
   if (w.x > 0.0 && w.x < 1.0 && w.y > 0.0 && w.y < 1.0) {
     vec4 t = texture2D(uWord, w);
-    col = mix(col, t.rgb, t.a * uWordAlpha);
+    float side = mix(1.0, smoothstep(0.12, 0.62, uv.x) * 0.55 + 0.45, uWordLeft);
+    col = mix(col, t.rgb, t.a * uWordAlpha * side);
   }
 
   // Coins à peine bleutés (profondeur douce)
@@ -148,7 +151,7 @@ attribute float aSize;
 varying float vA;
 varying float vSpark;
 void main() {
-  vec3 p = position;
+  vec3 p = position * vec3(uBox.x, uBox.y, 1.0); // positions normalisées → boîte visible
   float sp = 0.1 + aSeed * 0.2;
   p.y = mod(p.y + uTime * sp * (1.0 + uScroll * 6.0) + uBox.y * 0.5, uBox.y) - uBox.y * 0.5;
   p.x += sin(uTime * 0.33 + aSeed * 31.0) * 0.32 + uScroll * (aSeed - 0.5) * 7.0;
@@ -298,9 +301,12 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   scene.environment = envRT.texture;
 
   // Lumières ponctuelles : petits points spéculaires très vifs.
-  const key = new THREE.DirectionalLight('#ffffff', 2.6);
+  const key = new THREE.DirectionalLight('#ffffff', 3.4);
   key.position.set(6, 9, 8);
   scene.add(key);
+  const fill = new THREE.PointLight('#ffffff', 26, 0, 2); // second point spéculaire (haut gauche)
+  fill.position.set(-5, 6, 7);
+  scene.add(fill);
   const rim = new THREE.PointLight('#4d9bff', 30, 0, 2);
   rim.position.set(3, -1, -4);
   scene.add(rim);
@@ -314,10 +320,11 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     uPar: { value: new THREE.Vector2() },
     uWord: { value: word.texture },
     uWordRect: { value: new THREE.Vector4(0.5, 0.45, 1, 0.3) },
-    uWordAlpha: { value: reduced ? 1 : 0 },
+    uWordAlpha: { value: 1 }, // le mot est présent dès l'affichage (relais du mot CSS)
     uWordLift: { value: 0 },
-    uFade: { value: reduced ? 1 : 0.4 },
+    uFade: { value: 1 },
     uCaustic: { value: mobile ? 0.3 : 0.36 },
+    uWordLeft: { value: 0 },
     uShadow: { value: Array.from({ length: NSH }, () => new THREE.Vector4(0, 0, 1, 0)) },
     cTop: { value: new THREE.Color('#ffffff') },
     cBottom: { value: new THREE.Color('#e3f1ff') },
@@ -345,16 +352,16 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
       roughnessMap: maps.detail,
       transmission: 1,
       transmissionMap: maps.detail,
-      thickness: 1.4,
+      thickness: 1.8,
       ior: 1.31,
-      attenuationColor: new THREE.Color('#b4dcff'),
-      attenuationDistance: 5.5,
+      attenuationColor: new THREE.Color('#bcdfff'),
+      attenuationDistance: 6.5,
       specularIntensity: 1,
       clearcoat: 1,
       clearcoatRoughness: 0.03,
       normalMap: maps.normal,
       normalScale: new THREE.Vector2(0.42, 0.42),
-      envMapIntensity: 2,
+      envMapIntensity: 2.4,
       dispersion: mobile ? 0 : 0.22,
       emissive: new THREE.Color('#d9efff'),
       emissiveIntensity: 0,
@@ -443,7 +450,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   /* ---------- Éclats de glace ---------- */
   const NS = 64;
   const shardGeo = new THREE.OctahedronGeometry(1, 0);
-  const shardMat = new THREE.MeshStandardMaterial({ color: '#d6ecff', roughness: 0.04, metalness: 0.2, envMapIntensity: 2.4, transparent: true, opacity: 0.92, flatShading: true });
+  const shardMat = new THREE.MeshStandardMaterial({ color: '#eef8ff', emissive: '#a8d6ff', emissiveIntensity: 0.45, roughness: 0.05, metalness: 0, envMapIntensity: 1.4, transparent: true, opacity: 0.94, flatShading: true });
   const shards = new THREE.InstancedMesh(shardGeo, shardMat, NS);
   shards.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   shards.frustumCulled = false;
@@ -485,6 +492,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
   let raf = 0;
   let last = 0;
   let disposed = false;
+  let primed = false; // premier rendu demandé explicitement par le module (hors intro)
   let introStarted = reduced;
   let glintTimer = 2.5;
   const shake = { v: 0 };
@@ -505,13 +513,13 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     const anchors = ANCHORS[mode];
     const unitPx = mode === 'side'
       ? Math.min(zone.w * 0.36, zone.h * 0.3, 300)
-      : Math.min(zone.h * 0.6, zone.w * 0.3, 210);
+      : Math.min(zone.h * 0.62, zone.w * 0.36, 210);
     unitW = unitPx * k;
     const [zx, zy] = toWorld(zone.x + zone.w / 2, zone.y + zone.h / 2);
     zoneCenter.set(zx, zy);
     cubes.forEach((c, i) => {
       const a = anchors[i % anchors.length];
-      const [x0, y0] = toWorld(zone.x + a.u * zone.w, zone.y + a.v * zone.h);
+      const [x0, y0] = toWorld(zone.x + a.u * zone.w, a.ay != null ? a.ay * H : zone.y + a.v * zone.h);
       const depth = (CAM_Z - a.z) / CAM_Z;
       c.base.set(x0 * depth, y0 * depth, a.z);
       c.size = unitW * a.s;
@@ -524,8 +532,9 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     U.uHalo.value.set((zone.x + zone.w * 0.5) / W, 1 - (zone.y + zone.h * 0.45) / H);
     const wordW = W * (mode === 'side' ? 0.985 : 1.04);
     const wordH = wordW / word.aspect;
-    const cy = mode === 'side' ? H - wordH * 0.4 : zone.y + zone.h * 0.56;
+    const cy = mode === 'side' ? H - wordH * 0.34 : zone.y + zone.h * 0.56;
     U.uWordRect.value.set(0.5, 1 - cy / H, wordW / W, wordH / H);
+    U.uWordLeft.value = mode === 'side' ? 1 : 0; // bureau : le mot s'efface derrière les boutons, reste net derrière les glaçons
     fU.uBox.value.set(visW * 1.35, visH * 1.3, 11);
   }
 
@@ -540,7 +549,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     U.uRes.value.set(W, H);
     fU.uScale.value = (H * renderer.getPixelRatio()) / (2 * TAN);
     layout(zone);
-    if (!running) renderOnce();
+    if (!running && primed) renderOnce(); // jamais de premier rendu (compilation) implicite
   }
 
   /* ---------- Effets ---------- */
@@ -673,6 +682,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     // Dissolution au défilement
     const s = scroll * scroll * (3 - 2 * scroll);
     U.uWordLift.value = s * 0.14;
+    U.uWordAlpha.value = 1 - THREE.MathUtils.smoothstep(s, 0.3, 0.85);
 
     for (const c of cubes) {
       const t = time * c.speed;
@@ -780,6 +790,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
 
   function renderOnce() {
     if (disposed) return;
+    primed = true;
     update(0);
     renderer.render(scene, camera);
   }
@@ -824,9 +835,9 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     intro() {
       if (introStarted || disposed) return;
       introStarted = true;
-      gsap.to(U.uFade, { value: 1, duration: 1.8, ease: 'power2.out' });
-      gsap.fromTo(U.uWordAlpha, { value: 0 }, { value: 1, duration: 2.4, ease: 'power2.out', delay: 0.15 });
-      gsap.fromTo(U.uWordLift, { value: -0.05 }, { value: 0, duration: 2.6, ease: 'expo.out' });
+      // Le froid saisit la scène : bref voile blanc, le mot se soulève à peine puis se pose.
+      gsap.fromTo(U.uFade, { value: 0.7 }, { value: 1, duration: 1.8, ease: 'power2.out' });
+      gsap.fromTo(U.uWordLift, { value: -0.025 }, { value: 0, duration: 2.6, ease: 'expo.out' });
       gsap.fromTo(fU.uIntro, { value: 0 }, { value: 1, duration: 2.5, ease: 'power1.out', delay: 0.4 });
       const order = cubes.map((c, i) => i).sort((a, b) => cubes[b].size - cubes[a].size);
       order.forEach((idx, j) => {
@@ -848,7 +859,7 @@ export async function createIceScene({ canvas, mobile, reduced, onLost }) {
     },
     setScroll(p) {
       scroll = Math.min(1, Math.max(0, p));
-      if (!running) renderOnce();
+      if (!running && primed) renderOnce();
     },
     setPointer(x, y, active) {
       pointer.set(x, y);

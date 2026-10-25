@@ -77,7 +77,7 @@ export function droplet() {
     const m = S / 2;
     // ombre de contact
     const sh = g.createRadialGradient(m + 2, m + R * 0.22, R * 0.5, m + 2, m + R * 0.22, R * 1.12);
-    sh.addColorStop(0, 'rgba(4,14,36,0.22)');
+    sh.addColorStop(0, 'rgba(4,14,36,0.14)');
     sh.addColorStop(1, 'rgba(4,14,36,0)');
     g.fillStyle = sh;
     g.beginPath();
@@ -89,10 +89,10 @@ export function droplet() {
     g.arc(m, m, R, 0, Math.PI * 2);
     g.clip();
     const body = g.createRadialGradient(m, m - R * 0.18, R * 0.1, m, m, R);
-    body.addColorStop(0, 'rgba(255,255,255,0.10)');
-    body.addColorStop(0.55, 'rgba(214,236,255,0.10)');
-    body.addColorStop(0.82, 'rgba(15,44,94,0.24)');
-    body.addColorStop(1, 'rgba(10,31,68,0.46)');
+    body.addColorStop(0, 'rgba(255,255,255,0.08)');
+    body.addColorStop(0.6, 'rgba(214,236,255,0.08)');
+    body.addColorStop(0.86, 'rgba(15,44,94,0.16)');
+    body.addColorStop(1, 'rgba(10,31,68,0.3)');
     g.fillStyle = body;
     g.fillRect(0, 0, S, S);
     // caustique : la lumière se concentre en bas de la goutte
@@ -130,6 +130,39 @@ export function droplet() {
     g.fillStyle = 'rgba(255,255,255,0.9)';
     g.beginPath();
     g.arc(m + R * 0.32, m + R * 0.38, R * 0.06, 0, Math.PI * 2);
+    g.fill();
+    return { canvas: c, R, S };
+  });
+}
+
+/**
+ * Micro-gouttelette de buée (rayon de référence 6 px) : croissant sombre en haut à gauche,
+ * croissant lumineux en bas à droite, point spéculaire. À 1–3 px, elle se lit comme une texture.
+ */
+export function microDrop() {
+  return memo('microDrop', () => {
+    const R = 6;
+    const S = 16;
+    const c = makeCanvas(S, S);
+    const g = c.getContext('2d');
+    const m = S / 2;
+    g.save();
+    g.beginPath();
+    g.arc(m, m, R, 0, Math.PI * 2);
+    g.clip();
+    g.fillStyle = 'rgba(235,246,255,0.22)';
+    g.fillRect(0, 0, S, S);
+    const dk = g.createLinearGradient(m - R, m - R, m + R, m + R);
+    dk.addColorStop(0, 'rgba(10,31,68,0.38)');
+    dk.addColorStop(0.45, 'rgba(10,31,68,0)');
+    dk.addColorStop(0.62, 'rgba(255,255,255,0)');
+    dk.addColorStop(1, 'rgba(255,255,255,0.85)');
+    g.fillStyle = dk;
+    g.fillRect(0, 0, S, S);
+    g.restore();
+    g.fillStyle = 'rgba(255,255,255,0.95)';
+    g.beginPath();
+    g.arc(m - R * 0.35, m - R * 0.4, R * 0.24, 0, Math.PI * 2);
     g.fill();
     return { canvas: c, R, S };
   });

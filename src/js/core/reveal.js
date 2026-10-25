@@ -52,7 +52,7 @@ export function initReveals(root = document) {
       scrollTrigger: { trigger: el.closest('section') || el, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
-  root.querySelectorAll('[data-count]').forEach((el) => {
+  root.querySelectorAll('[data-count]:not([data-quote-badge])').forEach((el) => {
     const end = Number(el.dataset.count);
     const dec = Number(el.dataset.countDecimals || 0);
     const suffix = el.dataset.countSuffix || '';

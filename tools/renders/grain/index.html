@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Rendu glace en grain — Le Glaceur</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:,">
+  <style>html,body{margin:0;background:#020a1c}canvas{display:block;max-width:100vw;height:auto}</style>
+  <script type="importmap">
+    { "imports": {
+      "three": "/node_modules/three/build/three.module.js",
+      "three/addons/": "/node_modules/three/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <!-- Outil interne (hors build Vite) : node tools/renders/grain/render.mjs. Paramètres : ?w=1600&h=2000&variant=0 -->
+  <script type="module">
+    const p = new URLSearchParams(location.search);
+    const w = +(p.get('w') || 800), h = +(p.get('h') || 1000);
+    const variant = +(p.get('variant') || 0);
+    const opts = {};
+    for (const [k, v] of p) if (!['w', 'h', 'variant'].includes(k)) opts[k] = isNaN(+v) ? v : +v;
+    window.__status = 'loading';
+    try {
+      const mod = await import('./scene.js');
+      const t0 = performance.now();
+      await mod.default({ w, h, variant, opts });
+      window.__ms = Math.round(performance.now() - t0);
+      window.__status = 'done';
+    } catch (e) {
+      console.error(e);
+      window.__status = 'error: ' + (e && e.stack || e);
+    }
+  </script>
+</body>
+</html>

@@ -137,7 +137,7 @@ export default function init(header, ctx) {
     }
     placePill();
   }
-  if (page === 'guide') setActive('guide');
+  if (page === 'guide') requestAnimationFrame(() => setActive('guide')); // après la déclaration de DESKTOP plus bas
   if (page === 'devis' && quote) quote.setAttribute('aria-current', 'page');
 
   function watchSections() {

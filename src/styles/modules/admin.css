@@ -1,0 +1,63 @@
+/* Espace administrateur (/admin) : registre des devis. Sobre, lisible, tableau défilant sur mobile. */
+.admin-top { border-bottom: 1px solid var(--line); background: #fff; }
+.admin-top__in { display: flex; align-items: center; gap: 1rem; min-height: 72px; }
+.admin-top__logo { display: inline-flex; width: 150px; color: var(--ink-900); }
+.admin-top__logo img { width: 100%; height: auto; }
+.admin-top__tag { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: var(--fs-small); color: var(--blue-600); }
+.admin-top__out { margin-left: auto; }
+
+.admin { padding-block: clamp(1.5rem, 4vw, 3rem) 4rem; min-height: 70vh; }
+.admin__title { font-family: var(--font-display); font-size: var(--fs-h2); line-height: var(--lh-tight); color: var(--ink-900); margin-bottom: 1rem; }
+.admin__h2 { font-family: var(--font-display); font-size: var(--fs-h4); color: var(--ink-900); margin: 2rem 0 0.75rem; }
+.admin__lead { color: var(--text-muted); margin-bottom: 1.25rem; }
+
+.admin-card { max-width: 440px; margin: 2rem auto; padding: 2rem; border-radius: 24px; }
+.admin-login { display: grid; gap: 1rem; }
+
+.admin-period { display: grid; gap: 1rem; padding: 1.25rem; border-radius: 20px; }
+.admin-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.admin-chip { padding: 0.45rem 0.9rem; border-radius: 999px; border: 1px solid var(--line-strong); background: #fff; color: var(--ink-800); font: 600 0.9rem var(--font-body); cursor: pointer; }
+.admin-chip:hover { border-color: var(--blue-400); }
+.admin-chip[aria-pressed='true'] { background: var(--blue-600); border-color: var(--blue-600); color: #fff; }
+.admin-period__dates { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; align-items: end; }
+
+.admin-status { margin: 1rem 0; color: var(--text-muted); font-weight: 500; }
+.admin-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+.admin-kpi { padding: 1rem 1.1rem; border-radius: 16px; display: grid; gap: 0.25rem; }
+.admin-kpi span { font-size: var(--fs-small); color: var(--text-muted); }
+.admin-kpi strong { font-family: var(--font-display); font-size: 1.5rem; color: var(--ink-900); font-variant-numeric: tabular-nums; }
+.admin-actions { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.admin-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.admin-table th, .admin-table td { padding: 0.7rem 0.8rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+.admin-table thead th { background: var(--ice-50); color: var(--ink-800); font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.admin-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.admin-table .mono { font-family: var(--font-mono); font-size: 0.85rem; }
+.admin-table small { color: var(--text-soft); }
+.admin-row:hover > td { background: var(--ice-50); }
+
+.admin-plus { position: relative; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--blue-400); background: #fff; color: var(--blue-600); cursor: pointer; }
+.admin-plus::before, .admin-plus::after { content: ''; position: absolute; inset: 50% auto auto 50%; width: 12px; height: 2px; background: currentColor; translate: -50% -50%; transition: rotate 0.2s ease; }
+.admin-plus::after { rotate: 90deg; }
+.admin-plus[aria-expanded='true'] { background: var(--blue-600); color: #fff; }
+.admin-plus[aria-expanded='true']::after { rotate: 0deg; }
+
+.admin-detail > td { background: var(--ice-50); white-space: normal; }
+.admin-detail__in { display: grid; gap: 1rem; padding: 0.5rem 0; }
+.admin-dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem 1rem; }
+.admin-dl dt { font-size: 0.8rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+.admin-dl dd { margin: 0; color: var(--ink-900); font-weight: 500; overflow-wrap: anywhere; }
+.admin-table--lines { background: #fff; border-radius: 12px; }
+.admin-table--lines tfoot th { text-align: right; }
+.admin-detail__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+@media (max-width: 700px) {
+  .admin-top__tag { display: none; }
+  .admin-table th, .admin-table td { padding: 0.6rem 0.5rem; }
+  /* Mobile : n°, livraison et nombre d'articles passent dans le détail déplié. */
+  .admin-table:not(.admin-table--compact, .admin-table--lines) > * > tr > :is(th, td):is(:nth-child(3), :nth-child(5), :nth-child(6)) { display: none; }
+  .admin-time { display: none; }
+  .admin-table--lines :is(th, td) { white-space: normal; font-size: 0.85rem; }
+  :is(.admin-table--lines, .admin-table--compact) td:not(.num) { white-space: normal; }
+}

@@ -3,6 +3,7 @@
  *
  *   createPdf(q)          → Promise<Blob>  PDF A4 premium (jsPDF + autotable + QR, chargés à la demande)
  *   createXlsx(q)         → Promise<Blob>  Classeur Excel protégé (ExcelJS, chargé à la demande)
+ *   createImage(q)        → Promise<Blob>  Le PDF converti en image PNG (pdf.js)
  *   whatsappMessage(q)    → string         Message WhatsApp prérempli
  *   quoteFileName(q, ext) → 'Devis-Le-Glaceur-GLC-261022-AB12.pdf'
  *   + downloadBlob(blob, name), preloadDocuments()  (confort pour l'interface)
@@ -147,6 +148,12 @@ export async function createPdf(q) {
 export async function createXlsx(q) {
   const [{ buildXlsx }, logo] = await Promise.all([import('./xlsx.js'), loadWhiteLogo()]);
   return buildXlsx(q, { logo });
+}
+
+/** Devis en image PNG (Blob image/png) : le PDF converti, identique. pdf = Blob déjà généré (facultatif). */
+export async function createImage(q, pdf) {
+  const [{ pdfToImage }, blob] = await Promise.all([import('./image.js'), pdf || createPdf(q)]);
+  return pdfToImage(blob);
 }
 
 /** Télécharge un Blob sous le nom donné (lien temporaire). */

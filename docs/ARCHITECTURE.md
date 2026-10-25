@@ -156,6 +156,8 @@ export function quoteFileName(q, ext) // → 'Devis-Le-Glaceur-GLC-261022-AB12.p
 Panier (`core/quote-store.js`) : `getState()`, `setQty(sku,q)`, `addQty(sku,d)`, `update(patch)`, `reset()`, `ensureNumber()`, `computeTotals()`, `toQuoteData()` ;
 événement `window` `quote:change`. Persisté en `localStorage`, partagé entre pages (le bouton « Ajouter au devis » de l'accueil remplit le même panier).
 
+Registre et espace administrateur : chaque `q` généré est posté (no-cors) sur `BRAND.quoteWebhook` (Apps Script `docs/apps-script/registre-devis.gs`, une ligne par n°, mise à jour si renvoyé). `admin.html` + `modules/admin.js` lisent ce registre en GET (`?code=&du=&au=`) : récapitulatif, liste dépliable, totaux par produit, export Excel (`quote/register-xlsx.js`). Page non liée, `noindex`.
+
 ## Qualité attendue
 - Mobile d'abord (360 px) jusqu'au grand écran (1920 px). Aucun défilement horizontal. Cibles tactiles ≥ 44 px.
 - Accessibilité : HTML sémantique, `alt` pertinents, contrastes AA, focus visible, `aria-*` corrects, navigation clavier, `prefers-reduced-motion` respecté.

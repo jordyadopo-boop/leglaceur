@@ -10,8 +10,9 @@ dans `public/img/manifest.json` (lu par la directive `<!-- @img slot="…" -->`)
 | Créneau | Sujet | Photographe | Banque | Page source |
 |---|---|---|---|---|
 | `glacons` | Glaçons cubiques sur fond bleu profond | Ting lee | Unsplash | [unsplash.com/photos/…-YBTEMvm85qI](https://unsplash.com/photos/clear-ice-cubes-casting-shadows-on-a-deep-blue-background-YBTEMvm85qI) |
-| `gobelet` | Gobelet transparent rempli de glaçons, menthe | Kunal Lakhotia | Pexels | [pexels.com/photo/…-28944486](https://www.pexels.com/photo/refreshing-cold-drink-with-mint-garnish-28944486/) |
-| `barres` | Pains de glace empilés (marché, Đà Nẵng) | baolong thai | Pexels | [pexels.com/photo/…-26728029](https://www.pexels.com/photo/man-unloading-ice-blocks-at-a-fish-market-26728029/) |
+| `gobelet` | Ice Cup : gobelet PET à dôme rempli de glaçons creux, condensation | Le Glaceur | Rendu 3D (Three.js) réalisé pour le site | `tools/renders/scene-gobelet.js` |
+| `barres` | Barres de glace de 5 et 10 kg, glaçons, sol mouillé | Le Glaceur | Rendu 3D (Three.js) réalisé pour le site | `tools/renders/scene-barres.js` |
+| `grain` | Glace en grain (nugget ice) : verre qui déborde de grains, coulée sur sol mouillé | Le Glaceur | Rendu 3D (Three.js) réalisé pour le site | `tools/renders/grain/scene.js` |
 | `pilee` | Glace pilée Le Glaceur, fine et neigeuse | Le Glaceur | Photo fournie par le client | `tools/source/glace-pilee-le-glaceur.jpg` |
 | `carboglace` | Glace carbonique et brume blanche | cottonbro studio | Pexels | [pexels.com/photo/…-9694195](https://www.pexels.com/photo/white-smoke-in-a-glass-container-against-black-background-9694195/) |
 | `sac-glaceur` | Sac de glaçons siglé « Le Glaceur » | Le Glaceur | Affiche officielle (client) | Visuel de marque fourni par le client |

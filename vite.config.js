@@ -75,6 +75,7 @@ export default defineConfig({
   // BASE_PATH is set by the GitHub Pages workflow ("/<repo>/" without a custom domain, "/" with one).
   base: process.env.BASE_PATH || '/',
   plugins: [htmlComposer()],
+  optimizeDeps: { include: ['jspdf', 'jspdf-autotable', 'qrcode', 'exceljs'] },
   build: {
     target: 'es2022',
     assetsInlineLimit: 2048,
@@ -86,6 +87,7 @@ export default defineConfig({
         guide: resolve(root, 'guide.html'),
         mentions: resolve(root, 'mentions-legales.html'),
         notfound: resolve(root, '404.html'),
+        admin: resolve(root, 'admin.html'),
       },
     },
   },

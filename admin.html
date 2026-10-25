@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <!-- @include layout/head-common.html -->
+  <title>Administration · Le Glaceur</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script type="module" src="/src/js/main.js"></script>
+</head>
+<body data-page="admin">
+  <!-- Espace administrateur : non lié depuis le site, non indexé. Données lues dans le registre Google Sheets (BRAND.quoteWebhook). -->
+  <header class="admin-top">
+    <div class="container admin-top__in">
+      <a class="admin-top__logo" href="{{base}}" aria-label="Le Glaceur — retour au site"><img src="{{base}}brand/logo-full.svg" alt="" width="150" height="40"></a>
+      <span class="admin-top__tag">Administration</span>
+      <button class="btn btn--glass btn--sm admin-top__out" type="button" data-admin-logout hidden>Se déconnecter</button>
+    </div>
+  </header>
+
+  <main id="contenu" class="admin" data-module="admin">
+    <div class="container">
+      <section class="admin-card frost" data-admin-login>
+        <h1 class="admin__title">Registre des devis</h1>
+        <p class="admin__lead">Réservé à l’équipe Le Glaceur. Entrez le code administrateur.</p>
+        <form class="admin-login" data-admin-login-form>
+          <div class="field">
+            <label for="admin-code">Code administrateur</label>
+            <input class="input" id="admin-code" name="code" type="password" autocomplete="current-password" required>
+          </div>
+          <button class="btn" type="submit"><span data-label>Ouvrir</span></button>
+          <p class="field-error" data-admin-error role="alert" hidden></p>
+        </form>
+      </section>
+
+      <section class="admin-app" data-admin-app hidden>
+        <h1 class="admin__title">Registre des devis</h1>
+
+        <form class="admin-period frost" data-admin-period>
+          <div class="admin-presets" role="group" aria-label="Périodes rapides">
+            <button type="button" class="admin-chip" data-preset="today">Aujourd’hui</button>
+            <button type="button" class="admin-chip" data-preset="7">7 derniers jours</button>
+            <button type="button" class="admin-chip" data-preset="month">Ce mois</button>
+            <button type="button" class="admin-chip" data-preset="lastmonth">Mois dernier</button>
+            <button type="button" class="admin-chip" data-preset="year">Cette année</button>
+          </div>
+          <div class="admin-period__dates">
+            <div class="field"><label for="admin-du">Du</label><input class="input" id="admin-du" name="du" type="date" required></div>
+            <div class="field"><label for="admin-au">Au</label><input class="input" id="admin-au" name="au" type="date" required></div>
+            <button class="btn" type="submit"><span data-label>Afficher</span></button>
+          </div>
+        </form>
+
+        <p class="admin-status" data-admin-status role="status"></p>
+
+        <div data-admin-result hidden>
+          <div class="admin-kpis" data-admin-kpis></div>
+          <div class="admin-actions">
+            <button class="btn btn--dark btn--sm" type="button" data-admin-export><span data-label>Télécharger le tableau Excel</span></button>
+          </div>
+
+          <h2 class="admin__h2">Devis de la période</h2>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th scope="col"><span class="sr-only">Détail</span></th><th scope="col">Date</th><th scope="col">N°</th><th scope="col">Client</th><th scope="col">Livraison</th><th scope="col" class="num">Articles</th><th scope="col" class="num">Total</th></tr></thead>
+              <tbody data-admin-rows></tbody>
+            </table>
+          </div>
+
+          <h2 class="admin__h2">Par produit</h2>
+          <div class="admin-table-wrap">
+            <table class="admin-table admin-table--compact">
+              <thead><tr><th scope="col">Produit</th><th scope="col">Format</th><th scope="col" class="num">Quantité</th><th scope="col" class="num">Montant</th></tr></thead>
+              <tbody data-admin-products></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

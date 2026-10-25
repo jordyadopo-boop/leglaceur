@@ -641,3 +641,4 @@
   .slab__howto { font-size: 0.9rem; }
   .slab__num { font-size: clamp(5rem, 21vw, 7rem); }
 }
+.slab__img[src*="barres-"], .slab__media img[src*="barres-"] { object-position: 50% 68%; }

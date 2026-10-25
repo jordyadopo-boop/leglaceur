@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {
-  Studio, rng, mark, buildEnvironment, buildBackdrop, buildFloor, iceMaps, iceMaterial, canvasTex, tick,
+  Studio, rng, mark, boxUV, buildEnvironment, buildBackdrop, backdropUniforms, buildFloor, iceMaps, iceMaterial, canvasTex, tick,
 } from './lib.js';
 
 /** Texture du cœur blanc (plumes de givre + voile laiteux) d'une glace de bloc. */
@@ -18,24 +18,27 @@ function coreTexture(seed, { w = 1024, h = 256, density = 1 } = {}) {
   // voile laiteux central
   const grad = g.createLinearGradient(0, 0, 0, h);
   grad.addColorStop(0, 'rgba(255,255,255,0)');
-  grad.addColorStop(0.5, 'rgba(240,248,255,0.55)');
+  grad.addColorStop(0.5, 'rgba(240,248,255,0.0)');
   grad.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = grad;
   g.filter = 'blur(10px)';
-  g.beginPath();
-  g.ellipse(w / 2, h / 2, w * 0.46, h * 0.2, 0, 0, Math.PI * 2);
-  g.fill();
+  g.filter = 'blur(6px)';
+  for (let i = 0; i < 46; i++) {
+    const x = w * (0.1 + r() * 0.8), rx = w * (0.02 + r() * 0.07), ry = h * (0.05 + r() * 0.12);
+    g.fillStyle = `rgba(240,248,255,${0.05 + r() * 0.16})`;
+    g.beginPath(); g.ellipse(x, h / 2 + (r() - 0.5) * h * 0.18, rx, ry, (r() - 0.5) * 0.6, 0, Math.PI * 2); g.fill();
+  }
   // plumes : traits fins partant de l'axe vers l'extérieur
   g.filter = 'blur(1.4px)';
   g.lineCap = 'round';
-  const n = Math.round(260 * density);
+  const n = Math.round(70 * density);
   for (let i = 0; i < n; i++) {
     const x = w * (0.08 + r() * 0.84);
     const up = r() < 0.5 ? -1 : 1;
     const len = h * (0.1 + r() * 0.32);
     const ang = (r() - 0.5) * 0.9;
     const edge = Math.min(1, Math.min(x, w - x) / (w * 0.12));
-    g.strokeStyle = `rgba(255,255,255,${(0.12 + r() * 0.35) * edge})`;
+    g.strokeStyle = `rgba(255,255,255,${(0.05 + r() * 0.16) * edge})`;
     g.lineWidth = 0.6 + r() * 2.2;
     g.beginPath();
     g.moveTo(x, h / 2 + (r() - 0.5) * h * 0.08);
@@ -44,7 +47,7 @@ function coreTexture(seed, { w = 1024, h = 256, density = 1 } = {}) {
   }
   // filaments d'air le long de l'axe
   g.filter = 'blur(0.8px)';
-  for (let i = 0; i < 40 * density; i++) {
+  for (let i = 0; i < 14 * density; i++) {
     const y = h / 2 + (r() - 0.5) * h * 0.12;
     const x = w * (0.1 + r() * 0.6);
     g.strokeStyle = `rgba(255,255,255,${0.2 + r() * 0.4})`;
@@ -55,9 +58,9 @@ function coreTexture(seed, { w = 1024, h = 256, density = 1 } = {}) {
 }
 
 function bar({ L, S, seed, frost = 0.45 }) {
-  const geo = new RoundedBoxGeometry(L, S, S, 6, 0.07);
-  const maps = iceMaps({ seed, size: 768, frost, aspect: L / S });
-  const mat = iceMaterial({ maps, thickness: S * 0.9, normalScale: 0.55, attenuationDistance: 5.5 });
+  const geo = boxUV(new RoundedBoxGeometry(L, S, S, 6, 0.07), 0.32);
+  const maps = iceMaps({ seed, size: 768, frost });
+  const mat = iceMaterial({ maps, thickness: S * 0.9, normalScale: 0.32, attenuationDistance: 6, envMapIntensity: 1.5, frostGlow: 0.05 });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.castShadow = true;
   return mesh;
@@ -70,31 +73,31 @@ function internals({ L, S, seed }) {
   const tex = coreTexture(seed);
   const coreMat = new THREE.MeshBasicMaterial({
     map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide,
-    color: new THREE.Color(0.8, 0.88, 1.0), opacity: 0.42,
+    color: new THREE.Color(0.8, 0.88, 1.0), opacity: 0.24,
   });
   const p1 = new THREE.Mesh(new THREE.PlaneGeometry(L * 0.86, S * 0.78), coreMat);
   const p2 = new THREE.Mesh(new THREE.PlaneGeometry(L * 0.86, S * 0.7), coreMat.clone());
   p2.material.map = coreTexture(seed + 50, { density: 0.7 });
   p2.rotation.x = Math.PI / 2;
   p2.material.opacity = 0.22;
-  grp.add(p1, p2);
+  grp.add(p1);
   // bulles
-  const nB = 420;
+  const nB = 1100;
   const bubbles = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), new THREE.MeshBasicMaterial({
     color: new THREE.Color(0.85, 0.93, 1.0), transparent: true, opacity: 0.32, depthWrite: false,
   }), nB);
   const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3();
   for (let i = 0; i < nB; i++) {
-    const trail = i < nB * 0.55;
+    const trail = i < nB * 0.18;
     // distance à l'axe : concentrées au cœur, traînées radiales
     const ang = r() * Math.PI * 2;
-    const rad = trail ? (0.12 + r() * 0.3) * S : Math.pow(r(), 2.2) * 0.22 * S;
-    p.set((r() - 0.5) * L * 0.9, Math.sin(ang) * rad, Math.cos(ang) * rad);
-    const size = trail ? 0.0025 + r() * 0.0035 : 0.002 + Math.pow(r(), 3) * 0.014;
+    const rad = trail ? (0.12 + r() * 0.3) * S : Math.pow(r(), 1.6) * 0.16 * S;
+    p.set((r() - 0.5) * L * (trail ? 0.9 : 0.8), Math.sin(ang) * rad, Math.cos(ang) * rad * (trail ? 1 : 0.45));
+    const size = trail ? 0.0012 + r() * 0.0015 : 0.002 + Math.pow(r(), 3) * 0.01;
     if (trail) {
       // ellipsoïde allongé orienté vers l'axe
       q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, Math.sin(ang), Math.cos(ang)));
-      s.set(size, size * (3 + r() * 6), size);
+      s.set(size, size * (8 + r() * 14), size);
     } else {
       q.identity(); s.setScalar(size);
     }
@@ -129,8 +132,8 @@ function floorDrops(seed, area) {
   const r = rng(seed);
   const grp = new THREE.Group();
   const mat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, roughness: 0.02, transmission: 1, thickness: 0.05, ior: 1.33,
-    specularIntensity: 1, envMapIntensity: 1.8, clearcoat: 1, clearcoatRoughness: 0,
+    color: 0xffffff, roughness: 0.07, transmission: 1, thickness: 0.05, ior: 1.33,
+    specularIntensity: 0.7, envMapIntensity: 1.4, clearcoat: 1, clearcoatRoughness: 0,
   });
   const geo = new THREE.SphereGeometry(1, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2);
   for (const a of area) {
@@ -139,7 +142,7 @@ function floorDrops(seed, area) {
       const rad = a.r0 + Math.pow(r(), 2.2) * a.r1;
       const ang = r() * Math.PI * 2, dist = Math.sqrt(r()) * a.spread;
       d.position.set(a.x + Math.cos(ang) * dist, 0, a.z + Math.sin(ang) * dist * 0.8);
-      d.scale.set(rad * (1 + r() * 0.8), rad * 0.22, rad * (1 + r() * 0.3));
+      d.scale.set(rad * (1 + r() * 0.5), rad * 0.42, rad * (1 + r() * 0.3));
       d.rotation.y = r() * Math.PI;
       grp.add(d);
     }
@@ -148,17 +151,17 @@ function floorDrops(seed, area) {
 }
 
 function cube(size, seed) {
-  const maps = iceMaps({ seed, size: 256, frost: 0.4 });
-  const m = new THREE.Mesh(new RoundedBoxGeometry(size, size, size, 5, size * 0.12), iceMaterial({ maps, thickness: size * 0.8, normalScale: 0.6 }));
+  const maps = iceMaps({ seed, size: 256, frost: 0.45, melt: 0.6 });
+  const m = new THREE.Mesh(boxUV(new RoundedBoxGeometry(size, size, size, 6, size * 0.16), 0.9), iceMaterial({ maps, thickness: size * 0.9, normalScale: 0.18, envMapIntensity: 1.9, attenuationDistance: 3, frostGlow: 0.16 }));
   m.castShadow = true;
   return m;
 }
 
 const VARIANTS = [
   // 0 : une barre debout à l'arrière, deux couchées en diagonale
-  { cam: [4.2, 6.2, 17.0], target: [0.1, 2.3, 0], fov: 28 },
-  { cam: [-2.6, 3.4, 12.6], target: [0.1, 1.5, 0], fov: 28 },
-  { cam: [4.5, 6.4, 10.8], target: [0.0, 1.2, 0.2], fov: 30 },
+  { cam: [4.6, 6.4, 18.4], target: [0.45, 2.3, 0], fov: 28, bd: { haloPos: [0.42, 0.66], haloSize: 0.5, horizon: 0.62 } },
+  { cam: [2.0, 3.6, 17.5], target: [0.1, 2.4, 0], fov: 28, bd: { haloPos: [0.42, 0.62], haloSize: 0.5, horizon: 0.55 } },
+  { cam: [5.5, 8.5, 15.5], target: [0.2, 2.0, 0.2], fov: 29, bd: { haloPos: [0.4, 0.75], haloSize: 0.5, horizon: 0.8 } },
 ];
 
 export default async function render({ w, h, variant = 0 }) {
@@ -174,15 +177,20 @@ export default async function render({ w, h, variant = 0 }) {
 
   mark('env');
   // décor
-  const backdrop = buildBackdrop({ haloPos: [0.5, 0.26], haloSize: 0.2, glow: 0.7 });
+  const bd = backdropUniforms(V.bd);
+  const backdrop = buildBackdrop(bd);
+  // horizon réel (projection d'un point lointain du sol), halo juste au-dessus
+  const hz = new THREE.Vector3(camera.position.x, 0, camera.position.z - 1e4).project(camera);
+  bd.horizon.value = hz.y * 0.5 + 0.5;
+  bd.haloPos.value.y = bd.horizon.value + (V.haloLift ?? 0.06);
   backdrop.scale.set(160, 80, 1);
   backdrop.position.set(0, 24, -45);
   studio.addBase(backdrop);
-  const floor = buildFloor({ size: 80, seed: 5 });
+  const floor = buildFloor({ seed: 5, bd });
   studio.addBase(floor);
 
   // lumières
-  const key = new THREE.DirectionalLight(0xeef6ff, 2.4);
+  const key = new THREE.DirectionalLight(0xeef6ff, 3.0);
   key.position.set(-7, 12, 1);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -197,13 +205,17 @@ export default async function render({ w, h, variant = 0 }) {
   const rim2 = new THREE.SpotLight(0x5b9bff, 160, 40, 0.5, 0.9, 1.6);
   rim2.position.set(-7, 4, -7); rim2.target.position.set(0, 1, 0);
   scene.add(rim2, rim2.target);
+  // flaque de lumière froide au sol derrière les barres : la glace s'illumine par transparence
+  const pool = new THREE.SpotLight(0xd8ecff, 900, 30, 0.35, 1, 1.5);
+  pool.position.set(0.5, 14, -5.5); pool.target.position.set(0.2, 0, -3.2);
+  scene.add(pool, pool.target);
   scene.add(new THREE.HemisphereLight(0xcfe6ff, 0x061224, 0.25));
 
   // barres
   const defs = [
-    { id: 'A', L: 6.0, S: 1.35, seed: 11, pos: [-1.45, 3.0, -1.6], rot: [0, 0.62, Math.PI / 2], frost: 0.5 }, // 10 kg debout
-    { id: 'B', L: 6.0, S: 1.35, seed: 23, pos: [0.85, 0.675, -0.75], rot: [0, -0.52, 0], frost: 0.42 }, // 10 kg couchée
-    { id: 'C', L: 4.9, S: 1.1, seed: 37, pos: [-0.25, 0.55, 1.35], rot: [0, -0.28, 0], frost: 0.38 }, // 5 kg devant
+    { id: 'A', L: 6.0, S: 1.35, seed: 11, pos: [-1.45, 3.0, -1.6], rot: [0, 0.62, Math.PI / 2], frost: 0.62 }, // 10 kg debout
+    { id: 'B', L: 6.0, S: 1.35, seed: 23, pos: [0.85, 0.675, -0.75], rot: [0, -0.52, 0], frost: 0.58 }, // 10 kg couchée
+    { id: 'C', L: 4.9, S: 1.1, seed: 37, pos: [-0.25, 0.55, 1.35], rot: [0, -0.23, 0], frost: 0.55 }, // 5 kg devant
   ];
   const camPos = camera.position;
   const items = defs.map((d) => {
@@ -216,9 +228,9 @@ export default async function render({ w, h, variant = 0 }) {
 
   // gouttes au sol (avant les barres : la profondeur gère l'occlusion)
   const drops = floorDrops(91, [
-    { x: 1.8, z: 2.6, n: 40, spread: 1.5, r0: 0.02, r1: 0.12 },
-    { x: -1.9, z: 2.3, n: 26, spread: 1.2, r0: 0.02, r1: 0.09 },
-    { x: 0.3, z: 0.4, n: 30, spread: 3.2, r0: 0.015, r1: 0.06 },
+    { x: 1.8, z: 2.6, n: 14, spread: 1.5, r0: 0.012, r1: 0.07 },
+    { x: -1.9, z: 2.3, n: 9, spread: 1.2, r0: 0.012, r1: 0.06 },
+    { x: 0.3, z: 0.4, n: 20, spread: 3.2, r0: 0.008, r1: 0.04 },
   ]);
   studio.addLayer([drops], { reflect: false, name: 'gouttes sol' });
 
@@ -235,14 +247,19 @@ export default async function render({ w, h, variant = 0 }) {
   }
 
   // glaçons au premier plan
-  const c1 = cube(0.5, 101); c1.position.set(2.25, 0.21, 2.55); c1.rotation.set(0, 0.5, 0);
-  const c2 = cube(0.45, 102); c2.position.set(2.85, 0.18, 1.85); c2.rotation.set(0, -0.3, 0);
-  const c3 = cube(0.42, 103); c3.position.set(-2.35, 0.17, 2.75); c3.rotation.set(0, 0.9, 0);
+  const c1 = cube(0.5, 101); c1.position.set(1.95, 0.25, 3.15); c1.rotation.set(0, 0.5, 0);
+  const c2 = cube(0.44, 102); c2.position.set(2.75, 0.22, 2.6); c2.rotation.set(0, -0.35, 0);
+  const c3 = cube(0.46, 103); c3.position.set(-1.55, 0.23, 3.25); c3.rotation.set(0, 0.85, 0);
+  const c4 = cube(0.4, 104); c4.position.set(2.35, 0.2 + 0.0, 2.25); c4.rotation.set(0, 1.2, 0);
+  studio.addLayer([c4], { name: 'glaçon 4' });
   studio.addLayer([c2], { name: 'glaçon 2' });
   studio.addLayer([c1, c3], { name: 'glaçons' });
 
   mark('scène construite');
   floor.userData.uniforms.fadeRadius.value = 14;
+  floor.userData.uniforms.poolCenter.value.set(-0.2, -1.6);
+  floor.userData.uniforms.poolRadius.value.set(6.5, 5.2);
+  floor.userData.uniforms.poolColor.value.set('#3d6fae').multiplyScalar(V.pool ?? 0.75);
   floor.userData.uniforms.fogFar.value = 42;
   await tick();
   await studio.render(camera, { floor, post: { bloom: 0.28, threshold: 1.0, vignette: 0.4, grain: 0.01 } });

@@ -33,8 +33,9 @@ export const BRAND = {
   email: 'sdlsitgroup@gmail.com', // confirmée par le client le 22/10/2026
   hours: '24h/24 · 7j/7',
   deliveryClaim: 'Livraison partout à Abidjan',
-  // Optionnel : URL (ex. Google Apps Script) qui reçoit chaque devis en JSON pour constituer un fichier clients.
-  quoteWebhook: null,
+  // URL du registre des devis (Google Apps Script, docs/apps-script/registre-devis.gs) : reçoit chaque devis
+  // et alimente la page /admin. null = registre non branché.
+  quoteWebhook: 'https://script.google.com/macros/s/AKfycbwo3y_lZxhRLQzj0YwQZRYmdUN52uGkwM_jOwpa6V1wIcKYiHBAyaQ-Us7OQqFOBbr6Yw/exec',
 };
 
 export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`;
@@ -62,6 +63,7 @@ export const PRODUCTS = [
   },
   {
     id: 'grain',
+    isNew: true,
     name: 'Glace en grain',
     alias: 'Nugget ice',
     tagline: 'Douce, croquante, gourmande',

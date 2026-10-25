@@ -14,20 +14,29 @@ import { growFrost, indexAt, strokeSegments } from './crystals.js';
 import { makeCanvas } from './sprites.js';
 import { clamp } from './env.js';
 
-const VERT = `
+// Même précision pour uRes dans les deux shaders (sinon l'édition de liens échoue).
+const PREC = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+#define P highp
+#else
+#define P mediump
+#endif
+`;
+
+const VERT = `${PREC}
 attribute vec2 aPos;
-uniform vec2 uRes;
+uniform P vec2 uRes;
 varying vec2 vUv;
 void main() {
   vUv = aPos / uRes;
   gl_Position = vec4(vUv.x * 2.0 - 1.0, 1.0 - vUv.y * 2.0, 0.0, 1.0);
 }`;
 
-const FRAG = `
-precision mediump float;
+const FRAG = `${PREC}
+precision P float;
 varying vec2 vUv;
 uniform sampler2D uMap;
-uniform vec2 uRes;
+uniform P vec2 uRes;
 uniform float uScale;
 uniform float uLevel;
 uniform float uTime;
@@ -87,11 +96,11 @@ void main() {
   col = over(vec4(vec3(0.97, 0.99, 1.0) * g, g), col);
 
   // Cristaux en relief.
-  float body = c0 * (0.38 + 0.2 * edge);
-  col = over(vec4(vec3(0.78, 0.89, 1.0) * body, body), col);
-  float sh = shade * 0.42;
-  col = over(vec4(vec3(0.03, 0.14, 0.38) * sh, sh), col);
-  float hi = lit * 0.95;
+  float body = c0 * (0.3 + 0.22 * edge);
+  col = over(vec4(vec3(0.82, 0.92, 1.0) * body, body), col);
+  float sh = shade * 0.24;
+  col = over(vec4(vec3(0.05, 0.2, 0.48) * sh, sh), col);
+  float hi = lit * 0.9;
   col = over(vec4(vec3(1.0) * hi, hi), col);
 
   // Éclats qui scintillent.
@@ -103,7 +112,7 @@ void main() {
 }`;
 
 /** Profondeur maximale du givre (px CSS) selon la taille de l'écran. */
-export const depthFor = (w, h) => clamp(Math.min(w, h) * 0.3, 110, 300);
+export const depthFor = (w, h) => clamp(Math.min(w, h) * 0.2, 90, 200);
 
 /** Carte de temps de gel (niveaux de gris : noir = gèle tout de suite, blanc = jamais). */
 function buildMap(cw, ch, scale, depth) {
@@ -113,7 +122,7 @@ function buildMap(cw, ch, scale, depth) {
   g.fillRect(0, 0, cw, ch);
   const w = cw / scale;
   const h = ch / scale;
-  const segs = growFrost({ w, h, depth, seed: 29, spacing: w < 600 ? 34 : 40, step: 5, maxGen: 2, corner: 1.25, stars: 5, pair: 0.4 });
+  const segs = growFrost({ w, h, depth, seed: 29, spacing: w < 600 ? 36 : 46, step: 5.5, maxGen: 2, corner: 1.25, stars: 5, pair: 0.35 });
   g.setTransform(scale, 0, 0, scale, 0, 0);
   g.lineCap = 'round';
   const B = 64;
@@ -151,6 +160,17 @@ export function createVeil(canvas) {
   } catch {
     gl = null;
   }
+  if (gl) {
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const r = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+    if (/swiftshader|llvmpipe|software|softpipe/i.test(r)) {
+      // Rendu logiciel : le voile 2D est bien plus léger. Le canvas a déjà un contexte WebGL : on le remplace.
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      const fresh = canvas.cloneNode(false);
+      canvas.replaceWith(fresh);
+      return createVeil2D(fresh);
+    }
+  }
   if (!gl) return createVeil2D(canvas);
 
   let prog;
@@ -166,6 +186,7 @@ export function createVeil(canvas) {
   let count = 0;
   let lost = false;
   let shown = false;
+  let quality = 1; // abaissée par le régulateur de fx-ambient si l'appareil peine
 
   function setup() {
     prog = gl.createProgram();
@@ -218,7 +239,8 @@ export function createVeil(canvas) {
     const cw = innerWidth;
     const ch = innerHeight;
     // Givre doux : résolution CSS 1:1 (1,25 max sur écran dense), moins sur très grand écran.
-    scale = Math.min(window.devicePixelRatio || 1, cw > 1680 ? 1 : 1.25);
+    const base = Math.min(window.devicePixelRatio || 1, cw > 1680 ? 1 : 1.25);
+    scale = base * quality;
     W = Math.round(cw * scale);
     H = Math.round(ch * scale);
     canvas.width = W;
@@ -226,14 +248,17 @@ export function createVeil(canvas) {
     depth = depthFor(cw, ch);
     if (lost) return;
     gl.viewport(0, 0, W, H);
-    // On ne régénère la carte que si la taille change franchement (barre d'adresse mobile : non).
-    if (!mapW || Math.abs(W - mapW) / mapW > 0.12 || Math.abs(H - mapH) / mapH > 0.12) {
-      const { canvas: map } = buildMap(W, H, scale, depth);
+    // La carte est construite à la résolution de base ; on ne la régénère que si l'écran change
+    // franchement de taille (pas pour la barre d'adresse mobile ni une baisse de qualité).
+    const mw = Math.round(cw * base);
+    const mh = Math.round(ch * base);
+    if (!mapW || Math.abs(mw - mapW) / mapW > 0.12 || Math.abs(mh - mapH) / mapH > 0.12) {
+      const { canvas: map } = buildMap(mw, mh, base, depth);
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, map);
-      mapW = W;
-      mapH = H;
+      mapW = mw;
+      mapH = mh;
     }
     band();
   }
@@ -266,6 +291,14 @@ export function createVeil(canvas) {
   return {
     kind: 'webgl',
     resize,
+    /** Baisse la résolution du voile (0,5 = moitié) sans régénérer la carte. */
+    setQuality(q) {
+      quality = clamp(q, 0.3, 1);
+      resize();
+    },
+    get quality() {
+      return quality;
+    },
     render(level, time) {
       const on = level > 0.004 && !lost;
       if (on !== shown) {
@@ -295,8 +328,8 @@ export function createVeil(canvas) {
   };
 }
 
-/** Repli sans WebGL : givre figé, opacité pilotée par le niveau. */
-function createVeil2D(canvas) {
+/** Repli sans WebGL : givre figé, opacité pilotée par le niveau (coût quasi nul : opacité CSS). */
+export function createVeil2D(canvas) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
   let shown = false;
@@ -306,7 +339,7 @@ function createVeil2D(canvas) {
     canvas.width = cw;
     canvas.height = ch;
     const depth = depthFor(cw, ch);
-    const segs = growFrost({ w: cw, h: ch, depth, seed: 29, spacing: 40, maxGen: 2, corner: 1.25 });
+    const segs = growFrost({ w: cw, h: ch, depth, seed: 29, spacing: 50, step: 6, maxGen: 1, corner: 1.25 });
     const to = indexAt(segs, 0.8);
     const fade = ctx.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.25, cw / 2, ch / 2, Math.hypot(cw, ch) / 2);
     fade.addColorStop(0, 'rgba(227,243,255,0)');

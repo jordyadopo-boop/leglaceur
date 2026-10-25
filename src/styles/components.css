@@ -23,6 +23,10 @@
   animation: ice-sheen 7s var(--ease-in-out) infinite;
 }
 .section--dark .ice-text, .ice-text--frost { background-image: var(--grad-text-frost); }
+/* SplitText découpe le texte en <div> : le dégradé doit passer sur chaque morceau. */
+.ice-text:has(div) { background: none; animation: none; color: inherit; -webkit-text-fill-color: currentColor; }
+.ice-text div:not(:has(div)) { background: var(--grad-text-ice); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.section--dark .ice-text div:not(:has(div)), .ice-text--frost div:not(:has(div)) { background-image: var(--grad-text-frost); }
 @keyframes ice-sheen { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0% 0; } }
 
 /* --- Verre dépoli --- */
