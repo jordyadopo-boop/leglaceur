@@ -231,3 +231,12 @@ export const ICE_TYPES = [
 export const SCIENCE = {
   latentHeat: 334, // J/g absorbés à la fusion
 };
+
+/** Espace administrateur : catégories proposées à la saisie (la saisie reste libre). */
+export const FINANCE = {
+  depenseCategories: [
+    'Électricité', 'Eau', 'Carburant & transport', 'Salaires', 'Emballages (sacs, gobelets)', 'Entretien & réparations',
+    'Loyer', 'Téléphone & internet', 'Marketing & publicité', 'Impôts & taxes', 'Fournitures', 'Autre',
+  ],
+  recetteCategories: ['Vente de boissons', 'Location de matériel', 'Prestation de service', 'Autre activité'],
+};

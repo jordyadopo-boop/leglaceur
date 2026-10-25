@@ -1,0 +1,23 @@
+{
+  "name": "leglaceur-promo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts Promo out/promo.mp4",
+    "render:nobgm": "remotion render src/index.ts Promo out/promo-nobgm.mp4 --props=props-nobgm.json",
+    "still": "remotion still src/index.ts Promo",
+    "posters": "for id in marque glacons carboglace livraison horaires piliers pros tarifs icecup pilee; do remotion still src/index.ts poster-$id out/posters/$id.png && remotion still src/index.ts story-$id out/stories/$id.png; done"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.484",
+    "@remotion/motion-blur": "4.0.484",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "remotion": "4.0.484"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "typescript": "6.0.3"
+  }
+}

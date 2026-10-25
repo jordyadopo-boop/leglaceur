@@ -7,7 +7,7 @@
   <script type="module" src="/src/js/main.js"></script>
 </head>
 <body data-page="admin">
-  <!-- Espace administrateur : non lié depuis le site, non indexé. Données lues dans le registre Google Sheets (BRAND.quoteWebhook). -->
+  <!-- Espace administrateur : non lié depuis le site, non indexé. Données lues et saisies dans le registre Google Sheets (BRAND.quoteWebhook) : devis, dépenses, autres recettes. -->
   <header class="admin-top">
     <div class="container admin-top__in">
       <a class="admin-top__logo" href="{{base}}" aria-label="Le Glaceur — retour au site"><img src="{{base}}brand/logo-full.svg" alt="" width="150" height="40"></a>
@@ -19,7 +19,7 @@
   <main id="contenu" class="admin" data-module="admin">
     <div class="container">
       <section class="admin-card frost" data-admin-login>
-        <h1 class="admin__title">Registre des devis</h1>
+        <h1 class="admin__title">Espace administrateur</h1>
         <p class="admin__lead">Réservé à l’équipe Le Glaceur. Entrez le code administrateur.</p>
         <form class="admin-login" data-admin-login-form>
           <div class="field">
@@ -32,7 +32,7 @@
       </section>
 
       <section class="admin-app" data-admin-app hidden>
-        <h1 class="admin__title">Registre des devis</h1>
+        <h1 class="admin__title">Tableau de bord</h1>
 
         <form class="admin-period frost" data-admin-period>
           <div class="admin-presets" role="group" aria-label="Périodes rapides">
@@ -41,6 +41,7 @@
             <button type="button" class="admin-chip" data-preset="month">Ce mois</button>
             <button type="button" class="admin-chip" data-preset="lastmonth">Mois dernier</button>
             <button type="button" class="admin-chip" data-preset="year">Cette année</button>
+            <button type="button" class="admin-chip" data-preset="all">Depuis le début</button>
           </div>
           <div class="admin-period__dates">
             <div class="field"><label for="admin-du">Du</label><input class="input" id="admin-du" name="du" type="date" required></div>
@@ -51,28 +52,112 @@
 
         <p class="admin-status" data-admin-status role="status"></p>
 
-        <div data-admin-result hidden>
-          <div class="admin-kpis" data-admin-kpis></div>
-          <div class="admin-actions">
-            <button class="btn btn--dark btn--sm" type="button" data-admin-export><span data-label>Télécharger le tableau Excel</span></button>
+        <div class="admin-tabs" role="tablist" aria-label="Rubriques">
+          <button class="admin-tab" type="button" role="tab" id="tab-bilan" aria-controls="panel-bilan" aria-selected="true" data-tab="bilan">Résultat</button>
+          <button class="admin-tab" type="button" role="tab" id="tab-devis" aria-controls="panel-devis" aria-selected="false" tabindex="-1" data-tab="devis">Devis</button>
+          <button class="admin-tab" type="button" role="tab" id="tab-depense" aria-controls="panel-depense" aria-selected="false" tabindex="-1" data-tab="depense">Dépenses</button>
+          <button class="admin-tab" type="button" role="tab" id="tab-recette" aria-controls="panel-recette" aria-selected="false" tabindex="-1" data-tab="recette">Autres recettes</button>
+          <button class="admin-tab" type="button" role="tab" id="tab-budget" aria-controls="panel-budget" aria-selected="false" tabindex="-1" data-tab="budget">Budget</button>
+        </div>
+
+        <div class="admin-panel" role="tabpanel" id="panel-bilan" aria-labelledby="tab-bilan" data-panel="bilan">
+          <p class="admin-note admin-note--warn" data-fin-warning hidden>Dépenses, autres recettes et budget indisponibles : mettez à jour le script du registre (docs/DEPLOIEMENT.md § 3, « Mise à jour »).</p>
+          <div class="hero-res frost" data-fin-hero></div>
+          <div class="admin-kpis admin-kpis--fin" data-fin-kpis></div>
+          <p class="admin-note">Ventes de glace = total des devis enregistrés sur la période. Autres recettes = activités annexes saisies dans l’onglet « Autres recettes ». Variations comparées à la période précédente de même durée.</p>
+
+          <h2 class="admin__h2">Recettes et dépenses <span class="admin__unit" data-fin-unit></span></h2>
+          <figure class="admin-chart frost" data-fin-chart>
+            <div class="admin-legend" aria-hidden="true"><span><i class="sw sw--glace"></i>Ventes de glace</span><span><i class="sw sw--autres"></i>Autres recettes</span><span><i class="sw sw--dep"></i>Dépenses</span></div>
+            <div class="admin-chart__plot" data-plot></div>
+            <div class="admin-tip" data-tip hidden></div>
+          </figure>
+          <details class="admin-more">
+            <summary>Voir le tableau détaillé</summary>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-table--compact">
+                <thead><tr><th scope="col" data-fin-col>Période</th><th scope="col" class="num">Ventes de glace</th><th scope="col" class="num">Autres recettes</th><th scope="col" class="num">Dépenses</th><th scope="col" class="num">Résultat</th></tr></thead>
+                <tbody data-fin-rows></tbody>
+                <tfoot data-fin-foot></tfoot>
+              </table>
+            </div>
+          </details>
+
+          <div class="admin-split">
+            <section class="admin-cats frost">
+              <h2 class="admin__h3">Dépenses par catégorie</h2>
+              <ul class="cat-list" data-fin-cat="depense"></ul>
+            </section>
+            <section class="admin-cats frost">
+              <h2 class="admin__h3">Autres recettes par activité</h2>
+              <ul class="cat-list" data-fin-cat="recette"></ul>
+            </section>
           </div>
 
-          <h2 class="admin__h2">Devis de la période</h2>
-          <div class="admin-table-wrap">
-            <table class="admin-table">
-              <thead><tr><th scope="col"><span class="sr-only">Détail</span></th><th scope="col">Date</th><th scope="col">N°</th><th scope="col">Client</th><th scope="col">Livraison</th><th scope="col" class="num">Articles</th><th scope="col" class="num">Total</th></tr></thead>
-              <tbody data-admin-rows></tbody>
-            </table>
-          </div>
+          <section data-fin-budget hidden>
+            <h2 class="admin__h2">Budget comparé au réel <span class="admin__unit" data-fin-unit></span></h2>
+            <div class="admin-gauges" data-fin-gauges></div>
+            <div class="admin-lines">
+            <figure class="admin-chart admin-chart--line frost" data-fin-line="ventes">
+              <figcaption class="admin-chart__cap">Ventes : recettes réelles vs budget des ventes</figcaption>
+              <div class="admin-legend" aria-hidden="true"><span><i class="sw sw--glace"></i>Réel</span><span><i class="sw sw--budget"></i>Budget</span></div>
+              <div class="admin-chart__plot" data-plot></div>
+              <div class="admin-tip" data-tip hidden></div>
+            </figure>
+            <figure class="admin-chart admin-chart--line frost" data-fin-line="depenses">
+              <figcaption class="admin-chart__cap">Dépenses réelles vs budget des dépenses</figcaption>
+              <div class="admin-legend" aria-hidden="true"><span><i class="sw sw--dep"></i>Réel</span><span><i class="sw sw--budget"></i>Budget</span></div>
+              <div class="admin-chart__plot" data-plot></div>
+              <div class="admin-tip" data-tip hidden></div>
+            </figure>
+            <figure class="admin-chart admin-chart--line frost" data-fin-line="marge">
+              <figcaption class="admin-chart__cap">Résultat réel vs résultat budgété</figcaption>
+              <div class="admin-legend" aria-hidden="true"><span><i class="sw sw--res"></i>Réel</span><span><i class="sw sw--budget"></i>Budget</span></div>
+              <div class="admin-chart__plot" data-plot></div>
+              <div class="admin-tip" data-tip hidden></div>
+            </figure>
+            </div>
+            <details class="admin-more">
+              <summary>Voir le tableau budget / réel</summary>
+              <div class="admin-table-wrap">
+                <table class="admin-table admin-table--compact">
+                  <thead><tr><th scope="col">Période</th><th scope="col" class="num">Budget ventes</th><th scope="col" class="num">Recettes réelles</th><th scope="col" class="num">Budget dépenses</th><th scope="col" class="num">Dépenses réelles</th><th scope="col" class="num">Résultat budget</th><th scope="col" class="num">Résultat réel</th></tr></thead>
+                  <tbody data-fin-brows></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+        </div>
 
-          <h2 class="admin__h2">Par produit</h2>
-          <div class="admin-table-wrap">
-            <table class="admin-table admin-table--compact">
-              <thead><tr><th scope="col">Produit</th><th scope="col">Format</th><th scope="col" class="num">Quantité</th><th scope="col" class="num">Montant</th></tr></thead>
-              <tbody data-admin-products></tbody>
-            </table>
+        <div class="admin-panel" role="tabpanel" id="panel-devis" aria-labelledby="tab-devis" data-panel="devis" hidden>
+          <p class="admin-note" data-admin-empty hidden>Aucun devis sur cette période.</p>
+          <div data-admin-result hidden>
+            <div class="admin-kpis" data-admin-kpis></div>
+            <div class="admin-actions">
+              <button class="btn btn--dark btn--sm" type="button" data-admin-export><span data-label>Télécharger le tableau Excel</span></button>
+            </div>
+
+            <h2 class="admin__h2">Devis de la période</h2>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-table--devis">
+                <thead><tr><th scope="col"><span class="sr-only">Détail</span></th><th scope="col">Date</th><th scope="col">N°</th><th scope="col">Client</th><th scope="col">Livraison</th><th scope="col" class="num">Articles</th><th scope="col" class="num">Total</th><th scope="col"><span class="sr-only">Supprimer</span></th></tr></thead>
+                <tbody data-admin-rows></tbody>
+              </table>
+            </div>
+
+            <h2 class="admin__h2">Par produit</h2>
+            <div class="admin-table-wrap">
+              <table class="admin-table admin-table--compact">
+                <thead><tr><th scope="col">Produit</th><th scope="col">Format</th><th scope="col" class="num">Quantité</th><th scope="col" class="num">Montant</th></tr></thead>
+                <tbody data-admin-products></tbody>
+              </table>
+            </div>
           </div>
         </div>
+
+        <div class="admin-panel" role="tabpanel" id="panel-depense" aria-labelledby="tab-depense" data-panel="depense" data-mv="depense" hidden></div>
+        <div class="admin-panel" role="tabpanel" id="panel-recette" aria-labelledby="tab-recette" data-panel="recette" data-mv="recette" hidden></div>
+        <div class="admin-panel" role="tabpanel" id="panel-budget" aria-labelledby="tab-budget" data-panel="budget" data-bud hidden></div>
       </section>
     </div>
   </main>
