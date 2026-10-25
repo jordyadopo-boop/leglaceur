@@ -1,0 +1,1 @@
+import{t as e}from"./config-Dpe1O9Hm.js";var t=(t=``,n=e.whatsapp)=>`https://wa.me/${n}${t?`?text=${encodeURIComponent(t)}`:``}`,n=e=>`tel:${e.replace(/\s/g,``)}`;export{t as n,n as t};
