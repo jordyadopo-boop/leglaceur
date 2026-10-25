@@ -56,7 +56,7 @@
           <button class="admin-tab" type="button" role="tab" id="tab-bilan" aria-controls="panel-bilan" aria-selected="true" data-tab="bilan">Résultat</button>
           <button class="admin-tab" type="button" role="tab" id="tab-devis" aria-controls="panel-devis" aria-selected="false" tabindex="-1" data-tab="devis">Devis</button>
           <button class="admin-tab" type="button" role="tab" id="tab-depense" aria-controls="panel-depense" aria-selected="false" tabindex="-1" data-tab="depense">Dépenses</button>
-          <button class="admin-tab" type="button" role="tab" id="tab-recette" aria-controls="panel-recette" aria-selected="false" tabindex="-1" data-tab="recette">Autres recettes</button>
+          <button class="admin-tab" type="button" role="tab" id="tab-recette" aria-controls="panel-recette" aria-selected="false" tabindex="-1" data-tab="recette">Recettes</button>
           <button class="admin-tab" type="button" role="tab" id="tab-budget" aria-controls="panel-budget" aria-selected="false" tabindex="-1" data-tab="budget">Budget</button>
         </div>
 
@@ -64,7 +64,7 @@
           <p class="admin-note admin-note--warn" data-fin-warning hidden>Dépenses, autres recettes et budget indisponibles : mettez à jour le script du registre (docs/DEPLOIEMENT.md § 3, « Mise à jour »).</p>
           <div class="hero-res frost" data-fin-hero></div>
           <div class="admin-kpis admin-kpis--fin" data-fin-kpis></div>
-          <p class="admin-note">Ventes de glace = total des devis enregistrés sur la période. Autres recettes = activités annexes saisies dans l’onglet « Autres recettes ». Variations comparées à la période précédente de même durée.</p>
+          <p class="admin-note">Seul l’argent encaissé compte. Ventes de glace = devis encaissés (bouton « Encaisser » de l’onglet Devis) + glace vendue sans devis, saisie dans l’onglet « Recettes ». Autres recettes = activités annexes. Variations comparées à la période précédente de même durée.</p>
 
           <h2 class="admin__h2">Recettes et dépenses <span class="admin__unit" data-fin-unit></span></h2>
           <figure class="admin-chart frost" data-fin-chart>
@@ -89,7 +89,7 @@
               <ul class="cat-list" data-fin-cat="depense"></ul>
             </section>
             <section class="admin-cats frost">
-              <h2 class="admin__h3">Autres recettes par activité</h2>
+              <h2 class="admin__h3">Recettes par activité</h2>
               <ul class="cat-list" data-fin-cat="recette"></ul>
             </section>
           </div>
@@ -140,7 +140,7 @@
             <h2 class="admin__h2">Devis de la période</h2>
             <div class="admin-table-wrap">
               <table class="admin-table admin-table--devis">
-                <thead><tr><th scope="col"><span class="sr-only">Détail</span></th><th scope="col">Date</th><th scope="col">N°</th><th scope="col">Client</th><th scope="col">Livraison</th><th scope="col" class="num">Articles</th><th scope="col" class="num">Total</th><th scope="col"><span class="sr-only">Supprimer</span></th></tr></thead>
+                <thead><tr><th scope="col"><span class="sr-only">Détail</span></th><th scope="col">Date</th><th scope="col">N°</th><th scope="col">Client</th><th scope="col">Livraison</th><th scope="col" class="num">Articles</th><th scope="col" class="num">Total</th><th scope="col">Encaissement</th><th scope="col"><span class="sr-only">Supprimer</span></th></tr></thead>
                 <tbody data-admin-rows></tbody>
               </table>
             </div>

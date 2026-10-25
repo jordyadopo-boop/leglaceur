@@ -238,5 +238,6 @@ export const FINANCE = {
     'Électricité', 'Eau', 'Carburant & transport', 'Salaires', 'Emballages (sacs, gobelets)', 'Entretien & réparations',
     'Loyer', 'Téléphone & internet', 'Marketing & publicité', 'Impôts & taxes', 'Fournitures', 'Autre',
   ],
-  recetteCategories: ['Vente de boissons', 'Location de matériel', 'Prestation de service', 'Autre activité'],
+  glace: 'Ventes de glace', // recettes de glace : devis encaissés (bouton « Encaisser ») et ventes sans devis
+  recetteCategories: ['Ventes de glace', 'Vente de boissons', 'Location de matériel', 'Prestation de service', 'Autre activité'],
 };

@@ -55,16 +55,21 @@ Installation (une seule fois, ~5 min, avec le compte Google de Le Glaceur) :
 Si vous modifiez le script plus tard : **Déployer → Gérer les déploiements → modifier → Nouvelle version**
 (l'URL reste la même). Les devis restent consultables directement dans le Google Sheet.
 
-### Tableau de bord, dépenses, autres recettes et budget
+### Tableau de bord, dépenses, recettes et budget
 
 L'espace administrateur s'ouvre sur un **tableau de bord** pour la période choisie (aujourd'hui, 7 jours,
 ce mois, mois dernier, cette année, depuis le début, ou dates libres) :
 
-- **Résultat** : recettes (ventes de glace = total des devis, + autres recettes) moins dépenses, marge,
+- **Résultat** : seul l'argent encaissé compte. Recettes (ventes de glace = devis encaissés + glace vendue
+  sans devis, + autres recettes) moins dépenses, marge,
   variations par rapport à la période précédente de même durée, graphique recettes / dépenses par jour,
-  mois ou année, répartition des dépenses par catégorie et des autres recettes par activité.
-- **Dépenses** et **Autres recettes** (activités annexes) : saisie datée et catégorisée, modification,
-  suppression avec la croix × en bout de ligne (feuille « Mouvements » du Google Sheet).
+  mois ou année, répartition des dépenses par catégorie et des recettes par activité.
+- **Dépenses** et **Recettes** : saisie datée et catégorisée, modification,
+  suppression avec la croix × en bout de ligne (feuille « Mouvements » du Google Sheet). Pour de la glace
+  vendue sans devis, choisissez l'activité « Ventes de glace ».
+- **Encaisser un devis** : un devis n'entre dans les recettes que lorsqu'il est payé. Le bouton
+  « Encaisser » (onglet Devis) demande le montant reçu et l'ajoute aux recettes « Ventes de glace » à la
+  date du jour ; le devis affiche alors « ✓ Encaissé ». Cliquer sur « ✓ Encaissé » annule l'encaissement.
 - **Devis** : la croix × en bout de ligne supprime un devis du registre ; dans le détail d'un devis, la
   croix × d'une ligne supprime ce produit et recalcule le total (supprimer la dernière ligne supprime le devis).
   Une confirmation est demandée à chaque fois ; la suppression est définitive.

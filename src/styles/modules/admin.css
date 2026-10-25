@@ -198,6 +198,17 @@
 .mv-tag { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.82rem; font-weight: 600; }
 .mv-tag--depense { background: #fdeee3; color: #9a4a12; }
 .mv-tag--recette { background: #e1f5f1; color: #0b6b5b; }
+.mv-tag--glace, .mv-tag--devis { background: #e3eefc; color: #0f4fae; }
+.mv-tag--devis { padding: 0.05rem 0.4rem; font-size: 0.72rem; vertical-align: 1px; }
+
+/* Encaissement d'un devis (onglet Devis) */
+.enc-cell { white-space: nowrap; }
+.enc { display: inline-flex; flex-direction: column; align-items: center; gap: 1px; min-width: 6.5rem; padding: 0.35rem 0.7rem; border: 1px solid var(--blue-400); border-radius: 999px; background: #fff; color: var(--blue-600); font: 600 0.82rem var(--font-body); cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+.enc:hover { background: var(--blue-600); color: #fff; }
+.enc--ok { border-color: transparent; background: color-mix(in srgb, var(--c-good) 14%, #fff); color: color-mix(in srgb, var(--c-good) 70%, #000); }
+.enc--ok:hover { background: color-mix(in srgb, var(--c-bad) 12%, #fff); color: var(--c-bad); }
+.enc small { font-weight: 500; font-size: 0.7rem; opacity: 0.85; }
+.enc:disabled { opacity: 0.5; cursor: progress; }
 .admin-table .mv-lib { white-space: normal; min-width: 160px; }
 .mv-btns { text-align: right; }
 .mv-btn { border: 0; background: none; padding: 0.3rem 0.5rem; border-radius: 8px; color: var(--blue-600); font: 600 0.85rem var(--font-body); cursor: pointer; }
@@ -224,7 +235,7 @@
   .admin-top__tag { display: none; }
   .admin-table th, .admin-table td { padding: 0.6rem 0.5rem; }
   /* Mobile : n°, livraison et nombre d'articles passent dans le détail déplié. */
-  .admin-table--devis > * > tr > :is(th, td):is(:nth-child(3), :nth-child(5), :nth-child(6)) { display: none; }
+  .admin-table--devis > * > tr > :is(th, td):is(:nth-child(2), :nth-child(3), :nth-child(5), :nth-child(6)) { display: none; }
   .admin-time { display: none; }
   .hero-res { grid-template-columns: 1fr; }
   .mv-grid { grid-template-columns: 1fr 1fr; }
@@ -240,6 +251,7 @@
   .admin-table--mv :is(th, td) { white-space: normal; }
   .admin-table--mv td:first-child { white-space: nowrap; }
   .mv-btns .mv-btn { display: block; margin-left: auto; padding: 0.2rem 0; font-size: 0.78rem; }
+  .enc { min-width: 0; padding: 0.3rem 0.55rem; font-size: 0.74rem; }
   .mv-btns .row-del { display: block; margin: 0.15rem 0 0 auto; }
   .admin-table--mv td.num { white-space: nowrap; }
   .mv-tag { border-radius: 8px; font-size: 0.76rem; }
