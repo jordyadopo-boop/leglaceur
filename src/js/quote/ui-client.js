@@ -8,7 +8,7 @@
 import * as store from '../core/quote-store.js';
 import { shake } from './ui-fx.js';
 
-/** « +225 07 89 85 16 86 » → « 0789851686 » ; null si invalide. */
+/** « +225 07 87 64 07 72 » → « 0787640772 » ; null si invalide. */
 export function normalizePhone(raw = '') {
   let d = String(raw).replace(/[^\d+]/g, '');
   if (d.startsWith('+')) d = d.slice(1);
@@ -17,7 +17,7 @@ export function normalizePhone(raw = '') {
   return /^\d{10}$/.test(d) ? d : null;
 }
 
-/** « 0789851686 » → « +225 07 89 85 16 86 » */
+/** « 0787640772 » → « +225 07 87 64 07 72 » */
 export const formatPhone = (d) => `+225 ${d.replace(/(\d{2})(?=\d)/g, '$1 ')}`;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

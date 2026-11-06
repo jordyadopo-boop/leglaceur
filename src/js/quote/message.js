@@ -23,7 +23,7 @@ const trim = (s) => cleanSpaces(s).trim();
 
 const capitalize = (s) => (s ? s.charAt(0).toLocaleUpperCase('fr-FR') + s.slice(1) : s);
 
-/** Numéro ivoirien lisible : « +225 07 89 85 16 86 » (sinon la saisie telle quelle). */
+/** Numéro ivoirien lisible : « +225 07 87 64 07 72 » (sinon la saisie telle quelle). */
 export function formatPhone(raw) {
   const s = trim(raw);
   if (!s) return '';

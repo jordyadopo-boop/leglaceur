@@ -68,7 +68,7 @@ const Cta: React.FC<{ f: number }> = ({ f }) => {
             <circle cx={32} cy={32} r={30} fill="#25d366" />
             <path d="M22 18c2-1 4 0 5 2l2 5c0 2-1 3-2 4 1 3 4 6 7 7 1-1 2-2 4-2l5 2c2 1 3 3 2 5-2 4-6 5-10 3-8-3-14-9-17-17-1-4 0-7 4-9z" fill="#fff" />
           </svg>
-          <span style={{ fontFamily: FONT.display, fontWeight: 700, fontSize: 68, color: L.ink, letterSpacing: '0.02em' }}>+225 07 89 85 16 86</span>
+          <span style={{ fontFamily: FONT.display, fontWeight: 700, fontSize: 68, color: L.ink, letterSpacing: '0.02em' }}>+225 07 87 64 07 72</span>
         </div>
       </div>
       <div style={{

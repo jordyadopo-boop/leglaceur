@@ -24,12 +24,12 @@ export const BRAND = {
     mapsQuery: 'Abatta Carrefour Drogba, Abidjan',
   },
   phones: [
-    { label: 'Service client & WhatsApp', display: '+225 07 89 85 16 86', tel: '+2250789851686' },
+    { label: 'Service client & WhatsApp', display: '+225 07 87 64 07 72', tel: '+2250787640772' },
     { label: 'Service client', display: '+225 05 66 04 31 69', tel: '+2250566043169' },
     { label: 'Ligne fixe', display: '+225 27 24 46 75 66', tel: '+2252724467566' },
   ],
-  // Numéro WhatsApp qui reçoit les devis (confirmé par le client le 22/10/2026).
-  whatsapp: '2250789851686',
+  // Numéro WhatsApp qui reçoit les devis (confirmé par le client le 06/11/2026).
+  whatsapp: '2250787640772',
   email: 'sdlsitgroup@gmail.com', // confirmée par le client le 22/10/2026
   hours: '24h/24 · 7j/7',
   deliveryClaim: 'Livraison partout à Abidjan',
