@@ -7,7 +7,7 @@ export const BRAND = {
   name: 'Le Glaceur',
   site: 'leglaceur.ci',
   tagline: 'La fraîcheur sous toutes ses formes',
-  whatsapp: '+225 07 89 85 16 86',
+  whatsapp: '+225 07 87 64 07 72',
   blue: '#2f8cf2',
   blue2: '#6db3ff',
   ice: '#8ecfff',

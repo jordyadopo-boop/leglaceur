@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
     fontFamily: FONT.display, fontWeight: 700, fontSize: 44, color: L.ink, letterSpacing: '0.02em',
   }}>
     <span style={{ display: 'flex', alignItems: 'center', gap: 16 }}><GlaceurMark size={56} />leglaceur.ci</span>
-    <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}><WaIcon size={48} />+225 07 89 85 16 86</span>
+    <span style={{ display: 'flex', alignItems: 'center', gap: 14 }}><WaIcon size={48} />+225 07 87 64 07 72</span>
   </div>
   );
 };
